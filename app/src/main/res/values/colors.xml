@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#fff</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="credentialsGradient_1">#673f00</color>
+    <color name="credentialsGradient_2">#67191f</color>
+    <color name="credentialsGradient_3">#67325c</color>
+    <color name="credentialsGradient_4">#2b3967</color>
+    <color name="credentialsGradient_5">#2a624d</color>
+    <color name="credentialsGradient_6">#67191f</color>
+
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
+    <color name="gray">#aaa</color>
+    <color name="red">#f00</color>
+    <color name="grey231F20">#231F20</color>
+    <color name="grey3">#333333</color>
+    <color name="grey5">#555555</color>
+    <color name="greyA">#AAAAAA</color>
+    <color name="greyC">#CCCCCC</color>
+    <color name="greyE5">#E5E5E5</color>
+    <color name="greyEF">#EFEFEF</color>
+    <color name="grey6">#666666</color>
+    <color name="greyF1">#F1F1F1</color>
+    <color name="greyF2">#F2F2F2</color>
+    <color name="greenD1">#00D100</color>
+    <color name="orangeC6">#FFC600</color>
+</resources>
