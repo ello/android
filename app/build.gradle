@@ -1,11 +1,14 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+
+def apikeyPropertiesFile = rootProject.file("local.properties");
+def apikeyProperties = new Properties();
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile));
 
 android {
     compileSdkVersion 27
+
     defaultConfig {
         applicationId "co.ello.android.ello"
         minSdkVersion 23
@@ -13,7 +16,34 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "GITHUB_API_TOKEN", apikeyProperties['GITHUB_API_TOKEN']
+        buildConfigField "String", "DANGER_GITHUB_API_TOKEN", apikeyProperties['DANGER_GITHUB_API_TOKEN']
+        buildConfigField "String", "INVITE_FRIENDS_SALT", apikeyProperties['INVITE_FRIENDS_SALT']
+        buildConfigField "String", "CRASHLYTICS_KEY", apikeyProperties['CRASHLYTICS_KEY']
+        buildConfigField "String", "NEW_RELIC_KEY", apikeyProperties['NEW_RELIC_KEY']
+        buildConfigField "String", "NINJA_CLIENT_KEY", apikeyProperties['NINJA_CLIENT_KEY']
+        buildConfigField "String", "NINJA_CLIENT_SECRET", apikeyProperties['NINJA_CLIENT_SECRET']
+        buildConfigField "String", "NINJA_DOMAIN", apikeyProperties['NINJA_DOMAIN']
+        buildConfigField "String", "STAGE1_CLIENT_KEY", apikeyProperties['STAGE1_CLIENT_KEY']
+        buildConfigField "String", "STAGE1_CLIENT_SECRET", apikeyProperties['STAGE1_CLIENT_SECRET']
+        buildConfigField "String", "STAGE1_DOMAIN", apikeyProperties['STAGE1_DOMAIN']
+        buildConfigField "String", "STAGE2_CLIENT_KEY", apikeyProperties['STAGE2_CLIENT_KEY']
+        buildConfigField "String", "STAGE2_CLIENT_SECRET", apikeyProperties['STAGE2_CLIENT_SECRET']
+        buildConfigField "String", "STAGE2_DOMAIN", apikeyProperties['STAGE2_DOMAIN']
+        buildConfigField "String", "RAINBOW_CLIENT_KEY", apikeyProperties['RAINBOW_CLIENT_KEY']
+        buildConfigField "String", "RAINBOW_CLIENT_SECRET", apikeyProperties['RAINBOW_CLIENT_SECRET']
+        buildConfigField "String", "RAINBOW_DOMAIN", apikeyProperties['RAINBOW_DOMAIN']
+        buildConfigField "String", "STAGING_SEGMENT_KEY", apikeyProperties['STAGING_SEGMENT_KEY']
+        buildConfigField "String", "PROD_CLIENT_KEY", apikeyProperties['PROD_CLIENT_KEY']
+        buildConfigField "String", "PROD_CLIENT_SECRET", apikeyProperties['PROD_CLIENT_SECRET']
+        buildConfigField "String", "PROD_DOMAIN", apikeyProperties['PROD_DOMAIN']
+        buildConfigField "String", "PROD_SEGMENT_KEY", apikeyProperties['PROD_SEGMENT_KEY']
+        buildConfigField "String", "AWS_DEFAULT_REGION", apikeyProperties['AWS_DEFAULT_REGION']
+        buildConfigField "String", "AWS_ACCESS_KEY_ID", apikeyProperties['AWS_ACCESS_KEY_ID']
+        buildConfigField "String", "AWS_SECRET_ACCESS_KEY", apikeyProperties['AWS_SECRET_ACCESS_KEY']
     }
+
     buildTypes {
         release {
             minifyEnabled false
