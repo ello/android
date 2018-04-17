@@ -13,7 +13,7 @@ open class ElloActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    fun constraintLayoutParams() : ConstraintLayout.LayoutParams = ConstraintLayout.LayoutParams(
+    fun constraintLayoutParams(): ConstraintLayout.LayoutParams = ConstraintLayout.LayoutParams(
         ConstraintLayout.LayoutParams.WRAP_CONTENT,
         ConstraintLayout.LayoutParams.WRAP_CONTENT
         )

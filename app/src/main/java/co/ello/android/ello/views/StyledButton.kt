@@ -44,10 +44,10 @@ class StyledButton @JvmOverloads constructor(
 
     }
 
-    val style : Style
+    val style: Style
     // these need to be calculated and stored from context.getColor
-    var color : Int?
-    var highlightedColor : Int?
+    var color: Int?
+    var highlightedColor: Int?
 
     init {
         setOnClickListener {}
@@ -55,7 +55,7 @@ class StyledButton @JvmOverloads constructor(
         val styleName = styledAttrs.getString(R.styleable.StyledButton_styleName) ?: ""
         styledAttrs.recycle()
 
-        val style : Style = when (styleName) {
+        val style: Style = when (styleName) {
             "clear white" -> Style.ClearWhite
             "clear black" -> Style.ClearBlack
             "forgot password" -> Style.ForgotPassword
@@ -111,7 +111,7 @@ class StyledButton @JvmOverloads constructor(
         }
     }
 
-    override fun onDraw(canvas_ : Canvas?) {
+    override fun onDraw(canvas_: Canvas?) {
         super.onDraw(canvas_)
 
         safeLet(style.cornerRadius, canvas_, color) { cornerRadius, canvas, color ->

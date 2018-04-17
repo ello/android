@@ -18,7 +18,7 @@ class StyledLabel @JvmOverloads constructor(
         LargeBoldWhite(font = "Bold", size = 18f, color = R.color.white)
     }
 
-    val style : Style
+    val style: Style
 
     init {
         val styledAttrs = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledButton, 0, 0)
@@ -26,7 +26,7 @@ class StyledLabel @JvmOverloads constructor(
         val styleName = styledAttrs.getString(R.styleable.StyledButton_styleName) ?: ""
         styledAttrs.recycle()
 
-        val style : Style = when (styleName) {
+        val style: Style = when (styleName) {
             "white" -> Style.White
             "large white" -> Style.LargeWhite
             "large bold white" -> Style.LargeBoldWhite

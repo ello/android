@@ -9,7 +9,7 @@ import android.widget.EditText
 
 
 class LoginScreen : LoginProtocols.Screen {
-    override val contentView : View
+    override val contentView: View
     val continueButton: Button
 
     constructor(activity: Activity) {

@@ -24,7 +24,7 @@ class StyledTextInput @JvmOverloads constructor(
         CredentialsUsername(size = 18f, color = R.color.white, placeholder = R.color.white, background = Background.BottomLine)
     }
 
-    val style : Style
+    val style: Style
 
     init {
         val styledAttrs = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledButton, 0, 0)
@@ -32,7 +32,7 @@ class StyledTextInput @JvmOverloads constructor(
         val styleName = styledAttrs.getString(R.styleable.StyledButton_styleName) ?: ""
         styledAttrs.recycle()
 
-        val style : Style = when (styleName) {
+        val style: Style = when (styleName) {
             "white" -> Style.White
             "credentials username" -> Style.CredentialsUsername
             else -> Style.Default
