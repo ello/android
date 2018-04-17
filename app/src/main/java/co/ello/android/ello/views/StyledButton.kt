@@ -55,7 +55,7 @@ class StyledButton @JvmOverloads constructor(
         val styleName = styledAttrs.getString(R.styleable.StyledButton_styleName) ?: ""
         styledAttrs.recycle()
 
-        val style: Style = when (styleName) {
+        this.style = when (styleName) {
             "clear white" -> Style.ClearWhite
             "clear black" -> Style.ClearBlack
             "forgot password" -> Style.ForgotPassword
@@ -63,7 +63,6 @@ class StyledButton @JvmOverloads constructor(
             "rounded gray outline" -> Style.RoundedGrayOutline
             else -> Style.Default
         }
-        this.style = style
 
         this.typeface = Typeface.createFromAsset(context.assets, "AtlasGrotesk${style.font}.otf")
         this.setTextSize(style.size)

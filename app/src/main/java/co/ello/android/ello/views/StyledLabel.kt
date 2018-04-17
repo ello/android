@@ -14,6 +14,7 @@ class StyledLabel @JvmOverloads constructor(
         Default(color = R.color.black),
         White(color = R.color.white),
 
+        SmallWhite(size = 12f, color = R.color.white),
         LargeWhite(size = 18f, color = R.color.white),
         LargeBoldWhite(font = "Bold", size = 18f, color = R.color.white)
     }
@@ -26,13 +27,13 @@ class StyledLabel @JvmOverloads constructor(
         val styleName = styledAttrs.getString(R.styleable.StyledButton_styleName) ?: ""
         styledAttrs.recycle()
 
-        val style: Style = when (styleName) {
+        this.style = when (styleName) {
             "white" -> Style.White
+            "small white" -> Style.SmallWhite
             "large white" -> Style.LargeWhite
             "large bold white" -> Style.LargeBoldWhite
             else -> Style.Default
         }
-        this.style = style
 
         this.typeface = Typeface.createFromAsset(context.assets, "AtlasGrotesk${style.font}.otf")
         this.setTextSize(style.size)

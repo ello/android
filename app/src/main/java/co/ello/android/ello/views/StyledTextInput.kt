@@ -7,21 +7,37 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.widget.EditText
+import android.text.InputType
+import android.text.method.PasswordTransformationMethod
 
 
 class StyledTextInput @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.editTextStyle
 ) : EditText(context, attrs, defStyleAttr) {
+
+    enum class KeyboardType {
+        Default,
+        Password
+    }
 
     enum class Background {
         BottomLine,
         None
     }
 
-    enum class Style(val font: String = "Regular", val size: Float = 14f, val color: Int? = null, val placeholder: Int? = null, val background: Background = Background.None) {
+    enum class Style(
+        val font: String = "Regular",
+        val size: Float = 14f,
+        val color: Int? = null,
+        val placeholder: Int? = null,
+        val background: Background = Background.None,
+        val keyboardType: KeyboardType = KeyboardType.Default,
+        val isMultiline: Boolean = false
+    ) {
         Default(color = R.color.black),
         White(color = R.color.white),
-        CredentialsUsername(size = 18f, color = R.color.white, placeholder = R.color.white, background = Background.BottomLine)
+        CredentialsUsername(size = 18f, color = R.color.white, placeholder = R.color.white, background = Background.BottomLine),
+        CredentialsPassword(size = 18f, color = R.color.white, placeholder = R.color.white, background = Background.BottomLine, keyboardType = KeyboardType.Password)
     }
 
     val style: Style
@@ -32,17 +48,36 @@ class StyledTextInput @JvmOverloads constructor(
         val styleName = styledAttrs.getString(R.styleable.StyledButton_styleName) ?: ""
         styledAttrs.recycle()
 
-        val style: Style = when (styleName) {
+        this.style = when (styleName) {
             "white" -> Style.White
             "credentials username" -> Style.CredentialsUsername
-            else -> Style.Default
+            "credentials password" -> Style.CredentialsPassword
+            "default", "" -> Style.Default
+            else -> {
+                println("unknown style \"$styleName\"")
+                Style.Default
+            }
         }
-        this.style = style
+        this.background = null
 
+        updateStyle()
+    }
+
+    fun updateStyle() {
         this.typeface = Typeface.createFromAsset(context.assets, "AtlasGrotesk${style.font}.otf")
         this.setTextSize(style.size * 1.2f)
         style.color?.let { this.setTextColor(context.getColor(it)) }
         style.placeholder?.let { this.setHintTextColor(context.getColor(it)) }
+        this.setSingleLine(!style.isMultiline)
+
+        when (style.keyboardType) {
+            KeyboardType.Default -> {
+                this.transformationMethod = null
+            }
+            KeyboardType.Password -> {
+                this.transformationMethod = PasswordTransformationMethod.getInstance()
+            }
+        }
     }
 
     override fun onDraw(canvas: Canvas?) {
