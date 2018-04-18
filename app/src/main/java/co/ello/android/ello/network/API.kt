@@ -10,40 +10,29 @@ import java.util.concurrent.CompletableFuture
 class API(val queue: Queue) {
     fun login(username: String, password: String): CompletableFuture<Credentials> {
         val future = CompletableFuture<Credentials>()
-        val url = "https://ello.co/api/oauth/token"
+        val path = "/oauth/token"
 
-        val stringRequest = object : StringRequest(Request.Method.POST, url,
-            Response.Listener<String> { json ->
+        val elloRequest = ElloRequest(ElloRequest.Method.POST, path)
+            .onSuccess { json ->
                 val gson = Gson()
                 val credentials = gson.fromJson(json, Credentials::class.java)
                 future.complete(credentials)
-            },
-            Response.ErrorListener { exception ->
+            }
+            .onFailure { exception ->
                 future.completeExceptionally(exception)
-            }) {
-
-            override fun getHeaders(): Map<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Accept"] = "application/json"
-                headers["Content-Type"] = "application/json"
-                return headers
             }
 
-            override fun getBody(): ByteArray {
-                val gson = Gson()
-                val vals = mapOf(
-                    "email" to username,
-                    "password" to password,
-                    "client_id" to BuildConfig.PROD_CLIENT_KEY,
-                    "client_secret" to BuildConfig.PROD_CLIENT_SECRET,
-                    "grant_type" to "password"
-                )
-                val json = gson.toJson(vals)
-                return json.toByteArray()
-            }
-        }
+        elloRequest.addHeader("Accept", "application/json")
+        elloRequest.addHeader("Content-Type", "application/json")
+        elloRequest.body = mapOf(
+            "email" to username,
+            "password" to password,
+            "client_id" to BuildConfig.NINJA_CLIENT_KEY,
+            "client_secret" to BuildConfig.NINJA_CLIENT_SECRET,
+            "grant_type" to "password"
+        )
 
-        queue.add(stringRequest)
+        queue.add(elloRequest)
         return future
     }
 }
