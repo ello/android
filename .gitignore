@@ -4,6 +4,7 @@
 .externalNativeBuild
 
 /local.properties
+/secret.properties
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
