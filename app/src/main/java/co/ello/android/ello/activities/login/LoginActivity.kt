@@ -17,11 +17,6 @@ class LoginActivity : ElloActivity(), LoginProtocols.Delegate {
         setContentView(screen.contentView)
         this.screen = screen
     }
-    override fun onStart() {
-        super.onStart()
-        screen?.spinnerVisibility(true, window)
-        screen?.spinnerVisibility(false, window)
-    }
 
     override fun submit(username: String, password: String) {
         val screen = this.screen

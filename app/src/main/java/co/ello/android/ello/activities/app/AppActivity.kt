@@ -11,7 +11,6 @@ class AppActivity : ElloActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val screen = AppScreen(this)
         setContentView(screen.contentView)
         this.screen = screen
@@ -20,7 +19,7 @@ class AppActivity : ElloActivity() {
     override fun onStart() {
         super.onStart()
 
-        val runnable = Runnable() {
+        val runnable = Runnable {
             showLoginScreen()
         }
 
