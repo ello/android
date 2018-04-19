@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 
 
-class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Delegate) : Controller(a), LoggedOutProtocols.Controller, LoginProtocols.Delegate {
+class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Delegate) : Controller(a), LoggedOutProtocols.Controller, LoginProtocols.Delegate, JoinProtocols.Delegate {
     private var screen: LoggedOutProtocols.Screen? = null
 
     override fun createView(): View {
@@ -15,11 +15,16 @@ class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Deleg
         return screen.contentView
     }
 
-    override fun onAppear() {
+    override fun showJoinScreen() {
+        navigationController?.push(JoinController(activity, this))
     }
 
-    override fun showJoinScreen() {
-        // navigationController?.push(JoinController(activity, this))
+    override fun joinDidJoin(credentials: Credentials) {
+        delegate.loggedOutDidLogin(credentials)
+    }
+
+    override fun joinDidCancel() {
+        navigationController?.pop()
     }
 
     override fun showLoginScreen() {

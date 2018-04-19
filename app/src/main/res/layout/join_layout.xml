@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <co.ello.android.ello.StartupGradientLayer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/image_back_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/loginLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="80dp"
+        android:text="@string/Startup.join"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:styleName="large bold white" />
+
+    <co.ello.android.ello.StyledTextInput
+        android:id="@+id/emailField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="55dp"
+        android:hint="@string/Join.emailPlaceholder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/loginLabel"
+        app:layout_constraintTop_toBottomOf="@+id/loginLabel"
+        app:styleName="credentials username"
+        tools:text="@string/Join.emailPlaceholder" />
+
+    <co.ello.android.ello.StyledTextInput
+        android:id="@+id/usernameField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/Join.usernamePlaceholder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/loginLabel"
+        app:layout_constraintTop_toBottomOf="@+id/emailField"
+        app:styleName="credentials username"
+        tools:text="@string/Join.usernamePlaceholder" />
+
+    <co.ello.android.ello.StyledTextInput
+        android:id="@+id/passwordField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/Join.passwordPlaceholder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/loginLabel"
+        app:layout_constraintTop_toBottomOf="@+id/usernameField"
+        app:styleName="credentials password"
+        tools:text="@string/Join.passwordPlaceholder" />
+
+    <View
+        android:id="@+id/continueContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <co.ello.android.ello.StyledButton
+        android:id="@+id/continueButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/Login.continue"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/continueContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/continueContainer"
+        app:layout_constraintTop_toTopOf="@+id/continueContainer"
+        app:styleName="rounded gray outline" />
+
+    <ImageView
+        android:id="@+id/emailFieldError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/emailField"
+        app:layout_constraintEnd_toEndOf="@+id/emailField"
+        app:layout_constraintTop_toTopOf="@+id/emailField"
+        app:srcCompat="@drawable/image_x_red" />
+
+    <ImageView
+        android:id="@+id/usernameFieldError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/usernameField"
+        app:layout_constraintEnd_toEndOf="@+id/usernameField"
+        app:layout_constraintTop_toTopOf="@+id/usernameField"
+        app:srcCompat="@drawable/image_x_red" />
+
+    <ImageView
+        android:id="@+id/passwordFieldError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/passwordField"
+        app:layout_constraintEnd_toEndOf="@+id/passwordField"
+        app:layout_constraintTop_toTopOf="@+id/passwordField"
+        app:srcCompat="@drawable/image_x_red" />
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/errorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text=""
+        app:layout_constraintStart_toStartOf="@+id/loginLabel"
+        app:layout_constraintTop_toBottomOf="@+id/passwordField"
+        app:styleName="small white"
+        tools:text="Error Label" />
+
+</android.support.constraint.ConstraintLayout>

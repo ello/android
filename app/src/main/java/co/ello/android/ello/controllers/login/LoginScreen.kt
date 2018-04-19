@@ -83,7 +83,9 @@ class LoginScreen : LoginProtocols.Screen {
             spinnerContainer.requestFocus()
 
             usernameField.isFocusable = false
+            usernameField.isFocusableInTouchMode = false
             passwordField.isFocusable = false
+            passwordField.isFocusableInTouchMode = false
         }
         else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)

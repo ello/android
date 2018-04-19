@@ -4,17 +4,17 @@ import android.view.View
 import android.view.Window
 
 
-class LoginProtocols {
+class JoinProtocols {
     interface Screen {
         val contentView: View
         var delegate: Controller?
-        fun showErrors(usernameMessage: String?, passwordMessage: String?)
-        fun spinnerVisibility(visibile: Boolean, window: Window)
+        var interactive: Boolean
+        fun showErrors(emailMessage: String?, usernameMessage: String?, passwordMessage: String?)
         fun onDestroy()
     }
 
     interface Controller {
-        fun submit(username: String, password: String)
+        fun submit(email: String, username: String, password: String)
         fun success(credentials: Credentials)
         fun failure()
         fun cancel()
@@ -22,11 +22,11 @@ class LoginProtocols {
 
     interface Generator {
         var delegate: Controller?
-        fun login(queue: Queue, username: String, password: String)
+        fun join(queue: Queue, email: String, username: String, password: String)
     }
 
     interface Delegate {
-        fun loginDidLogin(credentials: Credentials)
-        fun loginDidCancel()
+        fun joinDidJoin(credentials: Credentials)
+        fun joinDidCancel()
     }
 }

@@ -3,6 +3,7 @@ package co.ello.android.ello
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.view.WindowManager
 
 
 class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate {
@@ -56,5 +57,21 @@ class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, 
         controller.onAppear()
 
         this.controller = controller
+    }
+
+    fun showAppSpinner() {
+        // spinnerContainer.visibility = View.VISIBLE
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        // spinnerContainer.setFocusable(true)
+        // spinnerContainer.requestFocus()
+    }
+
+    fun hideAppSpinner() {
+        // spinnerContainer.visibility = View.INVISIBLE
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED)
+        // spinnerContainer.isFocusable = false
+        // spinnerContainer.clearFocus()
     }
 }

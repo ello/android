@@ -3,19 +3,24 @@ package co.ello.android.ello
 import android.view.View
 
 
-class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : Controller(a), LoginProtocols.Controller {
-    private var screen: LoginProtocols.Screen? = null
-    private val generator: LoginProtocols.Generator = LoginGenerator()
+class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : Controller(a), JoinProtocols.Controller {
+    private var screen: JoinProtocols.Screen? = null
+    private val generator: JoinProtocols.Generator = JoinGenerator()
 
     override fun createView(): View {
-        val screen = LoginScreen(activity)
+        val screen = JoinScreen(activity)
         screen.delegate = this
         generator.delegate = this
         this.screen = screen
         return screen.contentView
     }
 
-    override fun submit(username: String, password: String) {
+    override fun submit(email: String, username: String, password: String) {
+        var emailMessage: String? = null
+        if (email == "") {
+            emailMessage = activity.getString(R.string.Error_emailRequired)
+        }
+
         var usernameMessage: String? = null
         if (username == "") {
             usernameMessage = activity.getString(R.string.Error_usernameRequired)
@@ -30,26 +35,26 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : C
         }
 
         val screen = this.screen!!
-        screen.showErrors(usernameMessage, passwordMessage)
-        if (usernameMessage == null && passwordMessage == null) {
+        screen.showErrors(emailMessage, usernameMessage, passwordMessage)
+        if (emailMessage == null && usernameMessage == null && passwordMessage == null) {
             showSpinner()
-            screen.spinnerVisibility(true, window)
+            screen.interactive = false
 
-            generator.login(requestQueue, username, password)
+            generator.join(requestQueue, email, username, password)
         }
     }
 
     override fun cancel() {
-        delegate.loginDidCancel()
+        delegate.joinDidCancel()
     }
 
     override fun success(credentials: Credentials) {
-        delegate.loginDidLogin(credentials)
+        delegate.joinDidJoin(credentials)
     }
 
     override fun failure() {
         hideSpinner()
-        screen?.spinnerVisibility(false, window)
+        screen?.interactive = true
     }
 
     override fun onDestroy() {

@@ -42,4 +42,12 @@ abstract class Controller(val activity: AppActivity) {
 
     open fun onAppear() {}
     open fun onDisappear() {}
+
+    fun showSpinner() {
+        appController?.showAppSpinner()
+    }
+
+    fun hideSpinner() {
+        appController?.hideAppSpinner()
+    }
 }
