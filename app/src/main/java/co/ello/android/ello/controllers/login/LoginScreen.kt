@@ -16,7 +16,7 @@ import android.widget.TextView
 class LoginScreen : LoginProtocols.Screen {
     override val contentView: View
 
-    override var delegate: LoginProtocols.Delegate? = null
+    override var delegate: LoginProtocols.Controller? = null
 
     private val continueButton: Button
     private val spinnerContainer: View
@@ -102,5 +102,4 @@ class LoginScreen : LoginProtocols.Screen {
     override fun onDestroy() {
         continueButton.setOnClickListener(null)
     }
-
 }

@@ -7,20 +7,24 @@ import android.view.Window
 class LoginProtocols {
     interface Screen {
         val contentView: View
-        var delegate: Delegate?
+        var delegate: Controller?
         fun showErrors(usernameMessage: String?, passwordMessage: String?)
         fun spinnerVisibility(visibile: Boolean, window: Window)
         fun onDestroy()
     }
 
-    interface Delegate {
+    interface Controller {
         fun submit(username: String, password: String)
         fun success(credentials: Credentials)
         fun failure()
     }
 
     interface Generator {
-        var delegate: LoginProtocols.Delegate?
+        var delegate: LoginProtocols.Controller?
         fun login(queue: Queue, username: String, password: String)
+    }
+
+    interface Delegate {
+        fun didLogin(credentials: Credentials)
     }
 }

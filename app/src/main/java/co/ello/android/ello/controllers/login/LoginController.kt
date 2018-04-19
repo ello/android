@@ -1,27 +1,22 @@
 package co.ello.android.ello
 
-import android.content.Intent
-import android.os.Bundle
+import android.view.View
 
 
-class LoginActivity : ElloActivity(), LoginProtocols.Delegate {
+class LoginController(a: AppActivity) : Controller(a), LoginProtocols.Controller {
     private var screen: LoginProtocols.Screen? = null
     private val generator: LoginProtocols.Generator = LoginGenerator()
+    var delegate: LoginProtocols.Delegate? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val screen = LoginScreen(this)
+    override fun createView(): View {
+        val screen = LoginScreen(activity)
         screen.delegate = this
         generator.delegate = this
-        setContentView(screen.contentView)
         this.screen = screen
+        return screen.contentView
     }
 
     override fun submit(username: String, password: String) {
-        val screen = this.screen
-        if (screen == null)  return
-
         var usernameMessage: String? = null
         if (username == "") {
             usernameMessage = "Username is required"
@@ -35,18 +30,17 @@ class LoginActivity : ElloActivity(), LoginProtocols.Delegate {
             passwordMessage = "Password must be at least 8 characters"
         }
 
+        val screen = this.screen!!
         screen.showErrors(usernameMessage, passwordMessage)
         if (usernameMessage == null && passwordMessage == null) {
             screen.spinnerVisibility(true, window)
 
-            val queue = VolleyQueue(this)
-            generator.login(queue, username, password)
+            generator.login(requestQueue, username, password)
         }
     }
 
     override fun success(credentials: Credentials) {
-        val intent = Intent(this, DummyActivity::class.java)
-        startActivity(intent)
+        delegate?.didLogin(credentials)
     }
 
     override fun failure() {
