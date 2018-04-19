@@ -50,7 +50,7 @@ class StyledButton @JvmOverloads constructor(
     var highlightedColor: Int?
 
     init {
-        setOnClickListener {}
+        isClickable = true
         val styledAttrs = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledButton, 0, 0)
         val styleName = styledAttrs.getString(R.styleable.StyledButton_styleName) ?: ""
         styledAttrs.recycle()
