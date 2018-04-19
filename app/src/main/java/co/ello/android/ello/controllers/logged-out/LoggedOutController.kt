@@ -5,22 +5,24 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 
 
-class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Delegate) : Controller(a), LoginProtocols.Delegate {
+class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Delegate) : Controller(a), LoggedOutProtocols.Controller, LoginProtocols.Delegate {
     private var screen: LoggedOutProtocols.Screen? = null
-    var childController: Controller? = null
 
     override fun createView(): View {
         val screen = LoggedOutScreen(activity)
-        //screen.delegate = this
+        screen.delegate = this
         this.screen = screen
         return screen.contentView
     }
 
     override fun onAppear() {
-        showLoginScreen()
     }
 
-    fun showLoginScreen() {
+    override fun showJoinScreen() {
+        // navigationController?.push(JoinController(activity, this))
+    }
+
+    override fun showLoginScreen() {
         navigationController?.push(LoginController(activity, this))
     }
 

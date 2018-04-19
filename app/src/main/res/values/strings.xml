@@ -2,6 +2,7 @@
     <string name="app_name">Ello</string>
     <string name="hello">[Insert Ello here]</string>
     <string name="Startup.login">Login</string>
+    <string name="Startup.join">Sign Up</string>
     <string name="Login.usernamePlaceholder">Username or Email</string>
     <string name="Login.passwordPlaceholder">Password</string>
     <string name="Login.continue">Continue</string>

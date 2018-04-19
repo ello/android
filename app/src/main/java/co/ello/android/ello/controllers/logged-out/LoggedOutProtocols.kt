@@ -8,6 +8,12 @@ class LoggedOutProtocols {
     interface Screen {
         val contentView: View
         val containerView: ViewGroup
+        var delegate: Controller?
+    }
+
+    interface Controller {
+        fun showLoginScreen()
+        fun showJoinScreen()
     }
 
     interface Delegate {

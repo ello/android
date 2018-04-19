@@ -9,7 +9,9 @@ class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, 
     var controller: Controller? = null
 
     override fun createView(): View {
-        return FrameLayout(activity)
+        val view = FrameLayout(activity)
+        view.setBackgroundColor(R.color.black)
+        return view
     }
 
     override fun onAppear() {
@@ -36,18 +38,20 @@ class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, 
     }
 
     private fun showHomeScreen() {
-        // show(HomeController)
+        // show(HomeController(activity, this))
     }
+
+    private fun homeDidLogout() = showLoggedOutScreen()
 
     private fun show(controller: Controller) {
         val viewGroup: ViewGroup = this.view as ViewGroup
         this.controller?.let {
-            it.parent = null
+            it.assignParent(null)
             viewGroup.removeView(it.view)
             it.onDisappear()
         }
 
-        controller.parent = this
+        controller.assignParent(this)
         viewGroup.addView(controller.view)
         controller.onAppear()
 

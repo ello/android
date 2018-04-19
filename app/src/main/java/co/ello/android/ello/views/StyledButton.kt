@@ -30,16 +30,19 @@ class StyledButton @JvmOverloads constructor(
             val size: Float = 14f,
             val color: Int? = null,
             val highlightedColor: Int? = null,
-            val background: Int? = null,
+            val borderColor: Int? = null,
+            val backgroundColor: Int? = null,
             val cornerRadius: Corner? = null,
             val textAlign: Alignment = Alignment.Center
     ) {
 
-        Default(color = R.color.white, background = R.color.black),
+        Default(color = R.color.white, backgroundColor = R.color.black),
+        Green(color = R.color.white, highlightedColor = R.color.black, backgroundColor = R.color.green, cornerRadius = Corner.Rounded),
         ClearWhite(color = R.color.white),
+        ClearGray(color = R.color.gray, highlightedColor = R.color.black),
         ClearBlack(color = R.color.black),
         ForgotPassword(size = 11f, color = R.color.gray, highlightedColor = R.color.white),
-        White(color = R.color.black, background = R.color.white),
+        White(color = R.color.black, backgroundColor = R.color.white),
         RoundedGrayOutline(color = R.color.greyA, highlightedColor = R.color.black, cornerRadius = Corner.Rounded)
 
     }
@@ -48,6 +51,7 @@ class StyledButton @JvmOverloads constructor(
     // these need to be calculated and stored from context.getColor
     var color: Int?
     var highlightedColor: Int?
+    var backgroundColor: Int?
 
     init {
         isClickable = true
@@ -56,12 +60,14 @@ class StyledButton @JvmOverloads constructor(
         styledAttrs.recycle()
 
         this.style = when (styleName) {
-            "clear white" -> Style.ClearWhite
-            "clear black" -> Style.ClearBlack
-            "forgot password" -> Style.ForgotPassword
-            "white" -> Style.White
+            "clear white"          -> Style.ClearWhite
+            "clear gray"           -> Style.ClearGray
+            "clear black"          -> Style.ClearBlack
+            "green"                -> Style.Green
+            "forgot password"      -> Style.ForgotPassword
+            "white"                -> Style.White
             "rounded gray outline" -> Style.RoundedGrayOutline
-            else -> Style.Default
+            else                   -> Style.Default
         }
 
         this.typeface = Typeface.createFromAsset(context.assets, "AtlasGrotesk${style.font}.otf")
@@ -87,43 +93,37 @@ class StyledButton @JvmOverloads constructor(
         when(style.textAlign) {
             Alignment.Left -> {
                 this.textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
-                this.gravity = Gravity.LEFT
+                this.gravity = Gravity.CENTER
             }
             Alignment.Center -> {
                 this.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
                 this.gravity = Gravity.CENTER
             }
         }
+        setPadding(0, 0, 0, (3f * resources.displayMetrics.density).toInt())
 
-        if (style.color != null) {
-            color = context.getColor(style.color)
-        }
-        else {
-            color = null
-        }
-
-        if (style.highlightedColor != null) {
-            highlightedColor = context.getColor(style.highlightedColor)
-        }
-        else {
-            highlightedColor = null
-        }
+        color = style.color?.let { context.getColor(it) }
+        highlightedColor = style.highlightedColor?.let { context.getColor(it) }
+        backgroundColor = style.backgroundColor?.let { context.getColor(it) }
     }
 
     override fun onDraw(canvas_: Canvas?) {
-        super.onDraw(canvas_)
-
         safeLet(style.cornerRadius, canvas_, color) { cornerRadius, canvas, color ->
             when(cornerRadius) {
                 Corner.Pill -> {}
                 Corner.Rounded -> {
                     val p = Paint()
-                    p.style = Paint.Style.STROKE
+                    if (backgroundColor == null) {
+                        p.style = Paint.Style.STROKE
+                    }
+                    else {
+                        p.style = Paint.Style.FILL_AND_STROKE
+                    }
                     p.strokeWidth = 1f * resources.displayMetrics.density
                     if (isPressed) {
-                        p.setColor(highlightedColor ?: color)
+                        p.setColor(backgroundColor ?: highlightedColor ?: color)
                     } else {
-                        p.setColor(color)
+                        p.setColor(backgroundColor ?: color)
                     }
 
                     val five = 5f * resources.displayMetrics.density
@@ -132,6 +132,7 @@ class StyledButton @JvmOverloads constructor(
                 }
             }
         }
+        super.onDraw(canvas_)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

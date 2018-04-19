@@ -8,15 +8,11 @@ abstract class Controller(val activity: AppActivity) {
     val window: Window get() { return activity.window }
     val requestQueue: VolleyQueue get() { return VolleyQueue(activity) }
 
-    var parent: Controller? = null
-    val navigationController: NavigationController? get() {
-        var parent: Controller? = this
-        while (parent != null) {
-            if (parent is NavigationController)  return parent
-            parent = parent.parent
-        }
-        return null
-    }
+    private var _parent: Controller? = null
+    val parent: Controller? get() { return _parent }
+
+    val appController: AppController? get() { return findParent<AppController>() }
+    val navigationController: NavigationController? get() { return findParent<NavigationController>() }
 
     private var _view: View? = null
     val isViewLoaded: Boolean get() { return _view != null }
@@ -26,6 +22,19 @@ abstract class Controller(val activity: AppActivity) {
             _view = view
         }
         return view
+    }
+
+    fun assignParent(controller: Controller?) {
+        _parent = controller
+    }
+
+    inline fun <reified T : Controller> findParent(): T? {
+        var controller: Controller? = this
+        while (controller != null) {
+            if (controller is T)  return controller
+            controller = controller.parent
+        }
+        return null
     }
 
     abstract fun createView(): View

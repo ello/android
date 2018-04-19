@@ -27,17 +27,17 @@ open class NavigationController(a: AppActivity) : Controller(a) {
             it.onDisappear()
         }
 
-        nextController.parent = this
+        nextController.assignParent(this)
+        this.controllers.push(nextController)
         viewGroup.addView(nextController.view)
         nextController.onAppear()
-        this.controllers.push(nextController)
     }
 
     fun pop() {
-        val topController = controllers.pop()
         val viewGroup = containerView()
+        val topController = controllers.pop()
         topController?.let {
-            it.parent = null
+            it.assignParent(null)
             viewGroup.removeView(it.view)
             it.onDisappear()
         }
