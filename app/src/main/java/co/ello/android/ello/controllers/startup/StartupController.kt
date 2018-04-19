@@ -4,10 +4,9 @@ import android.view.View
 import android.os.Handler
 
 
-class StartupController(a: AppActivity) : Controller(a) {
+class StartupController(a: AppActivity, val delegate: StartupProtocols.Delegate) : Controller(a) {
     private val handler = Handler()
     private var screen: StartupProtocols.Screen? = null
-    var delegate: StartupProtocols.Delegate? = null
 
     override fun createView(): View {
         val screen = StartupScreen(activity)
@@ -17,7 +16,7 @@ class StartupController(a: AppActivity) : Controller(a) {
 
     override fun onAppear() {
         val runnable = Runnable {
-            delegate?.startupLoggedOut()
+            delegate.startupLoggedOut()
         }
 
         handler.postDelayed(runnable, 1000)

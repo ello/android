@@ -9,6 +9,14 @@ abstract class Controller(val activity: AppActivity) {
     val requestQueue: VolleyQueue get() { return VolleyQueue(activity) }
 
     var parent: Controller? = null
+    val navigationController: NavigationController? get() {
+        var parent: Controller? = this
+        while (parent != null) {
+            if (parent is NavigationController)  return parent
+            parent = parent.parent
+        }
+        return null
+    }
 
     private var _view: View? = null
     val isViewLoaded: Boolean get() { return _view != null }

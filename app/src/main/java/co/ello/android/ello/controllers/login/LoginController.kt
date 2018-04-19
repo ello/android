@@ -3,10 +3,9 @@ package co.ello.android.ello
 import android.view.View
 
 
-class LoginController(a: AppActivity) : Controller(a), LoginProtocols.Controller {
+class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : Controller(a), LoginProtocols.Controller {
     private var screen: LoginProtocols.Screen? = null
     private val generator: LoginProtocols.Generator = LoginGenerator()
-    var delegate: LoginProtocols.Delegate? = null
 
     override fun createView(): View {
         val screen = LoginScreen(activity)
@@ -39,8 +38,12 @@ class LoginController(a: AppActivity) : Controller(a), LoginProtocols.Controller
         }
     }
 
+    override fun cancel() {
+        delegate.loginDidCancel()
+    }
+
     override fun success(credentials: Credentials) {
-        delegate?.didLogin(credentials)
+        delegate.loginDidLogin(credentials)
     }
 
     override fun failure() {

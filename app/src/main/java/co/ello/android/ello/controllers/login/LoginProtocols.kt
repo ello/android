@@ -17,6 +17,7 @@ class LoginProtocols {
         fun submit(username: String, password: String)
         fun success(credentials: Credentials)
         fun failure()
+        fun cancel()
     }
 
     interface Generator {
@@ -25,6 +26,7 @@ class LoginProtocols {
     }
 
     interface Delegate {
-        fun didLogin(credentials: Credentials)
+        fun loginDidLogin(credentials: Credentials)
+        fun loginDidCancel()
     }
 }

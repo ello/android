@@ -19,6 +19,7 @@ class LoginScreen : LoginProtocols.Screen {
     override var delegate: LoginProtocols.Controller? = null
 
     private val continueButton: Button
+    private val backButton: Button
     private val spinnerContainer: View
     private val spinnerImageView: ImageView
     private val errorLabel: TextView
@@ -33,6 +34,10 @@ class LoginScreen : LoginProtocols.Screen {
         continueButton = contentView.findViewById<Button>(R.id.continueButton)
         continueButton.setOnClickListener {
             continueButtonTapped()
+        }
+        backButton = contentView.findViewById<Button>(R.id.backButton)
+        backButton.setOnClickListener {
+            backButtonTapped()
         }
 
         errorLabel = contentView.findViewById<TextView>(R.id.errorLabel)
@@ -99,7 +104,12 @@ class LoginScreen : LoginProtocols.Screen {
         delegate?.submit(usernameText, passwordText)
     }
 
+    private fun backButtonTapped() {
+        delegate?.cancel()
+    }
+
     override fun onDestroy() {
         continueButton.setOnClickListener(null)
+        backButton.setOnClickListener(null)
     }
 }

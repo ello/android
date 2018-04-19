@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 
 
-class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, LoginProtocols.Delegate {
+class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate {
     var controller: Controller? = null
 
     override fun createView(): View {
@@ -17,37 +17,40 @@ class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, 
     }
 
     private fun showStartup() {
-        val controller = StartupController(activity)
-        controller.delegate = this
-        show(controller)
+        show(StartupController(activity, this))
     }
 
-    override fun startupLoggedIn(credentials: Credentials) = didLogin(credentials)
-    override fun startupLoggedOut() = showLoginScreen()
+    override fun startupLoggedIn(credentials: Credentials) = loggedOutDidLogin(credentials)
+    override fun startupLoggedOut() = showLoggedOutScreen()
 
-    fun showLoginScreen() {
-        val controller = LoginController(activity)
-        controller.delegate = this
-        show(controller)
+    fun showLoggedOutScreen() {
+        val navController = NavigationController(activity)
+        val loggedOutController = LoggedOutController(activity, this)
+        navController.push(loggedOutController)
+        show(navController)
     }
 
-    override fun didLogin(credentials: Credentials) {
-        // show()
+    override fun loggedOutDidLogin(credentials: Credentials) {
+        println("=============== AppController.kt at line 34 ===============");
+        // showHomeScreen()
     }
 
-    fun showLoggedInScreen() {
-        // show(LoggedInController)
+    private fun showHomeScreen() {
+        // show(HomeController)
     }
 
     private fun show(controller: Controller) {
-        val frameLayout: ViewGroup = this.view as ViewGroup
+        val viewGroup: ViewGroup = this.view as ViewGroup
         this.controller?.let {
-            frameLayout.removeView(it.view)
+            it.parent = null
+            viewGroup.removeView(it.view)
             it.onDisappear()
         }
 
-        frameLayout.addView(controller.view)
+        controller.parent = this
+        viewGroup.addView(controller.view)
         controller.onAppear()
+
         this.controller = controller
     }
 }
