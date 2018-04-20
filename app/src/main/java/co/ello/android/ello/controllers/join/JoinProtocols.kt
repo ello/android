@@ -1,7 +1,6 @@
 package co.ello.android.ello
 
 import android.view.View
-import android.view.Window
 
 
 class JoinProtocols {

@@ -2,7 +2,6 @@ package co.ello.android.ello
 
 import android.app.Activity
 import android.view.View
-import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView

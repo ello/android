@@ -2,14 +2,15 @@ package co.ello.android.ello
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.*
-import android.graphics.drawable.ShapeDrawable
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.Typeface
 import android.util.AttributeSet
-import android.widget.Button
-import android.widget.TextView
-import android.graphics.drawable.shapes.RoundRectShape
 import android.view.Gravity
 import android.view.MotionEvent
+import android.widget.Button
+import android.widget.TextView
 
 
 class StyledButton @JvmOverloads constructor(

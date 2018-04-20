@@ -5,10 +5,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.text.method.PasswordTransformationMethod
 import android.util.AttributeSet
 import android.widget.EditText
-import android.text.InputType
-import android.text.method.PasswordTransformationMethod
 
 
 class StyledTextInput @JvmOverloads constructor(

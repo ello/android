@@ -1,9 +1,9 @@
 package co.ello.android.ello
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.View
-import android.graphics.drawable.GradientDrawable
 
 
 const val NUM_COLORS = 11

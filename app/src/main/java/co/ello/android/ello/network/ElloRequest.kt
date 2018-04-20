@@ -1,12 +1,11 @@
 package co.ello.android.ello
 
+import com.android.volley.NetworkResponse
 import com.android.volley.Request
 import com.android.volley.Response
-import com.google.gson.Gson
-import com.android.volley.toolbox.HttpHeaderParser
-import android.R.attr.data
-import com.android.volley.NetworkResponse
 import com.android.volley.VolleyError
+import com.android.volley.toolbox.HttpHeaderParser
+import com.google.gson.Gson
 
 
 class ElloRequest(

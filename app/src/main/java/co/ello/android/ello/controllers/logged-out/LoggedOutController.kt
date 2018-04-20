@@ -1,8 +1,6 @@
 package co.ello.android.ello
 
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
 
 
 class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Delegate) : Controller(a), LoggedOutProtocols.Controller, LoginProtocols.Delegate, JoinProtocols.Delegate {

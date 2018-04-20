@@ -2,8 +2,6 @@ package co.ello.android.ello
 
 import android.app.Activity
 import android.support.constraint.ConstraintLayout
-import android.view.View
-import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation

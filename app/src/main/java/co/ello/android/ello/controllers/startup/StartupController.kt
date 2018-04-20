@@ -1,7 +1,7 @@
 package co.ello.android.ello
 
-import android.view.View
 import android.os.Handler
+import android.view.View
 
 
 class StartupController(a: AppActivity, val delegate: StartupProtocols.Delegate) : Controller(a) {
