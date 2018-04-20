@@ -1,0 +1,159 @@
+package co.ello.android.ello
+
+import com.android.volley.NetworkResponse
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.HttpHeaderParser
+import com.google.gson.Gson
+import java.util.concurrent.CompletableFuture
+
+
+class GraphQLRequest<T>(
+        val endpointName: String
+) : Request<String>(Request.Method.POST, "${BuildConfig.NINJA_DOMAIN}/api/v3/graphql", null) {
+
+    sealed class Variable {
+        abstract val name: String
+        abstract val type: String
+        abstract val value: Any?
+
+        data class string(override val name: String         , override val value: String)   : Variable() { override val type: String get() { return "String!"}}
+        data class optionalString(override val name: String , override val value: String?)  : Variable() { override val type: String get() { return "String" }}
+        data class int(override val name: String            , override val value: Int)      : Variable() { override val type: String get() { return "Int!"   }}
+        data class optionalInt(override val name: String    , override val value: Int?)     : Variable() { override val type: String get() { return "Int"    }}
+        data class float(override val name: String          , override val value: Float)    : Variable() { override val type: String get() { return "Float!" }}
+        data class optionalFloat(override val name: String  , override val value: Float?)   : Variable() { override val type: String get() { return "Float"  }}
+        data class bool(override val name: String           , override val value: Boolean)  : Variable() { override val type: String get() { return "Bool!"  }}
+        data class optionalBool(override val name: String   , override val value: Boolean?) : Variable() { override val type: String get() { return "Bool"   }}
+        data class enum(override val name: String           , override val value: String, val typeName: String) : Variable() { override val type: String get() { return "$typeName!" }}
+        data class optionalEnum(override val name: String   , override val value: String?, val typeName: String) : Variable() { override val type: String get() { return typeName }}
+    }
+
+    private val headers = HashMap<String, String>()
+    private var successCompletion: ((String) -> Unit)? = null
+    private var failureCompletion: ((Throwable) -> Unit)? = null
+
+    private var parserCompletion: ((String) -> T)? = null
+    private var variables: List<Variable>? = null
+    private var fragments: List<Fragments>? = null
+    private var body: String? = null
+
+    fun parser(parser: ((String) -> T)): GraphQLRequest<T> {
+        parserCompletion = parser
+        return this
+    }
+
+    fun setVariables(vararg variables: Variable): GraphQLRequest<T> {
+        this.variables = List<Variable>(variables.size, { variables[it] })
+        return this
+    }
+
+    fun setFragments(vararg fragments: Fragments): GraphQLRequest<T> {
+        this.fragments = List<Fragments>(fragments.size, { fragments[it] })
+        return this
+    }
+
+    fun setBody(body: String): GraphQLRequest<T> {
+        this.body = body
+        return this
+    }
+
+    fun enqueue(queue: Queue): CompletableFuture<T> {
+        val future = CompletableFuture<T>()
+
+        this.onSuccess { json ->
+            val result = parserCompletion?.invoke(json)
+            if (result != null) {
+                future.complete(result)
+            }
+            // else {
+            //     future.completeExceptionally(exception)
+            // }
+        }
+        .onFailure { exception ->
+            future.completeExceptionally(exception)
+        }
+
+        queue.add(this)
+        return future
+    }
+
+    override fun deliverError(error: VolleyError) {
+        failureCompletion?.invoke(error)
+    }
+
+    private fun onSuccess(completion: ((String) -> Unit)?): GraphQLRequest<T> {
+        successCompletion = completion
+        return this
+    }
+
+    private fun onFailure(completion: ((Throwable) -> Unit)?): GraphQLRequest<T> {
+        failureCompletion = completion
+        return this
+    }
+
+    override fun getHeaders(): Map<String, String> {
+        return mapOf(
+            "Accept" to "application/json",
+            "Content-Type" to "application/json"
+            )
+    }
+
+    private fun queryVariables(): String {
+        return variables?.let { it.map { variable ->
+            return "$${variable.name}: ${variable.type}"
+        }.joinToString(", ") } ?: ""
+    }
+
+    private fun endpointVariables(): String {
+        return variables?.let { it.map { variable ->
+            return "${variable.name}: $${variable.name}"
+        }.joinToString(", ") } ?: ""
+    }
+
+    override fun getBody(): ByteArray {
+        var query = ""
+        val variables = this.variables
+        val fragments = this.fragments
+
+        if (fragments != null && fragments.isNotEmpty()) {
+            val fragmentsQuery = Fragments.flatten(fragments)
+            query += fragmentsQuery + "\n"
+        }
+
+        if (variables != null && variables.isNotEmpty()) {
+            query += "query(${queryVariables()})\n"
+        }
+
+        query += "{\n$endpointName"
+        if (variables != null && variables.isNotEmpty()) {
+            query += "(${endpointVariables()})"
+        }
+        query += "\n  {\n${body ?: ""}\n  }\n}"
+
+        val httpBody: MutableMap<String, Any> = mutableMapOf("query" to query)
+
+        if (variables != null && variables.isNotEmpty()) {
+            val variablesMap: MutableMap<String, Any?> = mutableMapOf()
+            for (variable in variables) {
+                variablesMap[variable.name] = variable.value
+            }
+            httpBody["variables"] = variablesMap
+        }
+
+        val gson = Gson()
+        val json = gson.toJson(httpBody)
+        return json.toByteArray()
+    }
+
+    override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
+        val parsed = String(response.data)
+        return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response))
+    }
+
+    override fun deliverResponse(response: String) {
+        successCompletion?.invoke(response)
+    }
+
+}

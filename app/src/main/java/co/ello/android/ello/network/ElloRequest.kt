@@ -22,7 +22,7 @@ class ElloRequest<T>(
             Method.POST -> Request.Method.POST
             Method.PUT -> Request.Method.PUT
             Method.DELETE -> Request.Method.DELETE
-        }, "${BuildConfig.NINJA_DOMAIN}/api$path")
+        }, path)
 
     private val headers = HashMap<String, String>()
     private var successCompletion: ((String) -> Unit)? = null
@@ -34,14 +34,25 @@ class ElloRequest<T>(
         GET, POST, PUT, DELETE
     }
 
-    var body: Map<String, Any>? = null
+    private var body: ByteArray? = null
 
-    fun addHeader(name: String, value: String) {
-        headers[name] = value
+    fun parser(completion: ((Gson, String) -> T)?): ElloRequest<T> {
+        parserCompletion = completion
+        return this
     }
 
-    override fun deliverError(error: VolleyError) {
-        failureCompletion?.invoke(error)
+    fun addHeader(name: String, value: String): ElloRequest<T> {
+        headers[name] = value
+        return this
+    }
+
+    fun setBody(body: String): ElloRequest<T> {
+        this.body = body.toByteArray()
+        return this
+    }
+
+    fun setBody(body: Map<String, Any>): ElloRequest<T> {
+        return setBody(gson.toJson(body))
     }
 
     fun enqueue(queue: Queue): CompletableFuture<T> {
@@ -49,7 +60,6 @@ class ElloRequest<T>(
 
         this.onSuccess { json ->
             val result = parserCompletion?.invoke(gson, json)
-            println("result $result")
             if (result != null) {
                 future.complete(result)
             }
@@ -58,7 +68,6 @@ class ElloRequest<T>(
             // }
         }
         .onFailure { exception ->
-            println("error $exception")
             future.completeExceptionally(exception)
         }
 
@@ -66,17 +75,16 @@ class ElloRequest<T>(
         return future
     }
 
-    fun parser(completion: ((Gson, String) -> T)?): ElloRequest<T> {
-        parserCompletion = completion
-        return this
+    override fun deliverError(error: VolleyError) {
+        failureCompletion?.invoke(error)
     }
 
-    fun onSuccess(completion: ((String) -> Unit)?): ElloRequest<T> {
+    private fun onSuccess(completion: ((String) -> Unit)?): ElloRequest<T> {
         successCompletion = completion
         return this
     }
 
-    fun onFailure(completion: ((Throwable) -> Unit)?): ElloRequest<T> {
+    private fun onFailure(completion: ((Throwable) -> Unit)?): ElloRequest<T> {
         failureCompletion = completion
         return this
     }
@@ -86,10 +94,7 @@ class ElloRequest<T>(
     }
 
     override fun getBody(): ByteArray {
-        if (body == null)  return ByteArray(0)
-
-        val json = gson.toJson(body)
-        return json.toByteArray()
+        return body ?: ByteArray(0)
     }
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
