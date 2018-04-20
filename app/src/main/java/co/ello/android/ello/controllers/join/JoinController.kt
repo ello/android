@@ -17,17 +17,17 @@ class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : Con
 
     override fun submit(email: String, username: String, password: String) {
         var emailMessage: String? = null
-        if (email == "") {
+        if (email.isEmpty()) {
             emailMessage = activity.getString(R.string.Error_emailRequired)
         }
 
         var usernameMessage: String? = null
-        if (username == "") {
+        if (username.isEmpty()) {
             usernameMessage = activity.getString(R.string.Error_usernameRequired)
         }
 
         var passwordMessage: String? = null
-        if (password == "") {
+        if (password.isEmpty()) {
             passwordMessage = activity.getString(R.string.Error_passwordRequired)
         }
         else if (password.length < 8) {
