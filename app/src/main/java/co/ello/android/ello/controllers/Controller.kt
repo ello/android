@@ -6,7 +6,7 @@ import android.view.Window
 
 abstract class Controller(val activity: AppActivity) {
     val window: Window get() { return activity.window }
-    val requestQueue: VolleyQueue get() { return VolleyQueue(activity) }
+    val requestQueue: Queue get() { return VolleyQueue(activity) }
 
     private var _parent: Controller? = null
     val parent: Controller? get() { return _parent }
