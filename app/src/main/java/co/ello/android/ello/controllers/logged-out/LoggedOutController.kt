@@ -13,6 +13,17 @@ class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Deleg
         return screen.contentView
     }
 
+    override fun onStart() {
+        API().globalPostStream(API.CategoryFilter.FEATURED)
+            .enqueue(requestQueue)
+            .onSuccess { test ->
+                println("globalPostStream success: $test")
+            }
+            .onFailure { error ->
+                println("globalPostStream fail: $error")
+            }
+    }
+
     override fun showJoinScreen() {
         navigationController?.push(JoinController(activity, this))
     }

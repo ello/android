@@ -13,15 +13,17 @@ class API {
         val request = GraphQLRequest<String>("globalPostStream")
             .parser { json ->
                 //PageParser<Post>("posts", PostParser()).parse(json)
-                print("json:\n$json\n")
-                ""
+                json
             }
             .setVariables(
-                GraphQLRequest.Variable.enum("kind", "StreamKind", filter.value),
+                GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
                 GraphQLRequest.Variable.optionalString("before", before)
             )
             .setFragments(Fragments.postStream)
             .setBody(Fragments.postStreamBody)
+            .addHeader("Accept", "application/json")
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Authorization", "Bearer blablabla")
         return request
     }
 

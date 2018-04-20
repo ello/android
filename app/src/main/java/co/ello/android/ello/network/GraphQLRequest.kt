@@ -93,11 +93,13 @@ class GraphQLRequest<T>(
         return this
     }
 
+    fun addHeader(name: String, value: String): GraphQLRequest<T> {
+        headers[name] = value
+        return this
+    }
+
     override fun getHeaders(): Map<String, String> {
-        return mapOf(
-            "Accept" to "application/json",
-            "Content-Type" to "application/json"
-            )
+        return headers
     }
 
     private fun queryVariables(): String {
