@@ -5,7 +5,8 @@ class LoginGenerator : LoginProtocols.Generator {
     override var delegate: LoginProtocols.Controller? = null
 
     override fun login(queue: Queue, username: String, password: String) {
-        API(queue).login(username, password)
+        API().login(username, password)
+            .enqueue(queue)
             .onSuccess { credentials ->
                 delegate?.success(credentials)
             }

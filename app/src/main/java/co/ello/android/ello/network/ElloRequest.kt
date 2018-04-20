@@ -6,9 +6,10 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
+import java.util.concurrent.CompletableFuture
 
 
-class ElloRequest(
+class ElloRequest<T>(
         method: Int,
         url: String
 ) : Request<String>(method, url, null) {
@@ -25,7 +26,9 @@ class ElloRequest(
 
     private val headers = HashMap<String, String>()
     private var successCompletion: ((String) -> Unit)? = null
+    private var parserCompletion: ((Gson, String) -> T)? = null
     private var failureCompletion: ((Throwable) -> Unit)? = null
+    private val gson = Gson()
 
     enum class Method {
         GET, POST, PUT, DELETE
@@ -41,12 +44,39 @@ class ElloRequest(
         failureCompletion?.invoke(error)
     }
 
-    fun onSuccess(completion: ((String) -> Unit)?): ElloRequest {
+    fun enqueue(queue: Queue): CompletableFuture<T> {
+        val future = CompletableFuture<T>()
+
+        this.onSuccess { json ->
+            val result = parserCompletion?.invoke(gson, json)
+            println("result $result")
+            if (result != null) {
+                future.complete(result)
+            }
+            // else {
+            //     future.completeExceptionally(exception)
+            // }
+        }
+        .onFailure { exception ->
+            println("error $exception")
+            future.completeExceptionally(exception)
+        }
+
+        queue.add(this)
+        return future
+    }
+
+    fun parser(completion: ((Gson, String) -> T)?): ElloRequest<T> {
+        parserCompletion = completion
+        return this
+    }
+
+    fun onSuccess(completion: ((String) -> Unit)?): ElloRequest<T> {
         successCompletion = completion
         return this
     }
 
-    fun onFailure(completion: ((Throwable) -> Unit)?): ElloRequest {
+    fun onFailure(completion: ((Throwable) -> Unit)?): ElloRequest<T> {
         failureCompletion = completion
         return this
     }
@@ -58,7 +88,6 @@ class ElloRequest(
     override fun getBody(): ByteArray {
         if (body == null)  return ByteArray(0)
 
-        val gson = Gson()
         val json = gson.toJson(body)
         return json.toByteArray()
     }
