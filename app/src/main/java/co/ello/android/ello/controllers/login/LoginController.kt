@@ -51,9 +51,4 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : C
         hideSpinner()
         screen?.spinnerVisibility(false, window)
     }
-
-    override fun onDestroy() {
-        screen?.onDestroy()
-        super.onDestroy()
-    }
 }

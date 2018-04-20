@@ -9,7 +9,8 @@ import java.util.*
 open class NavigationController(a: AppActivity) : Controller(a) {
     private var controllers = ArrayDeque<Controller>()
 
-    val childControllers: Iterable<Controller> get() { return controllers }
+    override val childControllers: Iterable<Controller> get() { return controllers }
+    override val visibleChildControllers: Iterable<Controller> get() { return visibleController?.let { listOf(it) } ?: emptyList() }
     val visibleController: Controller? get() { return controllers.peek() }
 
     override fun createView(): View {
@@ -24,28 +25,30 @@ open class NavigationController(a: AppActivity) : Controller(a) {
         val viewGroup = containerView()
         this.visibleController?.let {
             viewGroup.removeView(it.view)
-            it.onDisappear()
+            it.disappear()
         }
 
-        nextController.assignParent(this)
         this.controllers.push(nextController)
         viewGroup.addView(nextController.view)
-        nextController.onAppear()
+        nextController.assignParent(this)
+        nextController.start()
+        nextController.appear()
     }
 
     fun pop() {
         val viewGroup = containerView()
         val topController = controllers.pop()
         topController?.let {
-            it.assignParent(null)
             viewGroup.removeView(it.view)
-            it.onDisappear()
+            it.assignParent(null)
+            it.disappear()
+            it.finish()
         }
 
         val nextController = visibleController
         nextController?.let {
             viewGroup.addView(it.view)
-            it.onAppear()
+            it.appear()
         }
     }
 }

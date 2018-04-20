@@ -9,7 +9,6 @@ class JoinProtocols {
         var delegate: Controller?
         var interactive: Boolean
         fun showErrors(emailMessage: String?, usernameMessage: String?, passwordMessage: String?)
-        fun onDestroy()
     }
 
     interface Controller {

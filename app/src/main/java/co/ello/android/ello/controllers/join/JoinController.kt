@@ -56,9 +56,4 @@ class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : Con
         hideSpinner()
         screen?.interactive = true
     }
-
-    override fun onDestroy() {
-        screen?.onDestroy()
-        super.onDestroy()
-    }
 }

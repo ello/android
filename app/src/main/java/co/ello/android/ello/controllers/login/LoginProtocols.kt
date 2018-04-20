@@ -10,7 +10,6 @@ class LoginProtocols {
         var delegate: Controller?
         fun showErrors(usernameMessage: String?, passwordMessage: String?)
         fun spinnerVisibility(visibile: Boolean, window: Window)
-        fun onDestroy()
     }
 
     interface Controller {

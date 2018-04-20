@@ -16,7 +16,14 @@ class AppActivity : AppCompatActivity() {
     private fun showAppScreen() {
         val controller = AppController(this)
         setContentView(controller.view)
-        controller.onAppear()
+        controller.start()
+        controller.appear()
         this.controller = controller
+    }
+
+    override fun onDestroy() {
+        controller?.disappear()
+        controller?.finish()
+        super.onDestroy()
     }
 }

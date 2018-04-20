@@ -7,7 +7,11 @@ import android.widget.FrameLayout
 
 
 class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate {
-    var controller: Controller? = null
+    private var controller: Controller? = null
+
+    override val isRunning: Boolean get() { return true }
+    override val childControllers: Iterable<Controller> get() { return controller?.let { listOf(it) } ?: emptyList() }
+    override val visibleChildControllers: Iterable<Controller> get() { return childControllers }
 
     override fun createView(): View {
         val view = FrameLayout(activity)
@@ -47,14 +51,16 @@ class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, 
     private fun show(controller: Controller) {
         val viewGroup: ViewGroup = this.view as ViewGroup
         this.controller?.let {
-            it.assignParent(null)
             viewGroup.removeView(it.view)
-            it.onDisappear()
+            it.assignParent(null)
+            it.disappear()
+            it.finish()
         }
 
-        controller.assignParent(this)
         viewGroup.addView(controller.view)
-        controller.onAppear()
+        controller.assignParent(this)
+        controller.start()
+        controller.appear()
 
         this.controller = controller
     }

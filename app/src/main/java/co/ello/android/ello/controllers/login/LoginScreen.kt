@@ -109,9 +109,4 @@ class LoginScreen : LoginProtocols.Screen {
     private fun backButtonTapped() {
         delegate?.cancel()
     }
-
-    override fun onDestroy() {
-        continueButton.setOnClickListener(null)
-        backButton.setOnClickListener(null)
-    }
 }
