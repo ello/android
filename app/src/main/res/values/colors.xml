@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#fff</color>
-    <color name="colorPrimaryDark">#000</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="credentialsGradient_1">#673f00</color>
     <color name="credentialsGradient_2">#67191f</color>
     <color name="credentialsGradient_3">#67325c</color>
