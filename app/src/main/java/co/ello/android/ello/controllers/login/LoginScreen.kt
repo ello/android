@@ -7,6 +7,7 @@ import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -47,6 +48,15 @@ class LoginScreen : LoginProtocols.Screen {
         passwordField = contentView.findViewById<EditText>(R.id.passwordField)
         usernameFieldError = contentView.findViewById<ImageView>(R.id.usernameFieldError)
         passwordFieldError = contentView.findViewById<ImageView>(R.id.passwordFieldError)
+
+        passwordField.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                continueButtonTapped()
+                true
+            } else {
+                false
+            }
+        }
 
         val rotationAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
         rotationAnimation.duration = 250

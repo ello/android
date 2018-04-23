@@ -2,6 +2,7 @@ package co.ello.android.ello
 
 import android.app.Activity
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -47,6 +48,15 @@ class JoinScreen : JoinProtocols.Screen {
         emailFieldError = contentView.findViewById<ImageView>(R.id.emailFieldError)
         usernameFieldError = contentView.findViewById<ImageView>(R.id.usernameFieldError)
         passwordFieldError = contentView.findViewById<ImageView>(R.id.passwordFieldError)
+
+        passwordField.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                continueButtonTapped()
+                true
+            } else {
+                false
+            }
+        }
     }
 
     override fun showErrors(emailMessage: String?, usernameMessage: String?, passwordMessage: String?) {

@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.text.InputType
 import android.text.method.PasswordTransformationMethod
 import android.util.AttributeSet
 import android.widget.EditText
@@ -16,6 +17,7 @@ class StyledTextInput @JvmOverloads constructor(
 
     enum class KeyboardType {
         Default,
+        Email,
         Password
     }
 
@@ -35,7 +37,7 @@ class StyledTextInput @JvmOverloads constructor(
     ) {
         Default(color = R.color.black),
         White(color = R.color.white),
-        CredentialsUsername(size = 18f, color = R.color.white, placeholder = R.color.white, background = Background.BottomLine),
+        CredentialsUsername(size = 18f, color = R.color.white, placeholder = R.color.white, background = Background.BottomLine, keyboardType = KeyboardType.Email),
         CredentialsPassword(size = 18f, color = R.color.white, placeholder = R.color.white, background = Background.BottomLine, keyboardType = KeyboardType.Password)
     }
 
@@ -71,9 +73,15 @@ class StyledTextInput @JvmOverloads constructor(
 
         when (style.keyboardType) {
             KeyboardType.Default -> {
+                this.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+                this.transformationMethod = null
+            }
+            KeyboardType.Email -> {
+                this.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
                 this.transformationMethod = null
             }
             KeyboardType.Password -> {
+                this.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 this.transformationMethod = PasswordTransformationMethod.getInstance()
             }
         }

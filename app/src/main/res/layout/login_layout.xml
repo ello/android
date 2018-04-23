@@ -22,6 +22,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/image_back_white"
+        android:nextFocusForward="@+id/usernameField"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,6 +44,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="55dp"
+        android:nextFocusForward="@+id/passwordField"
         android:hint="@string/Login.usernamePlaceholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +59,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="30dp"
         android:hint="@string/Login.passwordPlaceholder"
+        android:imeOptions="actionDone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/loginLabel"
         app:layout_constraintTop_toBottomOf="@+id/usernameField"
