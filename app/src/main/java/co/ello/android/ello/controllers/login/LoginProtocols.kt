@@ -8,8 +8,8 @@ class LoginProtocols {
     interface Screen {
         val contentView: View
         var delegate: Controller?
+        var interactive: Boolean
         fun showErrors(usernameMessage: String?, passwordMessage: String?)
-        fun spinnerVisibility(visibile: Boolean, window: Window)
     }
 
     interface Controller {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <co.ello.android.ello.StartupGradientLayer
         android:layout_width="wrap_content"
@@ -136,10 +136,5 @@
         app:layout_constraintTop_toTopOf="@+id/forgotPasswordButton"
         app:styleName="small white"
         tools:text="Error Label" />
-
-    <include
-        android:id="@+id/spinnerContainer"
-        layout="@layout/spinner_layout"
-        android:visibility="invisible" />
 
 </android.support.constraint.ConstraintLayout>

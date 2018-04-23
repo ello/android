@@ -33,7 +33,7 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : C
         screen.showErrors(usernameMessage, passwordMessage)
         if (usernameMessage == null && passwordMessage == null) {
             showSpinner()
-            screen.spinnerVisibility(true, window)
+            screen.interactive = false
 
             generator.login(requestQueue, username, password)
         }
@@ -49,6 +49,6 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : C
 
     override fun failure() {
         hideSpinner()
-        screen?.spinnerVisibility(false, window)
+        screen?.interactive = true
     }
 }
