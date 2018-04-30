@@ -7,13 +7,10 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 
 
-class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate {
-    private var rootController: Controller? = null
+class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate {
     private var screen: AppProtocols.Screen? = null
 
-    override val isRunning: Boolean get() { return true }
-    override val childControllers: Iterable<Controller> get() { return rootController?.let { listOf(it) } ?: emptyList() }
-    override val visibleChildControllers: Iterable<Controller> get() { return childControllers }
+    override val containerView: ViewGroup? get() = screen?.containerView
 
     override fun createView(): View {
         val screen = AppScreen(activity)
@@ -32,7 +29,7 @@ class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, 
     override fun startupLoggedIn(credentials: Credentials) = loggedOutDidLogin(credentials)
     override fun startupLoggedOut() = showLoggedOutScreen()
 
-    fun showLoggedOutScreen() {
+    private fun showLoggedOutScreen() {
         val navController = NavigationController(activity)
         val loggedOutController = LoggedOutController(activity, this)
         navController.push(loggedOutController)
@@ -49,25 +46,6 @@ class AppController(a: AppActivity) : Controller(a), StartupProtocols.Delegate, 
     }
 
     private fun homeDidLogout() = showLoggedOutScreen()
-
-    private fun show(controller: Controller) {
-        val containerView = this.screen?.containerView
-        if (containerView == null)  return
-
-        this.rootController?.let {
-            containerView.removeView(it.view)
-            it.assignParent(null)
-            it.disappear()
-            it.finish()
-        }
-
-        containerView.addView(controller.view)
-        controller.assignParent(this)
-        controller.start()
-        controller.appear()
-
-        this.rootController = controller
-    }
 
     fun showAppSpinner() {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

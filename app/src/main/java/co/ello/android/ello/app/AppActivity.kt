@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity
 
 
 class AppActivity : AppCompatActivity() {
-    private var controller: AppController? = null
+    private var controller: RootController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
