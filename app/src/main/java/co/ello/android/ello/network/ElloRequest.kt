@@ -11,18 +11,23 @@ import java.util.concurrent.CompletableFuture
 
 class ElloRequest<T>(
         method: Int,
-        url: String
-) : Request<String>(method, url, null) {
+        path: String
+) : Request<String>(method, "${BuildConfig.NINJA_DOMAIN}$path", null) {
 
     constructor(
         method: Method,
-        path: String
+        path: String,
+        parameters: Map<String, Any>? = null
     ) : this(when(method) {
             Method.GET -> Request.Method.GET
             Method.POST -> Request.Method.POST
             Method.PUT -> Request.Method.PUT
             Method.DELETE -> Request.Method.DELETE
-        }, path)
+        }, path) {
+        if (parameters != null) {
+            setBody(parameters)
+        }
+    }
 
     private val headers = HashMap<String, String>()
     private var successCompletion: ((String) -> Unit)? = null

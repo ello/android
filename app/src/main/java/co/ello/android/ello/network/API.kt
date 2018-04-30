@@ -28,7 +28,7 @@ class API {
     }
 
     fun login(username: String, password: String): ElloRequest<Credentials> {
-        val path = "${BuildConfig.NINJA_DOMAIN}/api/oauth/token"
+        val path = "/api/oauth/token"
 
         val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path)
             .parser { gson, json ->
@@ -48,7 +48,7 @@ class API {
     }
 
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
-        val path = "${BuildConfig.NINJA_DOMAIN}/api/v2/join"
+        val path = "/api/v2/join"
 
         val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path)
                 .parser { gson, json ->
