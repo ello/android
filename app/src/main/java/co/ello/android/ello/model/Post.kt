@@ -51,7 +51,7 @@ data class Post(
         else content
 
     init {
-        addLinkObject("author", authorId, MappingType.usersType)
+        addLinkObject("author", authorId, MappingType.UsersType)
     }
 
     fun contentFor(gridView: Boolean): List<Regionable>? =

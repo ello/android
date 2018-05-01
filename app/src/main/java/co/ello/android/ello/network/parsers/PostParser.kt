@@ -1,15 +1,15 @@
 package co.ello.android.ello
 
 
-class PostParser : IdParser(table = MappingType.postsType) {
+class PostParser : IdParser(table = MappingType.PostsType) {
     init {
-        linkArray(MappingType.assetsType)
-        linkArray(MappingType.categoriesType)
+        linkArray(MappingType.AssetsType)
+        linkArray(MappingType.CategoriesType)
 
-        linkObject(MappingType.usersType, "author")
-        linkObject(MappingType.usersType, "repostAuthor")
-        linkObject(MappingType.postsType, "repostedSource")
-        linkObject(MappingType.artistInviteSubmissionsType)
+        linkObject(MappingType.UsersType, "author")
+        linkObject(MappingType.UsersType, "repostAuthor")
+        linkObject(MappingType.PostsType, "repostedSource")
+        linkObject(MappingType.ArtistInviteSubmissionsType)
     }
 
     override fun flatten(json: JSON, identifier: Identifier, db: Database) {
@@ -19,7 +19,7 @@ class PostParser : IdParser(table = MappingType.postsType) {
             json["links"] = JSON(mapOf<String, Any>(
                 "reposted_source" to mapOf<String, String>(
                     "id" to repostIdentifier.id,
-                    "type" to MappingType.postsType.name
+                    "type" to MappingType.PostsType.name
                 )
             ))
         }
@@ -29,7 +29,7 @@ class PostParser : IdParser(table = MappingType.postsType) {
 
     override fun parse(json: JSON): Post {
         val repostContent = RegionParser.graphQLRegions(json["repostContent"])
-        val createdAt = json["createdAt"].stringValue.toDate() ?: Globals.now
+        val createdAt = json["createdAt"].date ?: Globals.now
 
         val post = Post(
             id = json["id"].stringValue,
@@ -54,7 +54,7 @@ class PostParser : IdParser(table = MappingType.postsType) {
         post.repostsCount = json["postStats"]["repostsCount"].int
         post.lovesCount = json["postStats"]["lovesCount"].int
 
-        // post.links = json["links"].object
+        post.mergeLinks(json["links"])
 
         return post
     }

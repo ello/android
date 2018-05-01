@@ -1,5 +1,6 @@
 package co.ello.android.ello
 
+
 sealed class MappingType {
     val name: String
     val pluralKey: String
@@ -14,57 +15,57 @@ sealed class MappingType {
         this.parserGenerator = parser
     }
 
-    object activitiesType : MappingType(name = "activities", singularKey = "activity")
-    object amazonCredentialsType : MappingType(name = "credentials", singularKey = "credentials")
-    object announcementsType : MappingType(name = "announcements", singularKey = "announcement")
-    object artistInvitesType : MappingType(name = "artist_invites", singularKey = "artist_invite")
-    object artistInviteSubmissionsType : MappingType(name = "artist_invite_submissions", singularKey = "artist_invite_submission")
-    object assetsType : MappingType(name = "assets", singularKey = "asset")
-    object autoCompleteResultType : MappingType(name = "autocomplete_results", singularKey = "autocomplete_result")
-    object availabilityType : MappingType(name = "availability", singularKey = "availability", pluralKey = "availabilities")
-    object categoriesType : MappingType(name = "categories", singularKey = "category")
-    object categoryPostsType : MappingType(name = "category_posts", singularKey = "category_post")
-    object commentsType : MappingType(name = "comments", singularKey = "comment")
-    object dynamicSettingsType : MappingType(name = "settings", singularKey = "setting")
-    object editorials : MappingType(name = "editorials", singularKey = "editorial")
-    object errorsType : MappingType(name = "errors", singularKey = "error")
-    object errorType : MappingType(name = "error", singularKey = "error", pluralKey = "errors")
-    object lovesType : MappingType(name = "loves", singularKey = "love")
-    object noContentType : MappingType(name = "204", singularKey = "204")
-    object pageHeadersType : MappingType(name = "page_headers", singularKey = "page_header")
-    object postsType : MappingType(name = "posts", singularKey = "post", parser = { PostParser() })
-    object profilesType : MappingType(name = "profiles", singularKey = "profile")
-    object relationshipsType : MappingType(name = "relationships", singularKey = "relationship")
-    object usernamesType : MappingType(name = "usernames", singularKey = "username")
-    object usersType : MappingType(name = "users", singularKey = "user")
-    object watchesType : MappingType(name = "watches", singularKey = "watch")
+    object ActivitiesType : MappingType(name = "activities", singularKey = "activity")
+    object AmazonCredentialsType : MappingType(name = "credentials", singularKey = "credentials")
+    object AnnouncementsType : MappingType(name = "announcements", singularKey = "announcement")
+    object ArtistInvitesType : MappingType(name = "artist_invites", singularKey = "artist_invite")
+    object ArtistInviteSubmissionsType : MappingType(name = "artist_invite_submissions", singularKey = "artist_invite_submission")
+    object AssetsType : MappingType(name = "assets", singularKey = "asset")
+    object AutoCompleteResultType : MappingType(name = "autocomplete_results", singularKey = "autocomplete_result")
+    object AvailabilityType : MappingType(name = "availability", singularKey = "availability", pluralKey = "availabilities")
+    object CategoriesType : MappingType(name = "categories", singularKey = "category")
+    object CategoryPostsType : MappingType(name = "category_posts", singularKey = "category_post")
+    object CommentsType : MappingType(name = "comments", singularKey = "comment")
+    object DynamicSettingsType : MappingType(name = "settings", singularKey = "setting")
+    object Editorials : MappingType(name = "editorials", singularKey = "editorial")
+    object ErrorsType : MappingType(name = "errors", singularKey = "error")
+    object ErrorType : MappingType(name = "error", singularKey = "error", pluralKey = "errors")
+    object LovesType : MappingType(name = "loves", singularKey = "love")
+    object NoContentType : MappingType(name = "204", singularKey = "204")
+    object PageHeadersType : MappingType(name = "page_headers", singularKey = "page_header")
+    object PostsType : MappingType(name = "posts", singularKey = "post", parser = { PostParser() })
+    object ProfilesType : MappingType(name = "profiles", singularKey = "profile")
+    object RelationshipsType : MappingType(name = "relationships", singularKey = "relationship")
+    object UsernamesType : MappingType(name = "usernames", singularKey = "username")
+    object UsersType : MappingType(name = "users", singularKey = "user")
+    object WatchesType : MappingType(name = "watches", singularKey = "watch")
 
     companion object {
         fun create(value: String): MappingType? = when (value) {
-            "activities"                -> MappingType.activitiesType
-            "credentials"               -> MappingType.amazonCredentialsType
-            "announcements"             -> MappingType.announcementsType
-            "artist_invites"            -> MappingType.artistInvitesType
-            "artist_invite_submissions" -> MappingType.artistInviteSubmissionsType
-            "assets"                    -> MappingType.assetsType
-            "autocomplete_results"      -> MappingType.autoCompleteResultType
-            "availability"              -> MappingType.availabilityType
-            "categories"                -> MappingType.categoriesType
-            "category_posts"            -> MappingType.categoryPostsType
-            "comments"                  -> MappingType.commentsType
-            "settings"                  -> MappingType.dynamicSettingsType
-            "editorials"                -> MappingType.editorials
-            "errors"                    -> MappingType.errorsType
-            "error"                     -> MappingType.errorType
-            "loves"                     -> MappingType.lovesType
-            "204"                       -> MappingType.noContentType
-            "page_headers"              -> MappingType.pageHeadersType
-            "posts"                     -> MappingType.postsType
-            "profiles"                  -> MappingType.profilesType
-            "relationships"             -> MappingType.relationshipsType
-            "usernames"                 -> MappingType.usernamesType
-            "users"                     -> MappingType.usersType
-            "watches"                   -> MappingType.watchesType
+            "activities"                -> MappingType.ActivitiesType
+            "credentials"               -> MappingType.AmazonCredentialsType
+            "announcements"             -> MappingType.AnnouncementsType
+            "artist_invites"            -> MappingType.ArtistInvitesType
+            "artist_invite_submissions" -> MappingType.ArtistInviteSubmissionsType
+            "assets"                    -> MappingType.AssetsType
+            "autocomplete_results"      -> MappingType.AutoCompleteResultType
+            "availability"              -> MappingType.AvailabilityType
+            "categories"                -> MappingType.CategoriesType
+            "category_posts"            -> MappingType.CategoryPostsType
+            "comments"                  -> MappingType.CommentsType
+            "settings"                  -> MappingType.DynamicSettingsType
+            "editorials"                -> MappingType.Editorials
+            "errors"                    -> MappingType.ErrorsType
+            "error"                     -> MappingType.ErrorType
+            "loves"                     -> MappingType.LovesType
+            "204"                       -> MappingType.NoContentType
+            "page_headers"              -> MappingType.PageHeadersType
+            "posts"                     -> MappingType.PostsType
+            "profiles"                  -> MappingType.ProfilesType
+            "relationships"             -> MappingType.RelationshipsType
+            "usernames"                 -> MappingType.UsernamesType
+            "users"                     -> MappingType.UsersType
+            "watches"                   -> MappingType.WatchesType
             else -> null
         }
     }

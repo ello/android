@@ -11,12 +11,12 @@ data class Category(
     val order: Int,
     val allowInOnboarding: Boolean,
     val isCreatorType: Boolean,
-    val level: CategoryLevel
+    val level: CategoryLevel,
+    val tileImage: Attachment?
     ) : Model() {
 
     val isMeta: Boolean get() = level == CategoryLevel.Meta
     val tileURL: URL? get() = tileImage?.url
-    val tileImage: Attachment? = null
     val visibleOnSeeMore: Boolean get() = level == CategoryLevel.Primary || level == CategoryLevel.Secondary
 
     sealed class Selection {

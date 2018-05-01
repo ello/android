@@ -29,7 +29,7 @@ data class ImageRegion(
             val imageRegion = ImageRegion(url = url, buyButtonURL = buyButtonURL)
 
             json["links"]["assets"].string?.let { id ->
-                imageRegion.addLinkObject("assets", id = id, type = MappingType.assetsType)
+                imageRegion.addLinkObject("assets", id = id, type = MappingType.AssetsType)
             }
 
             return imageRegion

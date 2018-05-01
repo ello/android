@@ -30,6 +30,7 @@ import org.json.JSONObject
 import java.io.*
 import java.util.ArrayList
 import java.util.HashMap
+import java.util.Date
 
 
 class JSON {
@@ -235,6 +236,8 @@ class JSON {
             return result
         }
 
+    fun exists(): Boolean = getJSONArray() != null || getJSONObject() != null
+
     val obj: Map<String, Any>?
         get() {
             val jsonObject = getJSONObject() ?: return null
@@ -376,6 +379,11 @@ val JSON.doubleValue: Double
 
 val JSON.stringValue: String
     get() = string ?: ""
+
+val JSON.date: Date?
+    get() = string?.toDate()
+val JSON.dateValue: Date
+    get() = date ?: Globals.now
 
 val JSON.idValue: String
     get() = string ?: int?.let { "$it" } ?: ""

@@ -15,7 +15,7 @@ data class Watch(
     val user: User? get() =  getLinkObject("user")
 
     init {
-        addLinkObject("post", postId, MappingType.postsType)
-        addLinkObject("user", userId, MappingType.usersType)
+        addLinkObject("post", postId, MappingType.PostsType)
+        addLinkObject("user", userId, MappingType.UsersType)
     }
 }

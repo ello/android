@@ -1,5 +1,6 @@
 package co.ello.android.ello
 
+
 class RegionParser {
     companion object {
         fun graphQLRegions(jsonList: JSON, isRepostContent: Boolean = false): List<Regionable> {

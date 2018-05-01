@@ -1,5 +1,6 @@
 package co.ello.android.ello
 
+
 typealias Id = String
 typealias Database = MutableMap<MappingType, MutableMap<String, JSON>>
 

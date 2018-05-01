@@ -20,13 +20,13 @@ data class Comment(
     var loadedFromPostId: String = postId
         set(value: String) {
             field = value
-            addLinkObject("loaded_from_post", value, MappingType.postsType)
+            addLinkObject("loaded_from_post", value, MappingType.PostsType)
         }
 
     init {
-        addLinkObject("parent_post", postId, MappingType.postsType)
-        addLinkObject("loaded_from_post", postId, MappingType.postsType)
-        addLinkObject("author", authorId, MappingType.usersType)
+        addLinkObject("parent_post", postId, MappingType.PostsType)
+        addLinkObject("loaded_from_post", postId, MappingType.PostsType)
+        addLinkObject("author", authorId, MappingType.UsersType)
     }
 
     companion object {

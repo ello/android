@@ -19,7 +19,7 @@ class ManyParser<T>(val parser: Parser) {
         if (ids.size > 0) {
             many = ids.flatMap { identifier ->
                 Parser.saveToDB(parser = parser, identifier = identifier, db = db)?.let {
-                    listOf(it)
+                    listOf(it) as List<T>
                 } ?: emptyList()
             }
         }

@@ -133,30 +133,4 @@ data class Asset(val id: String) : Model() {
             AttachmentType.Regular ->   regular = withAttachment
         }
     }
-
-    companion object {
-        fun parseAsset(id: String, json: JSON?): Asset {
-            val asset = Asset(id = id)
-            val actualJson = json ?: return asset
-
-            val attachments: List<Pair<String, AttachmentType>> = listOf(
-                Pair("optimized", AttachmentType.Optimized),
-                Pair("mdpi", AttachmentType.Mdpi),
-                Pair("hdpi", AttachmentType.Hdpi),
-                Pair("xhdpi", AttachmentType.Xhdpi),
-                Pair("original", AttachmentType.Original),
-                Pair("large", AttachmentType.Large),
-                Pair("regular", AttachmentType.Regular)
-            )
-            for ((name, type) in attachments) {
-                val attachmentJSON: JSON = actualJson[name]
-                if (attachmentJSON["url"].string == null) continue
-
-                val attachment = Attachment.fromJSON(json)
-                asset.replace(type = type, withAttachment = attachment)
-            }
-            return asset
-        }
-    }
-
 }

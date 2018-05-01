@@ -42,8 +42,8 @@ open class Model {
     }
 
     fun mergeLinks(links: JSON) {
-        val list = links.list ?: return
-        for ((key, json) in links) {
+        val linksMap = links.map ?: return
+        for ((key, json) in linksMap) {
             val link = Link.decode(key, json) ?: continue
             this.links[key] = link
         }
