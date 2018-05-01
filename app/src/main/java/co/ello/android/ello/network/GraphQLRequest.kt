@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture
 
 class GraphQLRequest<T>(
         val endpointName: String
-) : Request<String>(Request.Method.POST, "${BuildConfig.NINJA_DOMAIN}/api/v3/graphql", null) {
+) : Request<JSON>(Request.Method.POST, "${BuildConfig.NINJA_DOMAIN}/api/v3/graphql", null) {
 
     sealed class Variable {
         abstract val name: String
@@ -31,15 +31,15 @@ class GraphQLRequest<T>(
     }
 
     private val headers = HashMap<String, String>()
-    private var successCompletion: ((String) -> Unit)? = null
+    private var successCompletion: ((JSON) -> Unit)? = null
     private var failureCompletion: ((Throwable) -> Unit)? = null
 
-    private var parserCompletion: ((String) -> T)? = null
+    private var parserCompletion: ((JSON) -> T)? = null
     private var variables: List<Variable>? = null
     private var fragments: List<Fragments>? = null
     private var body: String? = null
 
-    fun parser(parser: ((String) -> T)): GraphQLRequest<T> {
+    fun parser(parser: ((JSON) -> T)): GraphQLRequest<T> {
         parserCompletion = parser
         return this
     }
@@ -83,7 +83,7 @@ class GraphQLRequest<T>(
         failureCompletion?.invoke(error)
     }
 
-    private fun onSuccess(completion: ((String) -> Unit)?): GraphQLRequest<T> {
+    private fun onSuccess(completion: ((JSON) -> Unit)?): GraphQLRequest<T> {
         successCompletion = completion
         return this
     }
@@ -149,12 +149,12 @@ class GraphQLRequest<T>(
         return json.toByteArray()
     }
 
-    override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
-        val parsed = String(response.data)
-        return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response))
+    override fun parseNetworkResponse(response: NetworkResponse): Response<JSON> {
+        val json = JSON(response.data)
+        return Response.success(json, HttpHeaderParser.parseCacheHeaders(response))
     }
 
-    override fun deliverResponse(response: String) {
+    override fun deliverResponse(response: JSON) {
         successCompletion?.invoke(response)
     }
 

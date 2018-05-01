@@ -46,6 +46,7 @@ android {
         buildConfigField "String", "AWS_DEFAULT_REGION", secretProperties['AWS_DEFAULT_REGION']
         buildConfigField "String", "AWS_ACCESS_KEY_ID", secretProperties['AWS_ACCESS_KEY_ID']
         buildConfigField "String", "AWS_SECRET_ACCESS_KEY", secretProperties['AWS_SECRET_ACCESS_KEY']
+        buildConfigField "String", "TOKEN", secretProperties['TOKEN']
     }
 
     buildTypes {

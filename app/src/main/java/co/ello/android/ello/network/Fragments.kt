@@ -140,7 +140,7 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
     }
 
     val dependencies: List<Fragments> get() {
-        return listOf(listOf(this), needs, needs.flatMap { it.dependencies as Iterable<Fragments>}).flatten()
+        return listOf(listOf(this), needs, needs.flatMap { it.dependencies as Iterable<Fragments> }).flatten()
     }
 
 }

@@ -3,17 +3,26 @@ package co.ello.android.ello
 
 class API {
     enum class CategoryFilter(val value: String) {
-        FEATURED("FEATURED"),
-        TRENDING("TRENDING"),
-        RECENT("RECENT"),
-        SHOP("SHOP")
+        Featured("FEATURED"),
+        Trending("TRENDING"),
+        Recent("RECENT"),
+        Shop("SHOP");
+
+        companion object {
+            fun create(value: String): CategoryFilter? = when(value) {
+                "FEATURED" -> CategoryFilter.Featured
+                "TRENDING" -> CategoryFilter.Trending
+                "RECENT" -> CategoryFilter.Recent
+                "SHOP" -> CategoryFilter.Shop
+                else -> null
+            }
+        }
     }
 
-    fun globalPostStream(filter: CategoryFilter, before: String? = null): GraphQLRequest<String> { // (PageConfig, [Post])
-        val request = GraphQLRequest<String>("globalPostStream")
+    fun globalPostStream(filter: CategoryFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
+        val request = GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream")
             .parser { json ->
-                //PageParser<Post>("posts", PostParser()).parse(json)
-                json
+                PageParser<Post>("posts", PostParser()).parse(json)
             }
             .setVariables(
                 GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
@@ -23,7 +32,7 @@ class API {
             .setBody(Fragments.postStreamBody)
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/json")
-            .addHeader("Authorization", "Bearer blablabla")
+            .addHeader("Authorization", "Bearer ${BuildConfig.TOKEN}")
         return request
     }
 

@@ -9,4 +9,4 @@ data class Credentials(
         @SerializedName("expires_in") val expiresIn: String,
         @SerializedName("refresh_token") val refreshToken: String,
         @SerializedName("created_at") val createdAt: String
-    )
+    ) : Model()

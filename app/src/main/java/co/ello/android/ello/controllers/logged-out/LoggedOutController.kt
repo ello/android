@@ -14,7 +14,7 @@ class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Deleg
     }
 
     override fun onStart() {
-        API().globalPostStream(API.CategoryFilter.FEATURED)
+        API().globalPostStream(API.CategoryFilter.Featured)
             .enqueue(requestQueue)
             .onSuccess { test ->
                 println("globalPostStream success: $test")
