@@ -19,11 +19,11 @@ open class Parser {
 
             table.remove(identifier.id)
             db[identifier.table] = table
-            val jsonable = parser.parse(json) ?: return null
-
-            TODO("ElloLinkedStore")
-            // ElloLinkedStore.shared.setObject(jsonable, forKey: identifier.id, type: identifier.table)
-            return jsonable
+            val model = parser.parse(json) ?: return null
+            Store.write { transaction ->
+                transaction.setObject(model, key = identifier.id, collection = identifier.table)
+            }
+            return model
         }
     }
 

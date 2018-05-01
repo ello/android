@@ -10,7 +10,6 @@ class PageHeaderParser : IdParser(table = MappingType.PageHeadersType) {
 
     override fun parse(json: JSON): PageHeader {
         val kind = json["kind"].string?.let { PageHeader.Kind.create(it) } ?: PageHeader.Kind.Generic
-        val id = json["id"].stringValue
         val image = AssetParser().parse(json["image"])
 
         val header = PageHeader(

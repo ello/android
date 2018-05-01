@@ -9,36 +9,35 @@ open class Model {
         companion object {}
     }
 
-    private var links: MutableMap<String, Model.Link> = mutableMapOf()
+    var links: MutableMap<String, Model.Link> = mutableMapOf()
 
-    fun <T: Model> getLinkObject(key: String): T? {
+    inline fun <reified T: Model> getLinkObject(key: String): T? {
         val link = links[key] ?: return null
         val (id, mappingType) = when (link) {
                 is Link.One -> { Pair(link.id, link.type) }
                 else -> null
             } ?: return null
 
-        TODO("ElloLinkedStore")
-        // var obj: T?
-        // ElloLinkedStore.shared.readConnection.read { transaction in
-        //     obj = transaction.object(forKey: id, inCollection: mappingType.rawValue) as? T
-        // }
-        return null
+        var obj: T? = Store.read { transaction ->
+            transaction.getObject(key = id, collection = mappingType) as? T
+        }
+        return obj
     }
 
-    fun <T: Model> getLinkArray(key: String): List<T> {
+    inline fun <reified T: Model> getLinkArray(key: String): List<T> {
         val link = links[key] ?: return emptyList()
         val (ids, mappingType) = when (link) {
                 is Link.Many -> { Pair(link.ids, link.type) }
                 else -> null
             } ?: return emptyList()
 
-        TODO("ElloLinkedStore")
-        // var arr = [T]()
-        // ElloLinkedStore.shared.readConnection.read { transaction in
-        //     arr = ids.compactMap { transaction.object(forKey: $0, inCollection: mappingType.rawValue) as? T }
-        // }
-        return emptyList()
+        var objects: List<T> = ids.flatMap { id ->
+            val model: T? = Store.read { transaction ->
+                transaction.getObject(id, collection = mappingType) as? T
+            }
+            model?.let { listOf(it) } ?: emptyList()
+        }
+        return objects
     }
 
     fun mergeLinks(links: JSON) {
@@ -55,8 +54,9 @@ open class Model {
 
     fun storeLinkObject(model: Model, key: String, id: String, type: MappingType) {
         addLinkObject(key, id, type)
-        TODO("ElloLinkedStore")
-        // ElloLinkedStore.shared.setObject(model, forKey: id, type: type)
+        Store.write { transaction ->
+            transaction.setObject(model, id, collection = type)
+        }
     }
 
     fun addLinkArray(key: String, array: List<String>, type: MappingType) {

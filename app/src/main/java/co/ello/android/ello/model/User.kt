@@ -41,11 +41,9 @@ data class User(
     val hasSubscribedCategory: Boolean get() = followedCategoryIds.size > 0
     var followedCategoryIds: Set<String> = emptySet()
     val followedCategories: List<Category> get() = followedCategoryIds.flatMap { id ->
-            var category: Category? = null
-            TODO("ElloLinkedStore")
-            // ElloLinkedStore.shared.readConnection.read { transaction in
-            //     category = transaction.object(forKey: id, inCollection: "categories") as? Category
-            // }
+            val category: Category? = Store.read { transaction ->
+                transaction.getObject(id, collection = MappingType.CategoriesType) as? Category
+            }
             category?.let { listOf(it) } ?: emptyList()
         }
 
