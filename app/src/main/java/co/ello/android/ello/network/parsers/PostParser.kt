@@ -29,11 +29,10 @@ class PostParser : IdParser(table = MappingType.PostsType) {
 
     override fun parse(json: JSON): Post {
         val repostContent = RegionParser.graphQLRegions(json["repostContent"])
-        val createdAt = json["createdAt"].date ?: Globals.now
 
         val post = Post(
             id = json["id"].stringValue,
-            createdAt = createdAt,
+            createdAt = json["createdAt"].date ?: Globals.now,
             authorId = json["author"]["id"].stringValue,
             token = json["token"].stringValue,
             isAdultContent = false, // json["is_adult_content"].booleanValue,

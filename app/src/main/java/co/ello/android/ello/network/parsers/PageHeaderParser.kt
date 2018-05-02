@@ -1,7 +1,5 @@
 package co.ello.android.ello
 
-import java.net.URL
-
 
 class PageHeaderParser : IdParser(table = MappingType.PageHeadersType) {
     init {
@@ -19,7 +17,7 @@ class PageHeaderParser : IdParser(table = MappingType.PageHeadersType) {
             header = json["header"].stringValue,
             subheader = json["subheader"].stringValue,
             ctaCaption = json["ctaLink"]["text"].stringValue,
-            ctaURL = json["ctaLink"]["url"].string?.let { URL(it) },
+            ctaURL = json["ctaLink"]["url"].url,
             isSponsored = json["isSponsored"].booleanValue,
             image = image,
             kind = kind

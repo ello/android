@@ -12,7 +12,7 @@ data class ExternalLink(
     companion object {
         fun fromJSON(json: JSON): ExternalLink? {
             return safeLet(json["url"].string, json["text"].string) { url, text ->
-                ExternalLink(URL(url), text, json["icon"].string?.let { URL(it) })
+                ExternalLink(URL(url), text, json["icon"].url)
             }
         }
     }

@@ -3,14 +3,12 @@ package co.ello.android.ello
 
 class ProfileParser : IdParser(table = MappingType.ProfilesType) {
     override fun parse(json: JSON): Profile {
-        val createdAt = json["createdAt"].date ?: Globals.now
-
         val profile = Profile(
             id = json["id"].stringValue,
-            createdAt = createdAt,
+            createdAt = json["createdAt"].date ?: Globals.now,
             shortBio = json["shortBio"].stringValue,
             email = json["email"].stringValue,
-            confirmedAt = json["confirmedAt"].dateValue,
+            confirmedAt = json["confirmedAt"].date ?: Globals.now,
             isPublic = json["isPublic"].booleanValue,
             isCommunity = json["isCommunity"].booleanValue,
             mutedCount = json["mutedCount"].intValue,

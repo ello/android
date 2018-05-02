@@ -1,6 +1,5 @@
 package co.ello.android.ello
 
-import java.util.Date
 import java.net.URL
 
 

@@ -31,7 +31,7 @@ val String.camelCase: String get() = this.split('_')
 
 fun String.toDate(): Date? {
     val tz = TimeZone.getTimeZone("UTC")
-    val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     df.timeZone = tz
 
     try {

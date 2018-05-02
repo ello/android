@@ -63,7 +63,8 @@ class GraphQLRequest<T>(
         val future = CompletableFuture<T>()
 
         this.onSuccess { json ->
-            val result = parserCompletion?.invoke(json)
+            val resultJson = json["data"][endpointName]
+            val result = parserCompletion?.invoke(resultJson)
             if (result != null) {
                 future.complete(result)
             }

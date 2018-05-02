@@ -16,10 +16,8 @@ open class Parser {
         fun saveToDB(parser: Parser, identifier: Identifier, db: Database): Model? {
             val table = db[identifier.table] ?: return null
             val json = table[identifier.id] ?: return null
-
-            table.remove(identifier.id)
-            db[identifier.table] = table
             val model = parser.parse(json) ?: return null
+
             Store.write { transaction ->
                 transaction.setObject(model, key = identifier.id, collection = identifier.table)
             }

@@ -31,6 +31,7 @@ import java.io.*
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.Date
+import java.net.URL
 
 
 class JSON {
@@ -147,15 +148,23 @@ class JSON {
 
     private fun <T : Any> getValue(fromParentObject: (JSONObject, String) -> T?, fromParentArray: (JSONArray, Int) -> T?): T? {
         try {
+            val name = this.name
+            val index = this.index
             if (name is String) {
                 val jsonObject = parent?.getJSONObject()
                 if (jsonObject is JSONObject) {
-                    return fromParentObject(jsonObject, name!!)
+                    if (jsonObject.has(name) && !jsonObject.isNull(name)) {
+                        return fromParentObject(jsonObject, name)
+                    }
+                    return null
                 }
             } else if (index is Int) {
                 val jsonArray = parent?.getJSONArray()
                 if (jsonArray is JSONArray) {
-                    return fromParentArray(jsonArray, index!!)
+                    if (index < jsonArray.length() && !jsonArray.isNull(index)) {
+                        return fromParentArray(jsonArray, index)
+                    }
+                    return null
                 }
             }
         } catch(e: JSONException) {
@@ -382,8 +391,9 @@ val JSON.stringValue: String
 
 val JSON.date: Date?
     get() = string?.toDate()
-val JSON.dateValue: Date
-    get() = date ?: Globals.now
+
+val JSON.url: URL?
+    get() = string?.let { URL(it) }
 
 val JSON.idValue: String
     get() = string ?: int?.let { "$it" } ?: ""

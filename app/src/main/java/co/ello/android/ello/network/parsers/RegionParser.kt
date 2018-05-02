@@ -9,14 +9,17 @@ class RegionParser {
             return regions.flatMap(fun (json: JSON): List<Regionable> {
                 val kind = json["kind"].string?.let { RegionKind.create(it) } ?: return emptyList()
 
-                val regionable: Regionable = when(kind) {
-                    RegionKind.Text -> TextRegion.fromJSON(json) as Regionable
-                    RegionKind.Image -> ImageRegion.fromJSON(json) as Regionable
-                    RegionKind.Embed -> EmbedRegion.fromJSON(json) as Regionable
+                val regionable: Regionable? = when(kind) {
+                    RegionKind.Text -> TextRegion.fromJSON(json)
+                    RegionKind.Image -> ImageRegion.fromJSON(json)
+                    RegionKind.Embed -> EmbedRegion.fromJSON(json)
                 }
 
-                regionable.isRepost = isRepostContent
-                return listOf(regionable)
+                if (regionable != null) {
+                    regionable.isRepost = isRepostContent
+                    return listOf(regionable)
+                }
+                return emptyList()
             })
         }
     }

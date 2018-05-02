@@ -1,7 +1,7 @@
 package co.ello.android.ello
 
 
-class ManyParser<T>(val parser: Parser) {
+class ManyParser<T: Model>(val parser: Parser) {
     class NotAnArray : Throwable()
 
     fun parse(json: JSON): List<T> {
@@ -15,19 +15,6 @@ class ManyParser<T>(val parser: Parser) {
             parser.flatten(json = objectJson, identifier = identifier, db = db)
         }
 
-        val many: List<T>?
-        if (ids.size > 0) {
-            many = ids.flatMap { identifier ->
-                Parser.saveToDB(parser = parser, identifier = identifier, db = db)?.let {
-                    @Suppress("UNCHECKED_CAST")
-                    listOf(it as T)
-                } ?: emptyList()
-            }
-        }
-        else {
-            many = null
-        }
-
         for ((table, dbObjects) in db) {
             val tableParser = table.parser ?: continue
 
@@ -37,11 +24,14 @@ class ManyParser<T>(val parser: Parser) {
             }
         }
 
-        if (many != null) {
-            return many
-        }
-        else {
-            return emptyList()
+        return ids.flatMap { identifier ->
+            val id = identifier.id
+            val mappingType = identifier.table
+            val model: T? = Store.read { transaction ->
+                @Suppress("UNCHECKED_CAST")
+                transaction.getObject(id, collection = mappingType) as? T
+            }
+            model?.let { listOf(it) } ?: emptyList()
         }
     }
 }

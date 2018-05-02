@@ -29,6 +29,7 @@ class Store {
         fun setObject(model: Model, key: String, collection: MappingType) {
             val table: StoreTable = store.db[collection.name] ?: mutableMapOf()
             table[key] = model
+            store.db[collection.name] = table
         }
     }
 }

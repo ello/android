@@ -5,7 +5,7 @@ import java.net.URL
 
 data class ImageRegion(
     val url: URL,
-    val buyButtonURL: URL
+    val buyButtonURL: URL?
     ) : Model(), Regionable {
 
     override var isRepost: Boolean = false
@@ -13,7 +13,7 @@ data class ImageRegion(
 
     val asset: Asset? get() = getLinkObject("assets")
     val fullScreenURL: URL? get() {
-        val asset: Asset = this.asset ?: return url
+        val asset = this.asset ?: return url
 
         val assetURL: URL?
         if (asset.isGif) { assetURL = asset.optimized?.url }
@@ -24,8 +24,8 @@ data class ImageRegion(
 
     companion object {
         fun fromJSON(json: JSON): ImageRegion? {
-            val buyButtonURL: URL = json["linkUrl"].string?.let { URL(it) } ?: return null
-            val url: URL = json["data"]["url"].string?.let { URL(it) } ?: return null
+            val url = json["data"]["url"].url ?: return null
+            val buyButtonURL = json["linkUrl"].url
             val imageRegion = ImageRegion(url = url, buyButtonURL = buyButtonURL)
 
             json["links"]["assets"].string?.let { id ->

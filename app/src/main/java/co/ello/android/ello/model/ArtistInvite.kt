@@ -38,8 +38,8 @@ data class ArtistInvite(
 
         companion object {
             fun create(json: JSON, submissionsStatus: ArtistInviteSubmission.Status): Stream? {
-                val url: URL = json["href"].string?.let { URL(it) } ?: return null
-                val label: String = json["label"].string ?: return null
+                val url = json["href"].url ?: return null
+                val label = json["label"].string ?: return null
 
                 return Stream(
                     url = url,

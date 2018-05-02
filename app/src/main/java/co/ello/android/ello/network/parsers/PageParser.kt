@@ -1,7 +1,7 @@
 package co.ello.android.ello
 
 
-class PageParser<T> {
+class PageParser<T: Model> {
     val parser: ManyParser<T>
     val resultsKey: String
 
