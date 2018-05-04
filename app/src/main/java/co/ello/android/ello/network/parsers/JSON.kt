@@ -28,10 +28,8 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.Date
 import java.net.URL
+import java.util.*
 
 
 class JSON {
@@ -61,7 +59,7 @@ class JSON {
             } catch (e2: JSONException) {
                 try {
                     val parent = JSON("[$string]".toByteArray(Charsets.UTF_8))
-                    if (parent.getJSONArray()?.length() == 1) {
+                    if (parent.jsonArray?.length() == 1) {
                         this.parent = parent
                         index = 0
                     }
@@ -71,45 +69,18 @@ class JSON {
         }
     }
 
-    constructor(inputStream: InputStream) : this(inputStreamToByteArray(inputStream) ?: ByteArray(0)) {
+    private constructor(parent: JSON, name: String) {
+        this.parent = parent
+        this.name = name
+        jsonObject = parent.jsonObject?.optJSONObject(name)
+        jsonArray = parent.jsonObject?.optJSONArray(name)
     }
 
-    constructor(file: File) : this(inputStreamToByteArray(FileInputStream(file), true) ?: ByteArray(0)) {
-    }
-
-    constructor(value: Boolean) {
-        val jsonArray = JSONArray()
-        jsonArray.put(value)
-        parent = JSON(jsonArray)
-        index = 0
-    }
-
-    constructor(value: Int) {
-        val jsonArray = JSONArray()
-        jsonArray.put(value)
-        parent = JSON(jsonArray)
-        index = 0
-    }
-
-    constructor(value: Long) {
-        val jsonArray = JSONArray()
-        jsonArray.put(value)
-        parent = JSON(jsonArray)
-        index = 0
-    }
-
-    constructor(value: Double) {
-        val jsonArray = JSONArray()
-        jsonArray.put(value)
-        parent = JSON(jsonArray)
-        index = 0
-    }
-
-    constructor(value: String) {
-        val jsonArray = JSONArray()
-        jsonArray.put(value)
-        parent = JSON(jsonArray)
-        index = 0
+    private constructor(parent: JSON, index: Int) {
+        this.parent = parent
+        this.index = index
+        jsonObject = parent.jsonArray?.optJSONObject(index)
+        jsonArray = parent.jsonArray?.optJSONArray(index)
     }
 
     constructor(value: List<JSON>) {
@@ -120,22 +91,25 @@ class JSON {
         jsonObject = JSONObject(value)
     }
 
-    private constructor(parent: JSON, name: String) {
-        this.parent = parent
-        this.name = name
-    }
-
-    private constructor(parent: JSON, index: Int) {
-        this.parent = parent
-        this.index = index
-    }
-
-    private constructor(jsonArray: JSONArray) {
-        this.jsonArray = jsonArray
+    fun merge(mergeJson: JSON) {
+        val jsonObject = this.jsonObject
+        val mergeJsonObject = mergeJson.jsonObject
+        if (jsonObject != null && mergeJsonObject != null) {
+            val names = mergeJsonObject.names()
+            for (index in 0..(names.length() - 1)) {
+                val name = names.getString(index)
+                if (mergeJsonObject.isNull(name)) {
+                    jsonObject.put(name, null)
+                }
+                else {
+                    jsonObject.put(name, mergeJsonObject.get(name))
+                }
+            }
+        }
     }
 
     operator fun set(name: String, value: JSON) {
-        parent?.getJSONObject()?.put(name, value)
+        jsonObject?.put(name, value)
     }
 
     operator fun get(name: String): JSON {
@@ -150,16 +124,16 @@ class JSON {
         try {
             val name = this.name
             val index = this.index
-            if (name is String) {
-                val jsonObject = parent?.getJSONObject()
+            if (name != null) {
+                val jsonObject = parent?.jsonObject
                 if (jsonObject is JSONObject) {
                     if (jsonObject.has(name) && !jsonObject.isNull(name)) {
                         return fromParentObject(jsonObject, name)
                     }
                     return null
                 }
-            } else if (index is Int) {
-                val jsonArray = parent?.getJSONArray()
+            } else if (index != null) {
+                val jsonArray = parent?.jsonArray
                 if (jsonArray is JSONArray) {
                     if (index < jsonArray.length() && !jsonArray.isNull(index)) {
                         return fromParentArray(jsonArray, index)
@@ -173,56 +147,18 @@ class JSON {
         return null
     }
 
-    private fun getJSONObject(): JSONObject? {
-        if (jsonObject !is JSONObject) {
-            jsonObject = getValue({ o, n -> o.getJSONObject(n) }, { a, i -> a.getJSONObject(i) })
-        }
-
-        return jsonObject
-    }
-
-    private fun getJSONArray(): JSONArray? {
-        if (jsonArray !is JSONArray) {
-            jsonArray = getValue({ o, n -> o.getJSONArray(n) }, { a, i -> a.getJSONArray(i) })
-        }
-
-        return jsonArray
-    }
-
-    val boolean: Boolean?
-        get() {
-            return getValue({ o, n -> o.getBoolean(n) }, { a, i -> a.getBoolean(i) })
-        }
-
-    val int: Int?
-        get() {
-            return getValue({ o, n -> o.getInt(n) }, { a, i -> a.getInt(i) })
-        }
-
-    val long: Long?
-        get() {
-            return getValue({ o, n -> o.getLong(n) }, { a, i -> a.getLong(i) })
-        }
-
-    val double: Double?
-        get() {
-            return getValue({ o, n -> o.getDouble(n) }, { a, i -> a.getDouble(i) })
-        }
-
-    val string: String?
-        get() {
-            return getValue({ o, n -> o.getString(n) }, { a, i -> a.getString(i) })
-        }
-
-    val id: String?
-        get() {
-            return string ?: int?.let { "$it" }
-        }
+    val exists: Boolean get() = getValue({ o, n -> o.has(n) && !o.isNull(n) }, { a, i -> i >= 0 && i < a.length() }) ?: false
+    val boolean: Boolean? get() = getValue({ o, n -> o.getBoolean(n) }, { a, i -> a.getBoolean(i) })
+    val int: Int? get() = getValue({ o, n -> o.getInt(n) }, { a, i -> a.getInt(i) })
+    val long: Long? get() = getValue({ o, n -> o.getLong(n) }, { a, i -> a.getLong(i) })
+    val double: Double? get() = getValue({ o, n -> o.getDouble(n) }, { a, i -> a.getDouble(i) })
+    val string: String? get() = getValue({ o, n -> o.getString(n) }, { a, i -> a.getString(i) })
+    val id: String? get() = string ?: int?.let { "$it" }
 
     val list: List<JSON>?
         get() {
-            val length = getJSONArray()?.length()
-            if (length is Int) {
+            val length = jsonArray?.length()
+            if (length != null) {
                 val result = ArrayList<JSON>()
                 for (index in 0..(length - 1)) {
                     result.add(JSON(this, index))
@@ -235,7 +171,7 @@ class JSON {
 
     val map: Map<String, JSON>?
         get() {
-            val jsonObject = getJSONObject() ?: return null
+            val jsonObject = jsonObject ?: return null
             val names = jsonObject.keys()
             val result = HashMap<String, JSON>()
             while (names.hasNext()) {
@@ -245,11 +181,9 @@ class JSON {
             return result
         }
 
-    fun exists(): Boolean = getJSONArray() != null || getJSONObject() != null
-
     val obj: Map<String, Any>?
         get() {
-            val jsonObject = getJSONObject() ?: return null
+            val jsonObject = jsonObject ?: return null
             val names = jsonObject.keys()
             val result = HashMap<String, Any>()
             while (names.hasNext()) {
@@ -261,17 +195,13 @@ class JSON {
 
         }
 
-    fun rawBytes(): ByteArray? {
-        return rawString()?.toByteArray(Charsets.UTF_8)
-    }
-
     fun rawString(): String? {
-        val jsonObject = getJSONObject()
+        val jsonObject = jsonObject
         if (jsonObject != null) {
             return jsonObject.toString()
         }
 
-        val jsonArray = getJSONArray()
+        val jsonArray = jsonArray
         if (jsonArray != null) {
             return jsonArray.toString()
         }
@@ -304,74 +234,6 @@ class JSON {
     override fun toString(): String {
         return rawString() ?: ""
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (!(other is JSON)) {
-            return false
-        }
-
-        val list1 = list
-        if (list1 != null) {
-            val list2 = other.list
-            if (list2 != null) {
-                return list1 == list2
-            } else {
-                return false
-            }
-        }
-
-        val map1 = map
-        if (map1 != null) {
-            val map2 = other.map
-            if (map2 != null) {
-                return map1 == map2
-            } else {
-                return false
-            }
-        }
-
-        val boolean1 = boolean
-        if (boolean1 != null) {
-            val boolean2 = other.boolean
-            if (boolean2 != null) {
-                return boolean1 == boolean2
-            } else {
-                return false
-            }
-        }
-
-        val double1 = double
-        if (double1 != null) {
-            if (double1.toLong().toDouble() != double1) {
-                val double2 = other.double
-                if (double2 != null) {
-                    return double1 == double2
-                }
-            }
-        }
-
-        val long1 = long
-        if (long1 != null) {
-            val long2 = other.long
-            if (long2 != null) {
-                return long1 == long2
-            } else {
-                return false
-            }
-        }
-
-        val string1 = string
-        if (string1 != null) {
-            val string2 = other.string
-            if (string2 != null) {
-                return string1 == string2
-            } else {
-                return false
-            }
-        }
-
-        return true // null == null
-    }
 }
 
 val JSON.booleanValue: Boolean
@@ -403,30 +265,3 @@ val JSON.listValue: List<JSON>
 
 val JSON.mapValue: Map<String, JSON>
     get() = map ?: mapOf()
-
-private fun inputStreamToByteArray(inputStream: InputStream, closeWhenDone: Boolean = false): ByteArray? {
-    try {
-        val buffer = ByteArray(0x1000)
-        val outputStream = ByteArrayOutputStream()
-
-        while (true) {
-            val length = inputStream.read(buffer)
-            if (length < 0) {
-                break
-            }
-
-            outputStream.write(buffer, 0, length)
-        }
-
-        return outputStream.toByteArray()
-    } catch (e: IOException) {
-        return null
-    } finally {
-        if (closeWhenDone) {
-            try {
-                inputStream.close()
-            } catch (e: IOException) {
-            }
-        }
-    }
-}

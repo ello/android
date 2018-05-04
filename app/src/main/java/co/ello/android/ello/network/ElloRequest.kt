@@ -7,23 +7,29 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import java.util.concurrent.CompletableFuture
+import java.util.UUID
 
 
 class ElloRequest<T>(
         method: Int,
-        path: String
-) : Request<String>(method, "${BuildConfig.NINJA_DOMAIN}$path", null) {
+        path: String,
+        override val requiresAnyToken: Boolean,
+        override val supportsAnonymousToken: Boolean
+) : Request<String>(method, "${BuildConfig.NINJA_DOMAIN}$path", null), AuthenticationEndpoint {
+    class CancelledRequest : Throwable()
 
     constructor(
         method: Method,
         path: String,
-        parameters: Map<String, Any>? = null
+        parameters: Map<String, Any>? = null,
+        requiresAnyToken: Boolean,
+        supportsAnonymousToken: Boolean
     ) : this(when(method) {
             Method.GET -> Request.Method.GET
             Method.POST -> Request.Method.POST
             Method.PUT -> Request.Method.PUT
             Method.DELETE -> Request.Method.DELETE
-        }, path) {
+        }, path, requiresAnyToken, supportsAnonymousToken) {
         if (parameters != null) {
             setBody(parameters)
         }
@@ -34,6 +40,7 @@ class ElloRequest<T>(
     private var parserCompletion: ((Gson, String) -> T)? = null
     private var failureCompletion: ((Throwable) -> Unit)? = null
     private val gson = Gson()
+    private var uuid: UUID? = null
 
     enum class Method {
         GET, POST, PUT, DELETE
@@ -60,23 +67,32 @@ class ElloRequest<T>(
         return setBody(gson.toJson(body))
     }
 
-    fun enqueue(queue: Queue): CompletableFuture<T> {
-        val future = CompletableFuture<T>()
+    fun enqueue(queue: Queue, prevFuture: CompletableFuture<T>? = null): CompletableFuture<T> {
+        val future = prevFuture ?: CompletableFuture<T>()
 
         this.onSuccess { json ->
-            val result = parserCompletion?.invoke(gson, json)
-            if (result != null) {
+            try {
+                val result = parserCompletion!!.invoke(gson, json)
                 future.complete(result)
             }
-            // else {
-            //     future.completeExceptionally(exception)
-            // }
+            catch(e: Throwable) {
+                future.completeExceptionally(e)
+            }
         }
         .onFailure { exception ->
             future.completeExceptionally(exception)
         }
 
-        queue.add(this)
+        AuthenticationManager(queue).attemptRequest(this,
+            retry = { this.enqueue(queue, prevFuture = future) },
+            proceed = { uuid ->
+                this.uuid = uuid
+                queue.add(this)
+            },
+            cancel = {
+                future.completeExceptionally(CancelledRequest())
+            })
+
         return future
     }
 

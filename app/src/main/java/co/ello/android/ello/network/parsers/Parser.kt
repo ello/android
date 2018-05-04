@@ -42,17 +42,11 @@ open class Parser {
     }
 
     open fun flatten(json: JSON, identifier: Identifier, db: Database) {
-        var foundJSON: JSON? = null
-        db[identifier.table]?.let { existingTable ->
-            val existing: JSON? = existingTable[identifier.id]
-            existing?.let {
-                for ((key, value) in json.mapValue) {
-                    it[key] = value
-                }
-            }
-            foundJSON = existing
-        }
-        val newJSON = foundJSON ?: json
+        var existingJSON: JSON? = db[identifier.table]?.let { it[identifier.id]?.let { existingJSON ->
+            existingJSON.merge(json)
+            existingJSON
+        } }
+        val newJSON = existingJSON ?: json
 
         val links: MutableMap<String, JSON> = json["links"].map?.let { HashMap(it) } ?: mutableMapOf()
         for (link in linkedArrays) {
@@ -73,7 +67,7 @@ open class Parser {
             links[linkKey] = JSON(map)
         }
 
-        for (link in linkedArrays) {
+        for (link in linkedObjects) {
             val mappingType = link.mappingType
             val jsonKey = link.jsonKey
             val linkKey = link.linkKey

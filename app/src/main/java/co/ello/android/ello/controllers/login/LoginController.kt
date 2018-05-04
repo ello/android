@@ -44,6 +44,7 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : C
     }
 
     override fun success(credentials: Credentials) {
+        AuthToken.update(credentials)
         delegate.loginDidLogin(credentials)
     }
 

@@ -42,7 +42,7 @@ class UserParser : IdParser(table = MappingType.UsersType) {
             user.badges = badgeNames.flatMap { it.string?.let { Badge.lookup(it) }?.let { listOf(it) } ?: emptyList() }
         }
 
-        if (relationshipPriority == RelationshipPriority.Me && json["profile"].exists()) {
+        if (relationshipPriority == RelationshipPriority.Me && json["profile"].exists) {
             user.profile = ProfileParser().parse(json["profile"])
         }
 

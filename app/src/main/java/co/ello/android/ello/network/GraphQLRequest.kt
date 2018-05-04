@@ -7,11 +7,16 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import java.util.concurrent.CompletableFuture
+import java.util.UUID
 
 
 class GraphQLRequest<T>(
-        val endpointName: String
-) : Request<JSON>(Request.Method.POST, "${BuildConfig.NINJA_DOMAIN}/api/v3/graphql", null) {
+        val endpointName: String,
+        override val requiresAnyToken: Boolean,
+        override val supportsAnonymousToken: Boolean
+) : Request<JSON>(Request.Method.POST, "${BuildConfig.NINJA_DOMAIN}/api/v3/graphql", null), AuthenticationEndpoint {
+    class CancelledRequest : Throwable()
+    class ParsingError : Throwable()
 
     sealed class Variable {
         abstract val name: String
@@ -38,6 +43,13 @@ class GraphQLRequest<T>(
     private var variables: List<Variable>? = null
     private var fragments: List<Fragments>? = null
     private var body: String? = null
+    private var uuid: UUID? = null
+
+    init {
+        AuthToken.shared.tokenWithBearer?.let {
+            this.addHeader("Authorization", it)
+        }
+    }
 
     fun parser(parser: ((JSON) -> T)): GraphQLRequest<T> {
         parserCompletion = parser
@@ -59,24 +71,33 @@ class GraphQLRequest<T>(
         return this
     }
 
-    fun enqueue(queue: Queue): CompletableFuture<T> {
-        val future = CompletableFuture<T>()
+    fun enqueue(queue: Queue, prevFuture: CompletableFuture<T>? = null): CompletableFuture<T> {
+        val future = prevFuture ?: CompletableFuture<T>()
 
         this.onSuccess { json ->
             val resultJson = json["data"][endpointName]
-            val result = parserCompletion?.invoke(resultJson)
-            if (result != null) {
+            try {
+                val result = parserCompletion!!.invoke(resultJson)
                 future.complete(result)
             }
-            // else {
-            //     future.completeExceptionally(exception)
-            // }
+            catch(e: Throwable) {
+                future.completeExceptionally(e)
+            }
         }
         .onFailure { exception ->
             future.completeExceptionally(exception)
         }
 
-        queue.add(this)
+        AuthenticationManager(queue).attemptRequest(this,
+            retry = { this.enqueue(queue, prevFuture = future) },
+            proceed = { uuid ->
+                this.uuid = uuid
+                queue.add(this)
+            },
+            cancel = {
+                future.completeExceptionally(CancelledRequest())
+            })
+
         return future
     }
 
