@@ -2,7 +2,9 @@ package co.ello.android.ello
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.TimeZone
+import java.util.UUID
 
 
 val String.uppercaseFirst: String get() = when (this.length) {
@@ -15,12 +17,12 @@ val String.snakeCase: String get() {
     var isFirst = true
     this.forEach {
         if (it.isUpperCase()) {
-            if (isFirst)  isFirst = false
-            else  text += "_"
+            if (!isFirst) text += "_"
             text += it.toLowerCase()
         } else {
             text += it
         }
+        isFirst = false
     }
     return text
 }
@@ -50,4 +52,5 @@ val String.toRequestMethod: ElloRequest.Method? get() = when(this.toUpperCase())
     else -> null
 }
 
+fun randomUUID(): UUID = UUID.randomUUID()
 fun UUIDString(): String = UUID.randomUUID().toString()
