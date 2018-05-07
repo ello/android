@@ -42,7 +42,7 @@ class GraphQLRequest<T>(
     private var parserCompletion: ((JSON) -> T)? = null
     private var variables: List<Variable>? = null
     private var fragments: List<Fragments>? = null
-    private var body: String? = null
+    private var body: Fragments? = null
     private var uuid: UUID? = null
 
     fun parser(parser: ((JSON) -> T)): GraphQLRequest<T> {
@@ -55,12 +55,7 @@ class GraphQLRequest<T>(
         return this
     }
 
-    fun setFragments(vararg fragments: Fragments): GraphQLRequest<T> {
-        this.fragments = List<Fragments>(fragments.size, { fragments[it] })
-        return this
-    }
-
-    fun setBody(body: String): GraphQLRequest<T> {
+    fun setBody(body: Fragments): GraphQLRequest<T> {
         this.body = body
         return this
     }
@@ -122,37 +117,41 @@ class GraphQLRequest<T>(
         return headers
     }
 
-    private fun queryVariables(): String {
+    private fun queryVariables(): String? {
         return variables?.let { it.map { variable ->
             return "$${variable.name}: ${variable.type}"
-        }.joinToString(", ") } ?: ""
+        }.joinToString(", ") }
     }
 
-    private fun endpointVariables(): String {
+    private fun endpointVariables(): String? {
         return variables?.let { it.map { variable ->
             return "${variable.name}: $${variable.name}"
-        }.joinToString(", ") } ?: ""
+        }.joinToString(", ") }
     }
 
     override fun getBody(): ByteArray {
         var query = ""
         val variables = this.variables
-        val fragments = this.fragments
+        val fragments = body?.dependencies
 
         if (fragments != null && fragments.isNotEmpty()) {
             val fragmentsQuery = Fragments.flatten(fragments)
             query += fragmentsQuery + "\n"
         }
 
-        if (variables != null && variables.isNotEmpty()) {
-            query += "query(${queryVariables()})\n"
+        val queryVariables = this.queryVariables()
+        if (queryVariables != null && queryVariables.isNotEmpty()) {
+            query += "query($queryVariables)\n"
         }
 
         query += "{\n$endpointName"
-        if (variables != null && variables.isNotEmpty()) {
-            query += "(${endpointVariables()})"
+        val endpointVariables = this.endpointVariables()
+        if (endpointVariables != null && endpointVariables.isNotEmpty()) {
+            query += "($endpointVariables)"
         }
-        query += "\n  {\n${body ?: ""}\n  }\n}"
+
+        val queryBody = body?.string ?: ""
+        query += "\n  {\n$queryBody\n  }\n}"
 
         val httpBody: MutableMap<String, Any> = mutableMapOf("query" to query)
 

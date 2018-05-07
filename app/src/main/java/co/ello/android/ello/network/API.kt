@@ -20,7 +20,7 @@ class API {
     }
 
     fun globalPostStream(filter: CategoryFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
-        val request = GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream", requiresAnyToken = true, supportsAnonymousToken = true)
+        return GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream", requiresAnyToken = true, supportsAnonymousToken = true)
             .parser { json ->
                 PageParser<Post>("posts", PostParser()).parse(json)
             }
@@ -28,11 +28,9 @@ class API {
                 GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
                 GraphQLRequest.Variable.optionalString("before", before)
             )
-            .setFragments(Fragments.postStream)
             .setBody(Fragments.postStreamBody)
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/json")
-        return request
     }
 
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {

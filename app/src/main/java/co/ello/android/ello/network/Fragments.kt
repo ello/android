@@ -11,6 +11,13 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
                 .joinToString("\n")
         }
 
+        val categoryPostActions = Fragments("""
+            fragment categoryPostActions on CategoryPostActions {
+                feature { href label method }
+                unfeature { href label method }
+            }
+            """)
+
         val imageProps = Fragments("""
             fragment imageProps on Image {
               url
@@ -24,7 +31,7 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
               large { ...imageProps }
               original { ...imageProps }
             }
-            """, listOf(imageProps))
+            """, needs = listOf(imageProps))
 
         val responsiveProps = Fragments("""
             fragment responsiveProps on ResponsiveImageVersions {
@@ -33,7 +40,7 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
               xhdpi { ...imageProps }
               optimized { ...imageProps }
             }
-            """, listOf(imageProps))
+            """, needs = listOf(imageProps))
 
         val authorProps = Fragments("""
             fragment authorProps on User {
@@ -52,7 +59,7 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
                 ...responsiveProps
               }
             }
-            """, listOf(tshirtProps, responsiveProps))
+            """, needs = listOf(tshirtProps, responsiveProps))
 
         val pageHeaderUserProps = Fragments("""
             fragment pageHeaderUserProps on User {
@@ -66,7 +73,7 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
                 ...responsiveProps
               }
             }
-            """, listOf(tshirtProps, responsiveProps))
+            """, needs = listOf(tshirtProps, responsiveProps))
 
         val postStream = Fragments("""
             fragment contentProps on ContentBlocks {
@@ -101,9 +108,9 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
               postStats { lovesCount commentsCount viewsCount repostsCount }
               currentUserState { watching loved reposted }
             }
-            """, listOf(imageProps, tshirtProps, responsiveProps, authorProps))
+            """, needs = listOf(imageProps, tshirtProps, responsiveProps, authorProps))
 
-        const val categoriesBody = """
+        val categoriesBody = Fragments("""
             id
             name
             slug
@@ -112,8 +119,8 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
             isCreatorType
             level
             tileImage { ...tshirtProps }
-            """
-        const val pageHeaderBody = """
+            """, needs = listOf(Fragments.tshirtProps))
+        val pageHeaderBody = Fragments("""
             id
             postToken
             category { id }
@@ -123,24 +130,28 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
             image { ...responsiveProps }
             ctaLink { text url }
             user { ...pageHeaderUserProps }
-            """
-        const val postStreamBody = """
+            """, needs = listOf(Fragments.responsiveProps, Fragments.pageHeaderUserProps))
+        val postStreamBody = Fragments("""
             next isLastPage
             posts {
                 ...postSummary
                 ...postContent
                 repostContent { ...contentProps }
-                categories { ...categoryProps }
-                currentUserState { loved reposted watching }
+                categoryPosts {
+                    id actions { ...categoryPostActions } status
+                    category { ...categoryProps }
+                    featuredAt submittedAt removedAt unfeaturedAt
+                    featuredBy { id username name } submittedBy { id username name }
+                }
                 repostedSource {
                     ...postSummary
                 }
             }
-            """
+            """, needs = listOf(Fragments.postStream, Fragments.categoryPostActions))
     }
 
     val dependencies: List<Fragments> get() {
-        return listOf(listOf(this), needs, needs.flatMap { it.dependencies as Iterable<Fragments> }).flatten()
+        return listOf(needs, needs.flatMap { it.dependencies as Iterable<Fragments> }).flatten()
     }
 
 }
