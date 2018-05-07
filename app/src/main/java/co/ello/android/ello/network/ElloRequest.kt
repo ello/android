@@ -86,6 +86,10 @@ class ElloRequest<T>(
         AuthenticationManager(queue).attemptRequest(this,
             retry = { this.enqueue(queue, prevFuture = future) },
             proceed = { uuid ->
+                AuthToken.shared.tokenWithBearer?.let {
+                    this.addHeader("Authorization", it)
+                }
+
                 this.uuid = uuid
                 queue.add(this)
             },

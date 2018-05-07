@@ -8,6 +8,7 @@ class LoginGenerator : LoginProtocols.Generator {
         API().login(username, password)
             .enqueue(queue)
             .onSuccess { credentials ->
+                credentials.isAnonymous = false
                 delegate?.success(credentials)
             }
             .onFailure {
