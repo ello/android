@@ -45,12 +45,6 @@ class GraphQLRequest<T>(
     private var body: String? = null
     private var uuid: UUID? = null
 
-    init {
-        AuthToken.shared.tokenWithBearer?.let {
-            this.addHeader("Authorization", it)
-        }
-    }
-
     fun parser(parser: ((JSON) -> T)): GraphQLRequest<T> {
         parserCompletion = parser
         return this
@@ -91,6 +85,10 @@ class GraphQLRequest<T>(
         AuthenticationManager(queue).attemptRequest(this,
             retry = { this.enqueue(queue, prevFuture = future) },
             proceed = { uuid ->
+                AuthToken.shared.tokenWithBearer?.let {
+                    this.addHeader("Authorization", it)
+                }
+
                 this.uuid = uuid
                 queue.add(this)
             },

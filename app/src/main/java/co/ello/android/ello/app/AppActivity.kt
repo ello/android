@@ -2,6 +2,7 @@ package co.ello.android.ello
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.orhanobut.hawk.Hawk
 
 
 class AppActivity : AppCompatActivity() {
@@ -9,6 +10,9 @@ class AppActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Hawk.init(this).build()
+        AuthToken.init()
 
         supportActionBar?.hide()
         showAppScreen()

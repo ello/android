@@ -4,7 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 
 data class Credentials(
-        @SerializedName("access_token") val accessToken: String,
-        @SerializedName("token_type") val tokenType: String,
-        @SerializedName("refresh_token") val refreshToken: String
-    ) : Model()
+        @SerializedName("access_token")
+            val accessToken: String,
+        @SerializedName("refresh_token")
+            val refreshToken: String?
+    ) : Model() {
+
+    var isAnonymous: Boolean = true
+
+}
