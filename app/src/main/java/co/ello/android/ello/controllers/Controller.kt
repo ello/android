@@ -90,7 +90,7 @@ abstract class Controller(val activity: AppActivity) {
     open fun start() {
         if (!isRunning || isStarted)  return
         _isStarted = true
-        println("calling onStart in $this (parent: ${this.parent})")
+        // println("calling onStart in $this (parent: ${this.parent})")
         onStart()
         for (controller in childControllers) {
             controller.start()
@@ -100,7 +100,7 @@ abstract class Controller(val activity: AppActivity) {
     open fun appear() {
         if (!isStarted || isVisible)  return
         _isVisible = true
-        println("calling onAppear in $this (parent: ${this.parent})")
+        // println("calling onAppear in $this (parent: ${this.parent})")
         onAppear()
         for (controller in visibleChildControllers) {
             controller.appear()
@@ -113,7 +113,7 @@ abstract class Controller(val activity: AppActivity) {
         for (controller in visibleChildControllers) {
             controller.disappear()
         }
-        println("calling onDisappear in $this (parent: ${this.parent})")
+        // println("calling onDisappear in $this (parent: ${this.parent})")
         onDisappear()
     }
 
@@ -123,7 +123,7 @@ abstract class Controller(val activity: AppActivity) {
         for (controller in childControllers) {
             controller.finish()
         }
-        println("calling onFinish in $this (parent: ${this.parent})")
+        // println("calling onFinish in $this (parent: ${this.parent})")
         onFinish()
     }
 
