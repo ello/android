@@ -18,15 +18,10 @@ abstract class RootController(a: AppActivity) : Controller(a) {
         this.rootController?.let {
             containerView.removeView(it.view)
             it.assignParent(null)
-            it.disappear()
-            it.finish()
         }
 
         containerView.addView(controller.view)
         controller.assignParent(this)
-        controller.start()
-        controller.appear()
-
         this.rootController = controller
     }
 }

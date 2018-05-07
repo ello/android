@@ -31,8 +31,6 @@ open class NavigationController(a: AppActivity) : Controller(a) {
         this.controllers.push(nextController)
         viewGroup.addView(nextController.view)
         nextController.assignParent(this)
-        nextController.start()
-        nextController.appear()
     }
 
     fun pop() {
@@ -41,8 +39,6 @@ open class NavigationController(a: AppActivity) : Controller(a) {
         topController?.let {
             viewGroup.removeView(it.view)
             it.assignParent(null)
-            it.disappear()
-            it.finish()
         }
 
         val nextController = visibleController

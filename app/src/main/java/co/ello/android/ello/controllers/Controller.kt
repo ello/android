@@ -43,7 +43,26 @@ abstract class Controller(val activity: AppActivity) {
 
     fun assignParent(controller: Controller?) {
         assert(_parent != null, {"$this is already a child controller on ${_parent!!}"})
-        _parent = controller
+
+        if (controller == null) {
+            if (isStarted) {
+                if (isVisible) {
+                    disappear()
+                }
+                finish()
+            }
+            _parent = null
+        }
+        else {
+            _parent = controller
+
+            if (controller.isStarted) {
+                this.start()
+                if (controller.isVisible) {
+                    this.appear()
+                }
+            }
+        }
     }
 
     inline fun <reified T : Controller> findParent(): T? {
@@ -71,6 +90,7 @@ abstract class Controller(val activity: AppActivity) {
     open fun start() {
         if (!isRunning || isStarted)  return
         _isStarted = true
+        println("calling onStart in $this (parent: ${this.parent})")
         onStart()
         for (controller in childControllers) {
             controller.start()
@@ -80,6 +100,7 @@ abstract class Controller(val activity: AppActivity) {
     open fun appear() {
         if (!isStarted || isVisible)  return
         _isVisible = true
+        println("calling onAppear in $this (parent: ${this.parent})")
         onAppear()
         for (controller in visibleChildControllers) {
             controller.appear()
@@ -92,6 +113,7 @@ abstract class Controller(val activity: AppActivity) {
         for (controller in visibleChildControllers) {
             controller.disappear()
         }
+        println("calling onDisappear in $this (parent: ${this.parent})")
         onDisappear()
     }
 
@@ -101,6 +123,7 @@ abstract class Controller(val activity: AppActivity) {
         for (controller in childControllers) {
             controller.finish()
         }
+        println("calling onFinish in $this (parent: ${this.parent})")
         onFinish()
     }
 
