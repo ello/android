@@ -19,7 +19,11 @@ class StyledLabel @JvmOverloads constructor(
         LargeBoldWhite(font = "Bold", size = 18f, color = R.color.white)
     }
 
-    val style: Style
+    var style: Style = Style.Default
+        set(value: Style) {
+            field = value
+            updateStyle()
+        }
 
     init {
         val styledAttrs = context.theme.obtainStyledAttributes(attrs, R.styleable.StyledButton, 0, 0)
@@ -34,7 +38,9 @@ class StyledLabel @JvmOverloads constructor(
             "large bold white" -> Style.LargeBoldWhite
             else -> Style.Default
         }
+    }
 
+    private fun updateStyle() {
         this.typeface = Typeface.createFromAsset(context.assets, "AtlasGrotesk${style.font}.otf")
         this.setTextSize(style.size)
         style.color?.let { this.setTextColor(context.getColor(it)) }
