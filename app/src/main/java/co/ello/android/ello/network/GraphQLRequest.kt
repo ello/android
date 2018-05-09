@@ -1,9 +1,6 @@
 package co.ello.android.ello
 
-import com.android.volley.NetworkResponse
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.VolleyError
+import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import java.util.concurrent.CompletableFuture
@@ -41,9 +38,12 @@ class GraphQLRequest<T>(
 
     private var parserCompletion: ((JSON) -> T)? = null
     private var variables: List<Variable>? = null
-    private var fragments: List<Fragments>? = null
     private var body: Fragments? = null
     private var uuid: UUID? = null
+    private var manager: AuthenticationManager? = null
+    private var retryBlock: Block? = null
+    private var cancelBlock: Block? = null
+    private val future = CompletableFuture<T>()
 
     fun parser(parser: ((JSON) -> T)): GraphQLRequest<T> {
         parserCompletion = parser
@@ -60,8 +60,14 @@ class GraphQLRequest<T>(
         return this
     }
 
-    fun enqueue(queue: Queue, prevFuture: CompletableFuture<T>? = null): CompletableFuture<T> {
-        val future = prevFuture ?: CompletableFuture<T>()
+    fun enqueue(queue: Queue): CompletableFuture<T> {
+        setRetryPolicy(DefaultRetryPolicy(
+                30_000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+
+        retryBlock = { this.enqueue(queue) }
+        cancelBlock = { future.completeExceptionally(CancelledRequest()) }
 
         this.onSuccess { json ->
             val resultJson = json["data"][endpointName]
@@ -77,8 +83,10 @@ class GraphQLRequest<T>(
             future.completeExceptionally(exception)
         }
 
-        AuthenticationManager(queue).attemptRequest(this,
-            retry = { this.enqueue(queue, prevFuture = future) },
+        val manager = AuthenticationManager(queue)
+        this.manager = manager
+        manager.attemptRequest(this,
+            retry = retryBlock!!,
             proceed = { uuid ->
                 AuthToken.shared.tokenWithBearer?.let {
                     this.addHeader("Authorization", it)
@@ -87,15 +95,18 @@ class GraphQLRequest<T>(
                 this.uuid = uuid
                 queue.add(this)
             },
-            cancel = {
-                future.completeExceptionally(CancelledRequest())
-            })
+            cancel = cancelBlock!!)
 
         return future
     }
 
     override fun deliverError(error: VolleyError) {
-        failureCompletion?.invoke(error)
+        if (error is AuthFailureError) {
+            manager!!.attemptAuthentication(uuid!!, RequestAttempt(this, retryBlock!!, cancelBlock!!))
+        }
+        else {
+            failureCompletion?.invoke(error)
+        }
     }
 
     private fun onSuccess(completion: ((JSON) -> Unit)?): GraphQLRequest<T> {
@@ -135,7 +146,7 @@ class GraphQLRequest<T>(
         val fragments = body?.dependencies
 
         if (fragments != null && fragments.isNotEmpty()) {
-            val fragmentsQuery = Fragments.flatten(fragments)
+            val fragmentsQuery = fragments.map { it.string }.joinToString("\n")
             query += fragmentsQuery + "\n"
         }
 
