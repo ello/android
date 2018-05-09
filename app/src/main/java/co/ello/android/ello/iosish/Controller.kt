@@ -34,8 +34,10 @@ abstract class Controller(val activity: AppActivity) {
     private var _view: View? = null
     val isViewLoaded: Boolean get() { return _view != null }
     val view: View get() {
-        val view = _view ?: createView()
-        if (_view == null) {
+        var view = _view
+        if (view == null) {
+            view = createView()
+            onViewCreated()
             _view = view
         }
         return view
@@ -82,6 +84,7 @@ abstract class Controller(val activity: AppActivity) {
     // controller is *moved* to another controller, these would be called again.
     open fun onStart() {}
     open fun onFinish() {}
+    open fun onViewCreated() {}
 
     // could be called many times, for instance in a tab controller
     open fun onAppear() {}
