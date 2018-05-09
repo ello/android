@@ -45,6 +45,16 @@ class API {
             .addHeader("Content-Type", "application/json")
     }
 
+    fun subscribedCategories(): GraphQLRequest<List<Category>> {
+        return GraphQLRequest<List<Category>>("categoryNav", requiresAnyToken = true, supportsAnonymousToken = true)
+            .parser { json ->
+                ManyParser<Category>(CategoryParser()).parse(json)
+            }
+            .setBody(Fragments.categoriesBody)
+            .addHeader("Accept", "application/json")
+            .addHeader("Content-Type", "application/json")
+    }
+
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/v2/join"
 
