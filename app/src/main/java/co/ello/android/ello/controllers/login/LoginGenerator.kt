@@ -1,8 +1,9 @@
 package co.ello.android.ello
 
 
-class LoginGenerator : LoginProtocols.Generator {
-    override var delegate: LoginProtocols.Controller? = null
+class LoginGenerator(val delegate: LoginProtocols.Controller?)
+    : LoginProtocols.Generator
+{
 
     override fun login(queue: Queue, username: String, password: String) {
         API().login(username, password)

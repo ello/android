@@ -1,8 +1,9 @@
 package co.ello.android.ello
 
 
-class JoinGenerator : JoinProtocols.Generator {
-    override var delegate: JoinProtocols.Controller? = null
+class JoinGenerator(val delegate: JoinProtocols.Controller?)
+    : JoinProtocols.Generator
+{
 
     override fun join(queue: Queue, email: String, username: String, password: String) {
         API().join(email, username, password)

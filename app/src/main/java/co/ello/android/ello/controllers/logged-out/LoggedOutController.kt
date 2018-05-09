@@ -3,8 +3,9 @@ package co.ello.android.ello
 import android.view.View
 
 
-class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Delegate) : Controller(a), LoggedOutProtocols.Controller, LoginProtocols.Delegate, JoinProtocols.Delegate {
-    private var screen: LoggedOutProtocols.Screen? = null
+class LoggedOutController(a: AppActivity, val delegate: LoggedOutProtocols.Delegate) : BaseController(a), LoggedOutProtocols.Controller, LoginProtocols.Delegate, JoinProtocols.Delegate {
+    private lateinit var screen: LoggedOutProtocols.Screen
+
 
     override fun createView(): View {
         val screen = LoggedOutScreen(activity)

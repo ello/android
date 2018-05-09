@@ -20,7 +20,6 @@ class LoginProtocols {
     }
 
     interface Generator {
-        var delegate: Controller?
         fun login(queue: Queue, username: String, password: String)
     }
 

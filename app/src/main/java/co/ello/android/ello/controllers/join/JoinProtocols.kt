@@ -19,7 +19,6 @@ class JoinProtocols {
     }
 
     interface Generator {
-        var delegate: Controller?
         fun join(queue: Queue, email: String, username: String, password: String)
     }
 

@@ -4,9 +4,9 @@ import android.os.Handler
 import android.view.View
 
 
-class StartupController(a: AppActivity, val delegate: StartupProtocols.Delegate) : Controller(a) {
+class StartupController(a: AppActivity, val delegate: StartupProtocols.Delegate) : BaseController(a) {
     private val handler = Handler()
-    private var screen: StartupProtocols.Screen? = null
+    private lateinit var screen: StartupProtocols.Screen
 
     override fun createView(): View {
         val screen = StartupScreen(activity)

@@ -3,14 +3,13 @@ package co.ello.android.ello
 import android.view.View
 
 
-class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : Controller(a), JoinProtocols.Controller {
-    private var screen: JoinProtocols.Screen? = null
-    private val generator: JoinProtocols.Generator = JoinGenerator()
+class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : BaseController(a), JoinProtocols.Controller {
+    private lateinit var screen: JoinProtocols.Screen
+    private val generator: JoinProtocols.Generator = JoinGenerator(delegate = this)
 
     override fun createView(): View {
         val screen = JoinScreen(activity)
         screen.delegate = this
-        generator.delegate = this
         this.screen = screen
         return screen.contentView
     }
@@ -34,7 +33,6 @@ class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : Con
             passwordMessage = activity.getString(R.string.Error_passwordLength)
         }
 
-        val screen = this.screen!!
         screen.showErrors(emailMessage, usernameMessage, passwordMessage)
         if (emailMessage == null && usernameMessage == null && passwordMessage == null) {
             showSpinner()
@@ -54,6 +52,6 @@ class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : Con
 
     override fun failure() {
         hideSpinner()
-        screen?.interactive = true
+        screen.interactive = true
     }
 }
