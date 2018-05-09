@@ -12,6 +12,7 @@ class AppActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         Hawk.init(this).build()
+        API.init()
         AuthToken.init()
 
         supportActionBar?.hide()

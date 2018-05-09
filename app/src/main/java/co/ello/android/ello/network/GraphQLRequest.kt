@@ -14,7 +14,7 @@ class GraphQLRequest<T>(
         val endpointName: String,
         override val requiresAnyToken: Boolean,
         override val supportsAnonymousToken: Boolean
-) : Request<JSON>(Request.Method.POST, "${BuildConfig.NINJA_DOMAIN}/api/v3/graphql", null), AuthenticationEndpoint {
+) : Request<JSON>(Request.Method.POST, "${API.domain}/api/v3/graphql", null), AuthenticationEndpoint {
     class CancelledRequest : Throwable()
     class ParsingError : Throwable()
 

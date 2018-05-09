@@ -15,7 +15,7 @@ class ElloRequest<T>(
         path: String,
         override val requiresAnyToken: Boolean,
         override val supportsAnonymousToken: Boolean
-) : Request<String>(method, "${BuildConfig.NINJA_DOMAIN}$path", null), AuthenticationEndpoint {
+) : Request<String>(method, "${API.domain}$path", null), AuthenticationEndpoint {
     class CancelledRequest : Throwable()
 
     constructor(
