@@ -1,15 +1,18 @@
 <resources>
-    <string name="app_name">Ello</string>
-    <string name="hello">[Insert Ello here]</string>
+    <string name="Ello">Ello</string>
+
     <string name="Startup.login">Login</string>
     <string name="Startup.join">Sign Up</string>
+
     <string name="Login.usernamePlaceholder">Username or Email</string>
     <string name="Login.passwordPlaceholder">Password</string>
+    <string name="Login.continue">Continue</string>
+    <string name="Login.forgotPassword">Forgot Password</string>
+
     <string name="Join.emailPlaceholder">Email</string>
     <string name="Join.usernamePlaceholder">Username</string>
     <string name="Join.passwordPlaceholder">Password</string>
-    <string name="Login.continue">Continue</string>
-    <string name="Login.forgotPassword">Forgot Password</string>
+
     <string name="Error.emailRequired">Email is required</string>
     <string name="Error.usernameRequired">Username is required</string>
     <string name="Error.passwordRequired">Password is required</string>
