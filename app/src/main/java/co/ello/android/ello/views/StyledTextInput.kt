@@ -66,7 +66,7 @@ class StyledTextInput @JvmOverloads constructor(
 
     fun updateStyle() {
         this.typeface = Typeface.createFromAsset(context.assets, "AtlasGrotesk${style.font}.otf")
-        this.setTextSize(style.size * 1.2f)
+        this.setTextSize(style.size.fontDp)
         style.color?.let { this.setTextColor(context.getColor(it)) }
         style.placeholder?.let { this.setHintTextColor(context.getColor(it)) }
         this.setSingleLine(!style.isMultiline)
@@ -93,7 +93,7 @@ class StyledTextInput @JvmOverloads constructor(
             if (style.background == Background.BottomLine) {
                 val p = Paint()
                 p.style = Paint.Style.STROKE
-                p.strokeWidth = resources.displayMetrics.density
+                p.strokeWidth = 1.dpf
                 p.setColor(Color.WHITE)
                 it.drawLine(0f, measuredHeight.toFloat(), measuredWidth.toFloat(), measuredHeight.toFloat(), p)
             }

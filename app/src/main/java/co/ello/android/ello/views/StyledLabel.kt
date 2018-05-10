@@ -42,7 +42,7 @@ class StyledLabel @JvmOverloads constructor(
 
     private fun updateStyle() {
         this.typeface = Typeface.createFromAsset(context.assets, "AtlasGrotesk${style.font}.otf")
-        this.setTextSize(style.size)
+        this.setTextSize(style.size.fontDp)
         style.color?.let { this.setTextColor(context.getColor(it)) }
     }
 
