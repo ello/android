@@ -50,7 +50,7 @@ data class User(
     private var _badges: List<Badge>? = null
     var badges: List<Badge>
         get() { return _badges ?: emptyList() }
-        set(value: List<Badge>) { _badges = value }
+        set(value) { _badges = value }
     var profile: Profile? = null
 
     val isCurrentUser: Boolean get() { return profile != null }

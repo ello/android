@@ -20,7 +20,7 @@ class StyledLabel @JvmOverloads constructor(
     }
 
     var style: Style = Style.Default
-        set(value: Style) {
+        set(value) {
             field = value
             updateStyle()
         }

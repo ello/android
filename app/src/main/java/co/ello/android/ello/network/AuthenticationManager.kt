@@ -17,7 +17,7 @@ class AuthenticationManager(val requestQueue: Queue) {
     private var uuid: UUID = randomUUID()
     private var authState: AuthState
         get() { return AuthToken.state }
-        set(value: AuthState) { AuthToken.state = value }
+        set(value) { AuthToken.state = value }
 
     // set queue to null in specs, and reauth requests are sent synchronously.
     var queue: DispatchQueue? = DispatchQueue()

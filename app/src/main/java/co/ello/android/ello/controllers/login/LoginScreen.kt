@@ -14,7 +14,7 @@ class LoginScreen : LoginProtocols.Screen {
 
     override var delegate: LoginProtocols.Controller? = null
     override var interactive: Boolean = true
-        set(value: Boolean) {
+        set(value) {
             field = value
             updateInteractive()
         }

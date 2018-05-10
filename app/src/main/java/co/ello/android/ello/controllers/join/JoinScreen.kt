@@ -14,7 +14,7 @@ class JoinScreen : JoinProtocols.Screen {
 
     override var delegate: JoinProtocols.Controller? = null
     override var interactive: Boolean = true
-        set(value: Boolean) {
+        set(value) {
             field = value
             updateInteractive()
         }

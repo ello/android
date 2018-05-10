@@ -3,7 +3,7 @@ package co.ello.android.ello
 
 abstract class BaseController(a: AppActivity) : Controller(a) {
     var currentUser: User? = null
-        set(value: User?) {
+        set(value) {
             field = value
             didSetCurrentUser()
             for (controller in childControllers) {
