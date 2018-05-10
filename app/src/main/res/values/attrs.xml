@@ -2,6 +2,7 @@
 <resources>
     <attr name="styleName" format="string" />
 
+    <declare-styleable name="PostToolbar" />
     <declare-styleable name="StartupGradientLayer" />
     <declare-styleable name="StyledButton">
         <attr name="styleName" />

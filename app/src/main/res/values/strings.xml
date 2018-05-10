@@ -17,5 +17,10 @@
     <string name="Error.usernameRequired">Username is required</string>
     <string name="Error.passwordRequired">Password is required</string>
     <string name="Error.passwordLength">Password is required</string>
+
+    <string name="Category.All">All</string>
+    <string name="Category.Subscribed">Subscribed</string>
+    <string name="Category.ZeroState">Choose communities to subscribe to here.</string>
+
     <string name="OK">OK</string>
 </resources>

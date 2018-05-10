@@ -23,7 +23,7 @@ class StreamController(a: AppActivity) : BaseController(a) {
                 items[position].type.viewType
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-                StreamCellType.createViewHolder(context = parent.context, viewType = viewType)
+                StreamCellType.createViewHolder(parent = parent, viewType = viewType)
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val item = items[position]
