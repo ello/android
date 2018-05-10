@@ -102,6 +102,9 @@ abstract class Controller(val activity: AppActivity) {
 
     open fun appear() {
         if (!isStarted || isVisible)  return
+        if (!isViewLoaded) {
+            throw IllegalArgumentException("View of $this should be loaded before appear() is called")
+        }
         _isVisible = true
         // println("calling onAppear in $this (parent: ${this.parent})")
         onAppear()
