@@ -1,5 +1,7 @@
 package co.ello.android.ello
 
+import java.net.URL
+
 
 data class User(
     val id: String,
@@ -65,6 +67,13 @@ data class User(
             return "<1K"
         }
         return count.numberToHuman(rounding = 1, showZero = true)
+    }
+
+    fun avatarURL(viewsAdultContent: Boolean? = false, animated: Boolean = false): URL? {
+        // if (animated && (!postsAdultContent || viewsAdultContent == true) && avatar?.original?.url.absoluteString.hasSuffix(".gif") == true) {
+        //     return avatar?.original?.url
+        // }
+        return avatar?.largeOrBest?.url
     }
 
 }
