@@ -1,5 +1,6 @@
 package co.ello.android.ello
 
+import android.content.res.Resources
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -54,3 +55,5 @@ val String.toRequestMethod: ElloRequest.Method? get() = when(this.toUpperCase())
 
 fun randomUUID(): UUID = UUID.randomUUID()
 fun UUIDString(): String = UUID.randomUUID().toString()
+
+fun T(res: Int): String = Resources.getSystem().getString(res)

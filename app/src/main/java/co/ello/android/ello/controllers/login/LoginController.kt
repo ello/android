@@ -17,15 +17,15 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : B
     override fun submit(username: String, password: String) {
         var usernameMessage: String? = null
         if (username.isEmpty()) {
-            usernameMessage = activity.getString(R.string.Error_usernameRequired)
+            usernameMessage = T(R.string.Error_usernameRequired)
         }
 
         var passwordMessage: String? = null
         if (password.isEmpty()) {
-            passwordMessage = activity.getString(R.string.Error_passwordRequired)
+            passwordMessage = T(R.string.Error_passwordRequired)
         }
         else if (password.length < 8) {
-            passwordMessage = activity.getString(R.string.Error_passwordLength)
+            passwordMessage = T(R.string.Error_passwordLength)
         }
 
         screen.showErrors(usernameMessage, passwordMessage)

@@ -17,20 +17,20 @@ class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : Bas
     override fun submit(email: String, username: String, password: String) {
         var emailMessage: String? = null
         if (email.isEmpty()) {
-            emailMessage = activity.getString(R.string.Error_emailRequired)
+            emailMessage = T(R.string.Error_emailRequired)
         }
 
         var usernameMessage: String? = null
         if (username.isEmpty()) {
-            usernameMessage = activity.getString(R.string.Error_usernameRequired)
+            usernameMessage = T(R.string.Error_usernameRequired)
         }
 
         var passwordMessage: String? = null
         if (password.isEmpty()) {
-            passwordMessage = activity.getString(R.string.Error_passwordRequired)
+            passwordMessage = T(R.string.Error_passwordRequired)
         }
         else if (password.length < 8) {
-            passwordMessage = activity.getString(R.string.Error_passwordLength)
+            passwordMessage = T(R.string.Error_passwordLength)
         }
 
         screen.showErrors(emailMessage, usernameMessage, passwordMessage)
