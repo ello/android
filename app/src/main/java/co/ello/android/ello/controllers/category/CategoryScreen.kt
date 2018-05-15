@@ -34,17 +34,21 @@ class CategoryScreen : CategoryProtocols.Screen {
         class Category(category: co.ello.android.ello.Category) : CardInfo(title = Lit(category.name), kind = Kind.Category, imageURL = category.tileURL)
     }
 
+    data class CardHolder(val view: View) {
+        val label = view.findViewById<StyledLabel>(R.id.label)
+        val imageView = view.findViewById<ImageView>(R.id.imageView)
+        val overlay = view.findViewById<View>(R.id.overlay)
     }
 
     override fun updateSubscribedCategories(categories: List<CardInfo>) {
         cardListContainer.removeAllViews()
 
         for (info in categories) {
-            val cardLayout = LayoutInflater.from(contentView.context).inflate(R.layout.category_card_view, null)
-            val label = cardLayout.findViewById<TextView>(R.id.label)
-            val imageView = cardLayout.findViewById<ImageView>(R.id.imageView)
-            label.setText(info.title)
-            imageView.setImageURL(info.imageURL)
+            val cardHolder = CardHolder(LayoutInflater.from(contentView.context).inflate(R.layout.category_card_view, null))
+            cardHolder.label.setText(info.title.gen(contentView.context))
+            cardHolder.label.style = if (info == CardInfo.All) StyledLabel.Style.BoldWhiteUnderline else StyledLabel.Style.White
+            cardHolder.imageView.setImageURL(info.imageURL)
+            cardHolder.overlay.alpha = if (info == CardInfo.All) 0.8f else 0.5f
 
             val width = (when(info.kind) {
                 CardInfo.Kind.All -> 50
@@ -54,9 +58,9 @@ class CategoryScreen : CategoryProtocols.Screen {
 
             val height = LinearLayout.LayoutParams.MATCH_PARENT
             val layoutParams = LinearLayout.LayoutParams(width, height)
-            cardLayout.layoutParams = layoutParams
+            cardHolder.view.layoutParams = layoutParams
 
-            cardListContainer.addView(cardLayout)
+            cardListContainer.addView(cardHolder.view)
         }
     }
 
