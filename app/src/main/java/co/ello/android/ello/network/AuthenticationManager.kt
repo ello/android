@@ -1,7 +1,6 @@
 package co.ello.android.ello
 
-import com.android.volley.Request
-import java.util.UUID
+import java.util.*
 
 
 interface AuthenticationEndpoint {
@@ -13,8 +12,11 @@ typealias RequestAttempt = Triple<AuthenticationEndpoint, Block, Block>
 
 class AuthenticationManager(val requestQueue: Queue) {
 
-    private var waitList: MutableList<RequestAttempt> = mutableListOf()
-    private var uuid: UUID = randomUUID()
+    companion object {
+        private var waitList: MutableList<RequestAttempt> = mutableListOf()
+        private var uuid: UUID = randomUUID()
+    }
+
     private var authState: AuthState
         get() { return AuthToken.state }
         set(value) { AuthToken.state = value }
@@ -23,13 +25,13 @@ class AuthenticationManager(val requestQueue: Queue) {
     var queue: DispatchQueue? = DispatchQueue()
 
     fun attemptRequest(target: AuthenticationEndpoint, retry: (() -> Unit), proceed: ((UUID) -> Unit), cancel: (() -> Unit)) {
-        val uuid = this.uuid
+        val uuid = AuthenticationManager.uuid
 
         if (authState.isUndetermined) {
             attemptAuthentication(uuid, RequestAttempt(target, retry, cancel))
         }
         else if (authState.isTransitioning && target.requiresAnyToken) {
-            appendRequest(RequestAttempt(target, retry, cancel))
+            AuthenticationManager.waitList.add(RequestAttempt(target, retry, cancel))
         }
         else {
             if (canMakeRequest(target)) {
@@ -57,13 +59,9 @@ class AuthenticationManager(val requestQueue: Queue) {
         return target.supportsAnonymousToken && authState == AuthState.Anonymous
     }
 
-    fun appendRequest(request: RequestAttempt) {
-        waitList.add(request)
-    }
-
     fun attemptAuthentication(uuid: UUID, request: RequestAttempt? = null) {
         inBackground(fun () {
-            val shouldResendRequest = uuid != this.uuid
+            val shouldResendRequest = uuid != AuthenticationManager.uuid
             val retry = request?.let { (_, retry, _) -> retry }
             if (retry != null && shouldResendRequest) {
                 retry()
@@ -71,7 +69,7 @@ class AuthenticationManager(val requestQueue: Queue) {
             }
 
             if (request != null) {
-                this.waitList.add(request)
+                AuthenticationManager.waitList.add(request)
             }
 
             when(this.authState) {
@@ -84,8 +82,6 @@ class AuthenticationManager(val requestQueue: Queue) {
                     })
                 }
                 AuthState.Anonymous -> {
-                    // an anonymous-authenticated request resulted in a 401 - we
-                    // should log the user out
                     this.advanceAuthState(AuthState.NoToken)
                 }
                 AuthState.Authenticated, AuthState.ShouldTryRefreshToken -> {
@@ -101,7 +97,6 @@ class AuthenticationManager(val requestQueue: Queue) {
                             }
                             .onFailure {
                                 this.advanceAuthState(AuthState.ShouldTryAnonymousCreds)
-                                // this.advanceAuthState(AuthState.shouldTryRefreshToken)
                             }
                     }
                     else {
@@ -118,7 +113,6 @@ class AuthenticationManager(val requestQueue: Queue) {
                             this.advanceAuthState(AuthState.Anonymous)
                         }.onFailure {
                             this.advanceAuthState(AuthState.NoToken)
-                            // this.advanceAuthState(AuthState.shouldTryAnonymousCreds)
                         }
                 }
                 AuthState.RefreshTokenSent, AuthState.AnonymousCredsSent -> {}
@@ -137,34 +131,24 @@ class AuthenticationManager(val requestQueue: Queue) {
             this.authState = nextState
 
             if (nextState == AuthState.NoToken) {
-                this.uuid = randomUUID()
+                AuthenticationManager.uuid = randomUUID()
                 AuthToken.reset()
 
                 this.flushWaitList()
             }
             else if (nextState == AuthState.Anonymous || nextState.isAuthenticated) {
-                // if you were using the app, but got logged out, you will
-                // quickly receive an anonymous token.  If any Requests don't
-                // support this flow , we should kick you out and present the
-                // log in screen.  During login/join, though, all the Requests
-                // *will* support an anonymous token.
-                //
-                // if, down the road, we have anonymous browsing, we should
-                // require and implement robust invalidToken handlers for all
-                // Controllers & Services
-
-                this.uuid = randomUUID()
+                AuthenticationManager.uuid = randomUUID()
                 this.flushWaitList()
             }
             else {
-                this.attemptAuthentication(this.uuid)
+                this.attemptAuthentication(AuthenticationManager.uuid)
             }
         }
     }
 
     private fun flushWaitList() {
         val currentWaitList = waitList
-        waitList = mutableListOf()
+        AuthenticationManager.waitList = mutableListOf()
 
         val runWaitList = {
             for (waitListEntry in currentWaitList) {

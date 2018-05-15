@@ -71,12 +71,16 @@ class GraphQLRequest<T>(
 
         this.onSuccess { json ->
             val resultJson = json["data"][endpointName]
+            var result: T? = null
             try {
-                val result = parserCompletion!!.invoke(resultJson)
-                future.complete(result)
+                result = parserCompletion!!.invoke(resultJson)
             }
             catch(e: Throwable) {
                 future.completeExceptionally(e)
+            }
+
+            if (result != null) {
+                future.complete(result)
             }
         }
         .onFailure { exception ->
