@@ -10,6 +10,7 @@ class StreamController(a: AppActivity)
     : BaseController(a), PostToolbarResponder
 {
     private lateinit var screen: RecyclerView
+    private var adapter: Adapter = Adapter(emptyList(), streamController = this)
 
     class Adapter(val items: List<StreamCellItem>, val streamController: StreamController) : RecyclerView.Adapter<StreamCell>() {
         init {
@@ -37,13 +38,14 @@ class StreamController(a: AppActivity)
     override fun createView(): View {
         val recycler = RecyclerView(activity)
         recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.adapter = Adapter(emptyList(), streamController = this)
+        recycler.adapter = adapter
         screen = recycler
         return screen
     }
 
     fun addAll(items: List<StreamCellItem>) {
-        screen.adapter = Adapter(items, streamController = this)
+        adapter = Adapter(items, streamController = this)
+        if (isViewLoaded)  screen.adapter = adapter
     }
 
     override fun toolbarTappedViews(cell: StreamCell, item: StreamCellItem) {

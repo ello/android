@@ -8,12 +8,15 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
     private lateinit var screen: CategoryProtocols.Screen
     private val generator: CategoryProtocols.Generator = CategoryGenerator(delegate = this)
 
+    private var categoryInfo: List<CategoryScreen.CardInfo>? = null
+
     override val viewForStream: ViewGroup get() = screen.streamContainer
 
     override fun createView(): View {
         val screen = CategoryScreen(activity)
         screen.delegate = this
         this.screen = screen
+        categoryInfo?.let { screen.updateSubscribedCategories(it) }
         return screen.contentView
     }
 
@@ -33,6 +36,9 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
             categoryInfo.add(CategoryScreen.CardInfo.Subscribed)
         }
         categoryInfo.addAll(categories.map { CategoryScreen.CardInfo.Category(it) })
-        screen.updateSubscribedCategories(categoryInfo)
+        this.categoryInfo = categoryInfo
+
+        if (isViewLoaded)
+            screen.updateSubscribedCategories(categoryInfo)
     }
 }
