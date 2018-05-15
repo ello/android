@@ -1,8 +1,6 @@
 package co.ello.android.ello
 
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import java.util.*
 
 
@@ -14,35 +12,39 @@ class NavigationController(a: AppActivity) : Controller(a) {
     val visibleController: Controller? get() { return controllers.peek() }
 
     override fun createView(): View {
-        return FrameLayout(activity)
+        return NavigationLayout(activity)
     }
 
-    fun push(nextController: Controller) {
-        val viewGroup = view as FrameLayout
+    fun push(nextController: Controller, animated: Boolean? = null) {
+        val twoFrameLayout = view as NavigationLayout
+        val shouldAnimate = animated ?: visibleController != null
+        val prevController = this.visibleController
 
-        this.visibleController?.let {
-            viewGroup.removeView(it.view)
-            it.disappear()
-        }
-
+        rootController?.stopInteraction()
         this.controllers.push(nextController)
-        viewGroup.addView(nextController.view)
+        twoFrameLayout.push(nextController.view, animated = shouldAnimate) { finished ->
+            rootController?.allowInteraction()
+            if (finished)  prevController?.disappear()
+        }
         nextController.assignParent(this, isVisible = true)
     }
 
-    fun pop() {
-        val viewGroup = view as FrameLayout
-        val topController = controllers.pop()
+    fun pop(animated: Boolean? = null) {
+        val twoFrameLayout = view as NavigationLayout
+        val shouldAnimate = animated ?: (controllers.size > 1)
+        val prevController = controllers.pop()
+        val visibleController = this.visibleController
 
-        topController?.let {
-            viewGroup.removeView(it.view)
-            it.removeFromParent()
+        if (visibleController != null) {
+            rootController?.stopInteraction()
+            twoFrameLayout.pop(visibleController.view, animated = shouldAnimate) { _ ->
+                rootController?.allowInteraction()
+                prevController?.removeFromParent()
+            }
+            visibleController.appear()
         }
-
-        val nextController = visibleController
-        nextController?.let {
-            viewGroup.addView(it.view)
-            it.appear()
+        else {
+            prevController?.removeFromParent()
         }
     }
 }
