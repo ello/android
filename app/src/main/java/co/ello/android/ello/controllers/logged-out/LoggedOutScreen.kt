@@ -16,8 +16,7 @@ class LoggedOutScreen : LoggedOutProtocols.Screen {
     private val joinButton: Button
 
     constructor(activity: Activity) {
-        val inflater = activity.layoutInflater
-        contentView = inflater.inflate(R.layout.logged_out_layout, null)
+        contentView = activity.layoutInflater.inflate(R.layout.logged_out_layout, null)
         loginButton = contentView.findViewById<Button>(R.id.loginButton)
         joinButton = contentView.findViewById<Button>(R.id.joinButton)
         containerView = contentView.findViewById<ViewGroup>(R.id.containerView)

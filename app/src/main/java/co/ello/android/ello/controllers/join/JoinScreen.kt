@@ -30,8 +30,7 @@ class JoinScreen : JoinProtocols.Screen {
     private val passwordFieldError: ImageView
 
     constructor(activity: Activity) {
-        val inflater = activity.layoutInflater
-        contentView = inflater.inflate(R.layout.join_layout, null)
+        contentView = activity.layoutInflater.inflate(R.layout.join_layout, null)
         continueButton = contentView.findViewById<Button>(R.id.continueButton)
         continueButton.setOnClickListener {
             continueButtonTapped()
