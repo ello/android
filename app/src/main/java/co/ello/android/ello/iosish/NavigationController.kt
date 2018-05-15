@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import java.util.*
 
 
-open class NavigationController(a: AppActivity) : Controller(a) {
+class NavigationController(a: AppActivity) : Controller(a) {
     private var controllers = ArrayDeque<Controller>()
 
     override val childControllers: Iterable<Controller> get() { return controllers }
@@ -17,12 +17,9 @@ open class NavigationController(a: AppActivity) : Controller(a) {
         return FrameLayout(activity)
     }
 
-    open fun containerView(): ViewGroup {
-        return view as ViewGroup
-    }
-
     fun push(nextController: Controller) {
-        val viewGroup = containerView()
+        val viewGroup = view as FrameLayout
+
         this.visibleController?.let {
             viewGroup.removeView(it.view)
             it.disappear()
@@ -30,15 +27,16 @@ open class NavigationController(a: AppActivity) : Controller(a) {
 
         this.controllers.push(nextController)
         viewGroup.addView(nextController.view)
-        nextController.assignParent(this)
+        nextController.assignParent(this, isVisible = true)
     }
 
     fun pop() {
-        val viewGroup = containerView()
+        val viewGroup = view as FrameLayout
         val topController = controllers.pop()
+
         topController?.let {
             viewGroup.removeView(it.view)
-            it.assignParent(null)
+            it.removeFromParent()
         }
 
         val nextController = visibleController

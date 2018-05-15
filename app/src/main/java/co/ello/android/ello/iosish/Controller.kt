@@ -43,26 +43,25 @@ abstract class Controller(val activity: AppActivity) {
         return view
     }
 
-    fun assignParent(controller: Controller?) {
+    fun removeFromParent() {
+        if (isStarted) {
+            if (isVisible) {
+                disappear()
+            }
+            finish()
+        }
+        _parent = null
+    }
+
+    fun assignParent(parentController: Controller, isVisible: Boolean) {
         assert(_parent != null, {"$this is already a child controller on ${_parent!!}"})
 
-        if (controller == null) {
-            if (isStarted) {
-                if (isVisible) {
-                    disappear()
-                }
-                finish()
-            }
-            _parent = null
-        }
-        else {
-            _parent = controller
+        _parent = parentController
 
-            if (controller.isStarted) {
-                this.start()
-                if (controller.isVisible) {
-                    this.appear()
-                }
+        if (parentController.isStarted) {
+            this.start()
+            if (isVisible && parentController.isVisible) {
+                this.appear()
             }
         }
     }

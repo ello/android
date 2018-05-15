@@ -12,6 +12,7 @@ abstract class StreamableController(a: AppActivity) : BaseController(a) {
     override val visibleChildControllers: Iterable<Controller> get() { return childControllers }
 
     override fun onViewCreated() {
+        super.onViewCreated()
         viewForStream.addView(streamController.view)
     }
 }
