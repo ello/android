@@ -70,9 +70,9 @@ data class User(
     }
 
     fun avatarURL(viewsAdultContent: Boolean? = false, animated: Boolean = false): URL? {
-        // if (animated && (!postsAdultContent || viewsAdultContent == true) && avatar?.original?.url.absoluteString.hasSuffix(".gif") == true) {
-        //     return avatar?.original?.url
-        // }
+         if (animated && (!postsAdultContent || viewsAdultContent == true) && avatar?.original?.url?.path?.endsWith(".gif") == true) {
+             return avatar?.original?.url
+         }
         return avatar?.largeOrBest?.url
     }
 
