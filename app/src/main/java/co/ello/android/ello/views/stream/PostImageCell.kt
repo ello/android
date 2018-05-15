@@ -32,16 +32,17 @@ class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.c
     }
 
     private fun calculateHeight() {
-        if (streamCellItem?.height != null)  return
-
         val imageWidth = imageView.drawable.intrinsicWidth
         val imageHeight = imageView.drawable.intrinsicHeight
         if (imageWidth > 0 && imageHeight > 0) {
             val aspectRatio = imageWidth.toFloat() / imageHeight.toFloat()
             val width = imageView.measuredWidth
             val height = (width.toFloat() / aspectRatio).roundToInt()
-            streamCellItem?.height = height
-            assignHeight(height)
+
+            if (width > 0 && streamCellItem?.height != height) {
+                streamCellItem?.height = height
+                assignHeight(height)
+            }
         }
     }
 }
