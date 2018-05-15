@@ -21,32 +21,25 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "GITHUB_API_TOKEN", secretProperties['GITHUB_API_TOKEN']
-        buildConfigField "String", "DANGER_GITHUB_API_TOKEN", secretProperties['DANGER_GITHUB_API_TOKEN']
-        buildConfigField "String", "INVITE_FRIENDS_SALT", secretProperties['INVITE_FRIENDS_SALT']
-        buildConfigField "String", "CRASHLYTICS_KEY", secretProperties['CRASHLYTICS_KEY']
-        buildConfigField "String", "NEW_RELIC_KEY", secretProperties['NEW_RELIC_KEY']
         buildConfigField "String", "NINJA_CLIENT_KEY", secretProperties['NINJA_CLIENT_KEY']
         buildConfigField "String", "NINJA_CLIENT_SECRET", secretProperties['NINJA_CLIENT_SECRET']
         buildConfigField "String", "NINJA_DOMAIN", secretProperties['NINJA_DOMAIN']
+
         buildConfigField "String", "STAGE1_CLIENT_KEY", secretProperties['STAGE1_CLIENT_KEY']
         buildConfigField "String", "STAGE1_CLIENT_SECRET", secretProperties['STAGE1_CLIENT_SECRET']
         buildConfigField "String", "STAGE1_DOMAIN", secretProperties['STAGE1_DOMAIN']
+
         buildConfigField "String", "STAGE2_CLIENT_KEY", secretProperties['STAGE2_CLIENT_KEY']
         buildConfigField "String", "STAGE2_CLIENT_SECRET", secretProperties['STAGE2_CLIENT_SECRET']
         buildConfigField "String", "STAGE2_DOMAIN", secretProperties['STAGE2_DOMAIN']
+
         buildConfigField "String", "RAINBOW_CLIENT_KEY", secretProperties['RAINBOW_CLIENT_KEY']
         buildConfigField "String", "RAINBOW_CLIENT_SECRET", secretProperties['RAINBOW_CLIENT_SECRET']
         buildConfigField "String", "RAINBOW_DOMAIN", secretProperties['RAINBOW_DOMAIN']
-        buildConfigField "String", "STAGING_SEGMENT_KEY", secretProperties['STAGING_SEGMENT_KEY']
+
         buildConfigField "String", "PROD_CLIENT_KEY", secretProperties['PROD_CLIENT_KEY']
         buildConfigField "String", "PROD_CLIENT_SECRET", secretProperties['PROD_CLIENT_SECRET']
         buildConfigField "String", "PROD_DOMAIN", secretProperties['PROD_DOMAIN']
-        buildConfigField "String", "PROD_SEGMENT_KEY", secretProperties['PROD_SEGMENT_KEY']
-        buildConfigField "String", "AWS_DEFAULT_REGION", secretProperties['AWS_DEFAULT_REGION']
-        buildConfigField "String", "AWS_ACCESS_KEY_ID", secretProperties['AWS_ACCESS_KEY_ID']
-        buildConfigField "String", "AWS_SECRET_ACCESS_KEY", secretProperties['AWS_SECRET_ACCESS_KEY']
-        buildConfigField "String", "TOKEN", secretProperties['TOKEN']
     }
 
     buildTypes {
