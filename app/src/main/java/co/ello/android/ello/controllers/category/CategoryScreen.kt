@@ -11,11 +11,17 @@ import java.net.URL
 
 
 class CategoryScreen : CategoryProtocols.Screen {
+    override var delegate: CategoryProtocols.Controller? = null
+
     override val contentView: View
     override val streamContainer: ViewGroup
     val cardListContainer: LinearLayout
 
-    override var delegate: CategoryProtocols.Controller? = null
+    constructor(activity: Activity) {
+        contentView = activity.layoutInflater.inflate(R.layout.category_layout, null)
+        cardListContainer = contentView.findViewById(R.id.cardListContainer)
+        streamContainer = contentView.findViewById(R.id.streamContainer)
+    }
 
     sealed class CardInfo(val title: String, val kind: Kind, val imageURL: URL?) {
         enum class Kind {
@@ -28,10 +34,6 @@ class CategoryScreen : CategoryProtocols.Screen {
         class Category(category: co.ello.android.ello.Category) : CardInfo(title = category.name, kind = Kind.Category, imageURL = category.tileURL)
     }
 
-    constructor(activity: Activity) {
-        contentView = activity.layoutInflater.inflate(R.layout.category_layout, null)
-        cardListContainer = contentView.findViewById(R.id.cardListContainer)
-        streamContainer = contentView.findViewById(R.id.streamContainer)
     }
 
     override fun updateSubscribedCategories(categories: List<CardInfo>) {
@@ -49,6 +51,7 @@ class CategoryScreen : CategoryProtocols.Screen {
                 CardInfo.Kind.ZeroState -> 300
                 CardInfo.Kind.Subscribed, CardInfo.Kind.Category-> 100
             }).dp
+
             val height = LinearLayout.LayoutParams.MATCH_PARENT
             val layoutParams = LinearLayout.LayoutParams(width, height)
             cardLayout.layoutParams = layoutParams

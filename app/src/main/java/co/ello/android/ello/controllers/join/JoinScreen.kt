@@ -10,9 +10,9 @@ import android.widget.TextView
 
 
 class JoinScreen : JoinProtocols.Screen {
-    override val contentView: View
-
     override var delegate: JoinProtocols.Controller? = null
+
+    override val contentView: View
     override var interactive: Boolean = true
         set(value) {
             field = value

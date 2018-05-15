@@ -21,10 +21,11 @@ class AppActivity : AppCompatActivity() {
 
     private fun showAppScreen() {
         val controller = AppController(this)
+        this.controller = controller
+
         setContentView(controller.view)
         controller.start()
         controller.appear()
-        this.controller = controller
     }
 
     override fun onDestroy() {

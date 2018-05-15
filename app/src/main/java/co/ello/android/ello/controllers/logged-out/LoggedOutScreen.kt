@@ -7,9 +7,10 @@ import android.widget.Button
 
 
 class LoggedOutScreen : LoggedOutProtocols.Screen {
+    override var delegate: LoggedOutProtocols.Controller? = null
+
     override val contentView: View
     override val containerView: ViewGroup
-    override var delegate: LoggedOutProtocols.Controller? = null
 
     private val loginButton: Button
     private val joinButton: Button
