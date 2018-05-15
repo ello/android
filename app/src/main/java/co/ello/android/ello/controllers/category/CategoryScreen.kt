@@ -23,15 +23,15 @@ class CategoryScreen : CategoryProtocols.Screen {
         streamContainer = contentView.findViewById(R.id.streamContainer)
     }
 
-    sealed class CardInfo(val title: String, val kind: Kind, val imageURL: URL?) {
+    sealed class CardInfo(val title: StringRes, val kind: Kind, val imageURL: URL?) {
         enum class Kind {
             All, Subscribed, ZeroState, Category
         }
 
-        object All : CardInfo(title = T(R.string.Category_All), kind = Kind.All, imageURL = null)
-        object Subscribed : CardInfo(title = T(R.string.Category_Subscribed), kind = Kind.Subscribed, imageURL = null)
-        object ZeroState : CardInfo(title = T(R.string.Category_ZeroState), kind = Kind.ZeroState, imageURL = null)
-        class Category(category: co.ello.android.ello.Category) : CardInfo(title = category.name, kind = Kind.Category, imageURL = category.tileURL)
+        object All : CardInfo(title = Res(R.string.Category_all), kind = Kind.All, imageURL = null)
+        object Subscribed : CardInfo(title = Res(R.string.Category_subscribed), kind = Kind.Subscribed, imageURL = null)
+        object ZeroState : CardInfo(title = Res(R.string.Category_zeroState), kind = Kind.ZeroState, imageURL = null)
+        class Category(category: co.ello.android.ello.Category) : CardInfo(title = Lit(category.name), kind = Kind.Category, imageURL = category.tileURL)
     }
 
     }
