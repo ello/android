@@ -12,6 +12,15 @@ abstract class BaseController(a: AppActivity) : Controller(a) {
             }
         }
     val isLoggedIn: Boolean get() = currentUser != null
+    val appController: AppController? get() { return findParent<AppController>() }
 
     fun didSetCurrentUser() {}
+
+    fun showSpinner() {
+        appController?.showAppSpinner()
+    }
+
+    fun hideSpinner() {
+        appController?.hideAppSpinner()
+    }
 }

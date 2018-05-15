@@ -28,7 +28,7 @@ abstract class Controller(val activity: AppActivity) {
     private var _isVisible = false
     val isVisible: Boolean get() { return _isVisible }
 
-    val appController: AppController? get() { return findParent<AppController>() }
+    val rootController: RootController? get() { return findParent<RootController>() }
     val navigationController: NavigationController? get() { return findParent<NavigationController>() }
 
     private var _view: View? = null
@@ -130,13 +130,5 @@ abstract class Controller(val activity: AppActivity) {
         }
         // println("calling onFinish in $this (parent: ${this.parent})")
         onFinish()
-    }
-
-    fun showSpinner() {
-        appController?.showAppSpinner()
-    }
-
-    fun hideSpinner() {
-        appController?.hideAppSpinner()
     }
 }
