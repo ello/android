@@ -31,6 +31,6 @@ class HomeController(
     }
 
     override fun tabSelected(tab: HomeScreen.Tab) {
-        delegate?.homeTabSelected(tab)
+        delegate.homeTabSelected(tab)
     }
 }

@@ -88,22 +88,20 @@ class StyledButton @JvmOverloads constructor(
         this.typeface = Typeface.createFromAsset(context.assets, "AtlasGrotesk${style.font}.otf")
         this.setTextSize(style.size.fontDp)
 
-        style.color?.let { color ->
-            val statesList = ArrayList<IntArray>()
-            val colorsList = ArrayList<Int>()
+        val statesList = ArrayList<IntArray>()
+        val colorsList = ArrayList<Int>()
 
-            style.highlightedColor?.let { highlightedColor ->
-                statesList.add(intArrayOf(android.R.attr.state_enabled, android.R.attr.state_pressed))
-                colorsList.add(context.getColor(highlightedColor))
-            }
-
-            statesList.add(intArrayOf(android.R.attr.state_enabled))
-            colorsList.add(context.getColor(color))
-
-            val states = Array<IntArray>(statesList.size) { statesList[it] }
-            val colors = IntArray(colorsList.size) { colorsList[it] }
-            setTextColor(ColorStateList(states, colors))
+        style.highlightedColor?.let { highlightedColor ->
+            statesList.add(intArrayOf(android.R.attr.state_enabled, android.R.attr.state_pressed))
+            colorsList.add(context.getColor(highlightedColor))
         }
+
+        statesList.add(intArrayOf(android.R.attr.state_enabled))
+        colorsList.add(context.getColor(style.color))
+
+        val states = Array<IntArray>(statesList.size) { statesList[it] }
+        val colors = IntArray(colorsList.size) { colorsList[it] }
+        setTextColor(ColorStateList(states, colors))
 
         style.textAlign?.let { when(it) {
             Alignment.Left -> {
@@ -117,7 +115,7 @@ class StyledButton @JvmOverloads constructor(
         } }
         setPadding(0, 0, 0, 3.dp)
 
-        color = style.color?.let { context.getColor(it) }
+        color = context.getColor(style.color)
         highlightedColor = style.highlightedColor?.let { context.getColor(it) }
         backgroundColor = style.backgroundColor?.let { context.getColor(it) }
 
@@ -127,7 +125,7 @@ class StyledButton @JvmOverloads constructor(
     override fun onDraw(canvas_: Canvas?) {
         val backgroundColor = this.backgroundColor
 
-        safeLet(canvas_, color) { canvas, color ->
+        canvas_?.let { canvas ->
             val p = Paint()
             p.strokeWidth = 1.dpf
 
@@ -140,7 +138,7 @@ class StyledButton @JvmOverloads constructor(
                         p.style = Paint.Style.FILL_AND_STROKE
                     }
                     else {
-                        p.setColor(if (isPressed) highlightedColor ?: color else color)
+                        p.setColor(if (isPressed) highlightedColor ?: style.color else style.color)
                         p.style = Paint.Style.STROKE
                     }
 
@@ -161,7 +159,7 @@ class StyledButton @JvmOverloads constructor(
                         p.style = Paint.Style.FILL_AND_STROKE
                     }
                     else {
-                        p.setColor(if (isPressed) highlightedColor ?: color else color)
+                        p.setColor(if (isPressed) highlightedColor ?: style.color else style.color)
                         p.style = Paint.Style.STROKE
                     }
 
