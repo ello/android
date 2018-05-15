@@ -1,7 +1,7 @@
 package co.ello.android.ello
 
 
-abstract class BaseController(a: AppActivity) : Controller(a) {
+abstract class BaseController(activity: AppActivity) : Controller(activity) {
     var currentUser: User? = null
         set(value) {
             field = value
