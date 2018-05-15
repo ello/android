@@ -6,10 +6,12 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.LinearLayoutManager
 
 
-class StreamController(a: AppActivity) : BaseController(a) {
+class StreamController(a: AppActivity)
+    : BaseController(a), PostToolbarResponder
+{
     private lateinit var screen: RecyclerView
 
-    class Adapter(val items: List<StreamCellItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    class Adapter(val items: List<StreamCellItem>, val streamController: StreamController) : RecyclerView.Adapter<StreamCell>() {
         init {
             setHasStableIds(true)
         }
@@ -22,11 +24,12 @@ class StreamController(a: AppActivity) : BaseController(a) {
         override fun getItemViewType(position: Int): Int =
                 items[position].type.viewType
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StreamCell =
                 StreamCellType.createViewHolder(parent = parent, viewType = viewType)
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: StreamCell, position: Int) {
             val item = items[position]
+            holder.streamController = streamController
             item.type.bindViewHolder(holder, item = item)
         }
     }
@@ -34,12 +37,27 @@ class StreamController(a: AppActivity) : BaseController(a) {
     override fun createView(): View {
         val recycler = RecyclerView(activity)
         recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.adapter = Adapter(emptyList())
+        recycler.adapter = Adapter(emptyList(), streamController = this)
         screen = recycler
         return screen
     }
 
     fun addAll(items: List<StreamCellItem>) {
-        screen.adapter = Adapter(items)
+        screen.adapter = Adapter(items, streamController = this)
+    }
+
+    override fun toolbarTappedViews(cell: StreamCell, item: StreamCellItem) {
+    }
+
+    override fun toolbarTappedLoves(cell: StreamCell, item: StreamCellItem) {
+    }
+
+    override fun toolbarTappedComments(cell: StreamCell, item: StreamCellItem) {
+    }
+
+    override fun toolbarTappedRepost(cell: StreamCell, item: StreamCellItem) {
+    }
+
+    override fun toolbarTappedShare(cell: StreamCell, item: StreamCellItem) {
     }
 }
