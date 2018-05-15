@@ -21,7 +21,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/image_back_white"
+        android:background="@drawable/image_back_button_white"
         android:nextFocusForward="@+id/emailField"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -96,6 +96,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:gravity="center"
         android:text="@string/Login.continue"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/continueContainer"

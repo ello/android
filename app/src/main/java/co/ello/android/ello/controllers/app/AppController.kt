@@ -1,16 +1,13 @@
 package co.ello.android.ello
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 
 
 class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate {
-    private var screen: AppProtocols.Screen? = null
+    private lateinit var screen: AppProtocols.Screen
 
-    override val containerView: ViewGroup? get() = screen?.containerView
+    override val containerView: ViewGroup? get() = screen.containerView
 
     override fun createView(): View {
         val screen = AppScreen(activity)
@@ -38,7 +35,7 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
 
     override fun loggedOutDidLogin(credentials: Credentials) {
         println("=============== AppController.kt at line 34 ===============");
-        // showHomeScreen()
+        showHomeScreen()
     }
 
     private fun showHomeScreen() {
@@ -48,17 +45,12 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
     private fun homeDidLogout() = showLoggedOutScreen()
 
     fun showAppSpinner() {
-        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
-
-        screen?.spinnerVisibility(true)
-        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        screen.spinnerVisibility(true)
+        stopInteraction()
     }
 
     fun hideAppSpinner() {
-        screen?.spinnerVisibility(false)
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED)
+        screen.spinnerVisibility(false)
+        allowInteraction()
     }
 }

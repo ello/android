@@ -6,8 +6,6 @@ import android.util.AttributeSet
 import android.view.View
 
 
-const val NUM_COLORS = 11
-
 class StartupGradientLayer : View {
 
     constructor(context: Context) : this(context, null)

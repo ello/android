@@ -10,11 +10,11 @@ import android.widget.TextView
 
 
 class LoginScreen : LoginProtocols.Screen {
-    override val contentView: View
-
     override var delegate: LoginProtocols.Controller? = null
+
+    override val contentView: View
     override var interactive: Boolean = true
-        set(value: Boolean) {
+        set(value) {
             field = value
             updateInteractive()
         }
@@ -28,8 +28,7 @@ class LoginScreen : LoginProtocols.Screen {
     private val passwordFieldError: ImageView
 
     constructor(activity: Activity) {
-        val inflater = activity.layoutInflater
-        contentView = inflater.inflate(R.layout.login_layout, null)
+        contentView = activity.layoutInflater.inflate(R.layout.login_layout, null)
         continueButton = contentView.findViewById<Button>(R.id.continueButton)
         continueButton.setOnClickListener {
             continueButtonTapped()

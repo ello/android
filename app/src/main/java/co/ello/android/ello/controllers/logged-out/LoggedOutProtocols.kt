@@ -6,9 +6,9 @@ import android.view.ViewGroup
 
 class LoggedOutProtocols {
     interface Screen {
+        var delegate: Controller?
         val contentView: View
         val containerView: ViewGroup
-        var delegate: Controller?
     }
 
     interface Controller {

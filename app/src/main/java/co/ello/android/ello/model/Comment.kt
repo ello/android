@@ -18,7 +18,7 @@ data class Comment(
     val parentPost: Post? get() = getLinkObject("parent_post")
     val loadedFromPost: Post? get() = getLinkObject("loaded_from_post")
     var loadedFromPostId: String = postId
-        set(value: String) {
+        set(value) {
             field = value
             addLinkObject("loaded_from_post", value, MappingType.PostsType)
         }

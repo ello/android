@@ -2,6 +2,7 @@ package co.ello.android.ello
 
 
 typealias Block = (() -> Unit)
+typealias CompletionBlock = ((Boolean) -> Unit)
 
 
 class DispatchQueue {

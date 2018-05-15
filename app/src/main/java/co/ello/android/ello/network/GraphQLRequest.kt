@@ -1,9 +1,6 @@
 package co.ello.android.ello
 
-import com.android.volley.NetworkResponse
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.VolleyError
+import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import java.util.concurrent.CompletableFuture
@@ -14,7 +11,7 @@ class GraphQLRequest<T>(
         val endpointName: String,
         override val requiresAnyToken: Boolean,
         override val supportsAnonymousToken: Boolean
-) : Request<JSON>(Request.Method.POST, "${BuildConfig.NINJA_DOMAIN}/api/v3/graphql", null), AuthenticationEndpoint {
+) : Request<JSON>(Request.Method.POST, "${API.domain}/api/v3/graphql", null), AuthenticationEndpoint {
     class CancelledRequest : Throwable()
     class ParsingError : Throwable()
 
@@ -41,9 +38,12 @@ class GraphQLRequest<T>(
 
     private var parserCompletion: ((JSON) -> T)? = null
     private var variables: List<Variable>? = null
-    private var fragments: List<Fragments>? = null
-    private var body: String? = null
+    private var body: Fragments? = null
     private var uuid: UUID? = null
+    private var manager: AuthenticationManager? = null
+    private var retryBlock: Block? = null
+    private var cancelBlock: Block? = null
+    private val future = CompletableFuture<T>()
 
     fun parser(parser: ((JSON) -> T)): GraphQLRequest<T> {
         parserCompletion = parser
@@ -55,35 +55,42 @@ class GraphQLRequest<T>(
         return this
     }
 
-    fun setFragments(vararg fragments: Fragments): GraphQLRequest<T> {
-        this.fragments = List<Fragments>(fragments.size, { fragments[it] })
-        return this
-    }
-
-    fun setBody(body: String): GraphQLRequest<T> {
+    fun setBody(body: Fragments): GraphQLRequest<T> {
         this.body = body
         return this
     }
 
-    fun enqueue(queue: Queue, prevFuture: CompletableFuture<T>? = null): CompletableFuture<T> {
-        val future = prevFuture ?: CompletableFuture<T>()
+    fun enqueue(queue: Queue): CompletableFuture<T> {
+        setRetryPolicy(DefaultRetryPolicy(
+                30_000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+
+        retryBlock = { this.enqueue(queue) }
+        cancelBlock = { future.completeExceptionally(CancelledRequest()) }
 
         this.onSuccess { json ->
             val resultJson = json["data"][endpointName]
+            var result: T? = null
             try {
-                val result = parserCompletion!!.invoke(resultJson)
-                future.complete(result)
+                result = parserCompletion!!.invoke(resultJson)
             }
             catch(e: Throwable) {
                 future.completeExceptionally(e)
+            }
+
+            if (result != null) {
+                future.complete(result)
             }
         }
         .onFailure { exception ->
             future.completeExceptionally(exception)
         }
 
-        AuthenticationManager(queue).attemptRequest(this,
-            retry = { this.enqueue(queue, prevFuture = future) },
+        val manager = AuthenticationManager(queue)
+        this.manager = manager
+        manager.attemptRequest(this,
+            retry = retryBlock!!,
             proceed = { uuid ->
                 AuthToken.shared.tokenWithBearer?.let {
                     this.addHeader("Authorization", it)
@@ -92,15 +99,18 @@ class GraphQLRequest<T>(
                 this.uuid = uuid
                 queue.add(this)
             },
-            cancel = {
-                future.completeExceptionally(CancelledRequest())
-            })
+            cancel = cancelBlock!!)
 
         return future
     }
 
     override fun deliverError(error: VolleyError) {
-        failureCompletion?.invoke(error)
+        if (error is AuthFailureError) {
+            manager!!.attemptAuthentication(uuid!!, RequestAttempt(this, retryBlock!!, cancelBlock!!))
+        }
+        else {
+            failureCompletion?.invoke(error)
+        }
     }
 
     private fun onSuccess(completion: ((JSON) -> Unit)?): GraphQLRequest<T> {
@@ -122,37 +132,41 @@ class GraphQLRequest<T>(
         return headers
     }
 
-    private fun queryVariables(): String {
+    private fun queryVariables(): String? {
         return variables?.let { it.map { variable ->
             return "$${variable.name}: ${variable.type}"
-        }.joinToString(", ") } ?: ""
+        }.joinToString(", ") }
     }
 
-    private fun endpointVariables(): String {
+    private fun endpointVariables(): String? {
         return variables?.let { it.map { variable ->
             return "${variable.name}: $${variable.name}"
-        }.joinToString(", ") } ?: ""
+        }.joinToString(", ") }
     }
 
     override fun getBody(): ByteArray {
         var query = ""
         val variables = this.variables
-        val fragments = this.fragments
+        val fragments = body?.dependencies
 
         if (fragments != null && fragments.isNotEmpty()) {
-            val fragmentsQuery = Fragments.flatten(fragments)
+            val fragmentsQuery = fragments.map { it.string }.joinToString("\n")
             query += fragmentsQuery + "\n"
         }
 
-        if (variables != null && variables.isNotEmpty()) {
-            query += "query(${queryVariables()})\n"
+        val queryVariables = this.queryVariables()
+        if (queryVariables != null && queryVariables.isNotEmpty()) {
+            query += "query($queryVariables)\n"
         }
 
         query += "{\n$endpointName"
-        if (variables != null && variables.isNotEmpty()) {
-            query += "(${endpointVariables()})"
+        val endpointVariables = this.endpointVariables()
+        if (endpointVariables != null && endpointVariables.isNotEmpty()) {
+            query += "($endpointVariables)"
         }
-        query += "\n  {\n${body ?: ""}\n  }\n}"
+
+        val queryBody = body?.string ?: ""
+        query += "\n  {\n$queryBody\n  }\n}"
 
         val httpBody: MutableMap<String, Any> = mutableMapOf("query" to query)
 

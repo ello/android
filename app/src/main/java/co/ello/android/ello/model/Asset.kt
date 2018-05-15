@@ -58,14 +58,12 @@ data class Asset(val id: String) : Model() {
     }
 
     val oneColumnAttachment: Attachment? get() {
+        return if (isGif) optimized else xhdpi
         // return Window.isWide(Window.width) && DeviceScreen.isRetina ? xhdpi : hdpi
-        TODO("Window.isWidth and DeviceScreen.isRetina")
     }
 
-    val gridLayoutAttachment: Attachment? get() {
+    val gridLayoutAttachment: Attachment? get() = hdpi
         // return Window.isWide(Window.width) && DeviceScreen.isRetina ? hdpi : mdpi
-        TODO("Window.isWidth and DeviceScreen.isRetina")
-    }
 
     val largeOrBest: Attachment? get() {
         if (isGif && original != null) return original

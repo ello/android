@@ -3,14 +3,13 @@ package co.ello.android.ello
 import android.view.View
 
 
-class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : Controller(a), LoginProtocols.Controller {
-    private var screen: LoginProtocols.Screen? = null
-    private val generator: LoginProtocols.Generator = LoginGenerator()
+class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : BaseController(a), LoginProtocols.Controller {
+    private lateinit var screen: LoginProtocols.Screen
+    private val generator: LoginProtocols.Generator = LoginGenerator(delegate = this)
 
     override fun createView(): View {
         val screen = LoginScreen(activity)
         screen.delegate = this
-        generator.delegate = this
         this.screen = screen
         return screen.contentView
     }
@@ -18,18 +17,17 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : C
     override fun submit(username: String, password: String) {
         var usernameMessage: String? = null
         if (username.isEmpty()) {
-            usernameMessage = activity.getString(R.string.Error_usernameRequired)
+            usernameMessage = T(R.string.Error_usernameRequired)
         }
 
         var passwordMessage: String? = null
         if (password.isEmpty()) {
-            passwordMessage = activity.getString(R.string.Error_passwordRequired)
+            passwordMessage = T(R.string.Error_passwordRequired)
         }
         else if (password.length < 8) {
-            passwordMessage = activity.getString(R.string.Error_passwordLength)
+            passwordMessage = T(R.string.Error_passwordLength)
         }
 
-        val screen = this.screen!!
         screen.showErrors(usernameMessage, passwordMessage)
         if (usernameMessage == null && passwordMessage == null) {
             showSpinner()
@@ -50,6 +48,6 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : C
 
     override fun failure() {
         hideSpinner()
-        screen?.interactive = true
+        screen.interactive = true
     }
 }

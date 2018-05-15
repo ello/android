@@ -2,6 +2,18 @@ package co.ello.android.ello
 
 
 class API {
+    companion object {
+        fun init() {
+            key = BuildConfig.NINJA_CLIENT_KEY
+            secret = BuildConfig.NINJA_CLIENT_SECRET
+            domain = BuildConfig.NINJA_DOMAIN
+        }
+
+        var key: String = ""
+        var secret: String = ""
+        var domain: String = ""
+    }
+
     enum class CategoryFilter(val value: String) {
         Featured("FEATURED"),
         Trending("TRENDING"),
@@ -20,7 +32,7 @@ class API {
     }
 
     fun globalPostStream(filter: CategoryFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
-        val request = GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream", requiresAnyToken = true, supportsAnonymousToken = true)
+        return GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream", requiresAnyToken = true, supportsAnonymousToken = true)
             .parser { json ->
                 PageParser<Post>("posts", PostParser()).parse(json)
             }
@@ -28,11 +40,19 @@ class API {
                 GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
                 GraphQLRequest.Variable.optionalString("before", before)
             )
-            .setFragments(Fragments.postStream)
             .setBody(Fragments.postStreamBody)
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/json")
-        return request
+    }
+
+    fun subscribedCategories(): GraphQLRequest<List<Category>> {
+        return GraphQLRequest<List<Category>>("categoryNav", requiresAnyToken = true, supportsAnonymousToken = true)
+            .parser { json ->
+                ManyParser<Category>(CategoryParser()).parse(json)
+            }
+            .setBody(Fragments.categoriesBody)
+            .addHeader("Accept", "application/json")
+            .addHeader("Content-Type", "application/json")
     }
 
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
@@ -49,8 +69,8 @@ class API {
                     "email" to email,
                     "username" to username,
                     "password" to password,
-                    "client_id" to BuildConfig.NINJA_CLIENT_KEY,
-                    "client_secret" to BuildConfig.NINJA_CLIENT_SECRET,
+                    "client_id" to API.key,
+                    "client_secret" to API.secret,
                     "grant_type" to "password"
                 ))
 
@@ -69,8 +89,8 @@ class API {
             .setBody(mapOf(
                 "email" to username,
                 "password" to password,
-                "client_id" to BuildConfig.NINJA_CLIENT_KEY,
-                "client_secret" to BuildConfig.NINJA_CLIENT_SECRET,
+                "client_id" to API.key,
+                "client_secret" to API.secret,
                 "grant_type" to "password"
             ))
 
@@ -87,8 +107,8 @@ class API {
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/json")
             .setBody(mapOf(
-                "client_id" to BuildConfig.NINJA_CLIENT_KEY,
-                "client_secret" to BuildConfig.NINJA_CLIENT_SECRET,
+                "client_id" to API.key,
+                "client_secret" to API.secret,
                 "refresh_token" to refreshToken,
                 "grant_type" to "refresh_token"
             ))
@@ -106,8 +126,8 @@ class API {
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/json")
             .setBody(mapOf(
-                "client_id" to BuildConfig.NINJA_CLIENT_KEY,
-                "client_secret" to BuildConfig.NINJA_CLIENT_SECRET,
+                "client_id" to API.key,
+                "client_secret" to API.secret,
                 "grant_type" to "client_credentials"
             ))
 

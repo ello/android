@@ -25,8 +25,8 @@ class UserParser : IdParser(table = MappingType.UsersType) {
             isHireable = json["settings"]["isHireable"].booleanValue
         )
 
-        user.avatar = AssetParser().parse(json["avatar"])
-        user.coverImage = AssetParser().parse(json["coverImage"])
+        user.avatar = AssetParser().parse(json, lookIn = "avatar")
+        user.coverImage = AssetParser().parse(json, lookIn = "coverImage")
 
         // user.identifiableBy = json["identifiable_by"].string
         user.formattedShortBio = json["formattedShortBio"].string

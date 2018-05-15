@@ -19,8 +19,7 @@ class AppScreen : AppProtocols.Screen {
     private val spinnerImageView: ImageView
 
     constructor(activity: Activity) {
-        val inflater = activity.layoutInflater
-        contentView = inflater.inflate(R.layout.app_layout, null)
+        contentView = activity.layoutInflater.inflate(R.layout.app_layout, null)
 
         containerView = contentView.findViewById<ViewGroup>(R.id.containerView)
         spinnerContainer = contentView.findViewById<View>(R.id.spinnerContainer)

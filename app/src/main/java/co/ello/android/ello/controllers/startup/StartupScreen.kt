@@ -13,8 +13,7 @@ class StartupScreen : StartupProtocols.Screen {
     private val spinnerImageView: ImageView
 
     constructor(activity: Activity) {
-        val inflater = activity.layoutInflater
-        contentView = inflater.inflate(R.layout.startup_layout, null) as ConstraintLayout
+        contentView = activity.layoutInflater.inflate(R.layout.startup_layout, null) as ConstraintLayout
 
         spinnerImageView = contentView.findViewById<ImageView>(R.id.spinner)
         val rotationAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)

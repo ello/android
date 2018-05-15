@@ -28,22 +28,42 @@ abstract class Controller(val activity: AppActivity) {
     private var _isVisible = false
     val isVisible: Boolean get() { return _isVisible }
 
-    val appController: AppController? get() { return findParent<AppController>() }
+    val rootController: RootController? get() { return findParent<RootController>() }
     val navigationController: NavigationController? get() { return findParent<NavigationController>() }
 
     private var _view: View? = null
     val isViewLoaded: Boolean get() { return _view != null }
     val view: View get() {
-        val view = _view ?: createView()
-        if (_view == null) {
+        var view = _view
+        if (view == null) {
+            view = createView()
+            onViewCreated()
             _view = view
         }
         return view
     }
 
-    fun assignParent(controller: Controller?) {
+    fun removeFromParent() {
+        if (isStarted) {
+            if (isVisible) {
+                disappear()
+            }
+            finish()
+        }
+        _parent = null
+    }
+
+    fun assignParent(parentController: Controller, isVisible: Boolean) {
         assert(_parent != null, {"$this is already a child controller on ${_parent!!}"})
-        _parent = controller
+
+        _parent = parentController
+
+        if (parentController.isStarted) {
+            this.start()
+            if (isVisible && parentController.isVisible) {
+                this.appear()
+            }
+        }
     }
 
     inline fun <reified T : Controller> findParent(): T? {
@@ -63,6 +83,7 @@ abstract class Controller(val activity: AppActivity) {
     // controller is *moved* to another controller, these would be called again.
     open fun onStart() {}
     open fun onFinish() {}
+    open fun onViewCreated() {}
 
     // could be called many times, for instance in a tab controller
     open fun onAppear() {}
@@ -71,6 +92,7 @@ abstract class Controller(val activity: AppActivity) {
     open fun start() {
         if (!isRunning || isStarted)  return
         _isStarted = true
+        // println("calling onStart in $this (parent: ${this.parent})")
         onStart()
         for (controller in childControllers) {
             controller.start()
@@ -79,7 +101,11 @@ abstract class Controller(val activity: AppActivity) {
 
     open fun appear() {
         if (!isStarted || isVisible)  return
+        if (!isViewLoaded) {
+            throw IllegalArgumentException("$this View should be loaded before appear() is called")
+        }
         _isVisible = true
+        // println("calling onAppear in $this (parent: ${this.parent})")
         onAppear()
         for (controller in visibleChildControllers) {
             controller.appear()
@@ -92,6 +118,7 @@ abstract class Controller(val activity: AppActivity) {
         for (controller in visibleChildControllers) {
             controller.disappear()
         }
+        // println("calling onDisappear in $this (parent: ${this.parent})")
         onDisappear()
     }
 
@@ -101,14 +128,7 @@ abstract class Controller(val activity: AppActivity) {
         for (controller in childControllers) {
             controller.finish()
         }
+        // println("calling onFinish in $this (parent: ${this.parent})")
         onFinish()
-    }
-
-    fun showSpinner() {
-        appController?.showAppSpinner()
-    }
-
-    fun hideSpinner() {
-        appController?.hideAppSpinner()
     }
 }

@@ -1,9 +1,6 @@
 package co.ello.android.ello
 
-import com.android.volley.NetworkResponse
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.VolleyError
+import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import java.util.concurrent.CompletableFuture
@@ -15,7 +12,7 @@ class ElloRequest<T>(
         path: String,
         override val requiresAnyToken: Boolean,
         override val supportsAnonymousToken: Boolean
-) : Request<String>(method, "${BuildConfig.NINJA_DOMAIN}$path", null), AuthenticationEndpoint {
+) : Request<String>(method, "${API.domain}$path", null), AuthenticationEndpoint {
     class CancelledRequest : Throwable()
 
     constructor(
@@ -41,6 +38,10 @@ class ElloRequest<T>(
     private var failureCompletion: ((Throwable) -> Unit)? = null
     private val gson = Gson()
     private var uuid: UUID? = null
+    private var manager: AuthenticationManager? = null
+    private var retryBlock: Block? = null
+    private var cancelBlock: Block? = null
+    private val future = CompletableFuture<T>()
 
     enum class Method {
         GET, POST, PUT, DELETE
@@ -67,8 +68,9 @@ class ElloRequest<T>(
         return setBody(gson.toJson(body))
     }
 
-    fun enqueue(queue: Queue, prevFuture: CompletableFuture<T>? = null): CompletableFuture<T> {
-        val future = prevFuture ?: CompletableFuture<T>()
+    fun enqueue(queue: Queue): CompletableFuture<T> {
+        retryBlock = { this.enqueue(queue) }
+        cancelBlock = { future.completeExceptionally(CancelledRequest()) }
 
         this.onSuccess { json ->
             try {
@@ -83,8 +85,10 @@ class ElloRequest<T>(
             future.completeExceptionally(exception)
         }
 
-        AuthenticationManager(queue).attemptRequest(this,
-            retry = { this.enqueue(queue, prevFuture = future) },
+        val manager = AuthenticationManager(queue)
+        this.manager = manager
+        manager.attemptRequest(this,
+            retry = retryBlock!!,
             proceed = { uuid ->
                 AuthToken.shared.tokenWithBearer?.let {
                     this.addHeader("Authorization", it)
@@ -93,15 +97,18 @@ class ElloRequest<T>(
                 this.uuid = uuid
                 queue.add(this)
             },
-            cancel = {
-                future.completeExceptionally(CancelledRequest())
-            })
+            cancel = cancelBlock!!)
 
         return future
     }
 
     override fun deliverError(error: VolleyError) {
-        failureCompletion?.invoke(error)
+        if (error is AuthFailureError) {
+            manager!!.attemptAuthentication(uuid!!, RequestAttempt(this, retryBlock!!, cancelBlock!!))
+        }
+        else {
+            failureCompletion?.invoke(error)
+        }
     }
 
     private fun onSuccess(completion: ((String) -> Unit)?): ElloRequest<T> {
