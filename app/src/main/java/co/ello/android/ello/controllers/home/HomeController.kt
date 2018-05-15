@@ -4,33 +4,57 @@ import android.view.View
 import android.view.ViewGroup
 
 
-class HomeController(
-        a: AppActivity,
-        val delegate: HomeProtocols.Delegate,
-        private val embeddedController: Controller,
-        private val highlighted: HomeScreen.Tab
-) : BaseController(a), HomeProtocols.Controller {
+class HomeController : BaseController, HomeProtocols.Controller {
     private lateinit var screen: HomeProtocols.Screen
 
-    override val childControllers: Iterable<Controller> get() { return listOf(embeddedController) }
-    override val visibleChildControllers: Iterable<Controller> get() { return childControllers }
+    private val delegate: HomeProtocols.Delegate?
+    private val controllersTitles: List<String>
+    private val controllers: List<Controller>
+    private var selectedIndex: Int
+
+    override val childControllers: Iterable<Controller> get() { return controllers }
+    override val visibleChildControllers: Iterable<Controller> get() { return listOf(selectedController) }
+    private val selectedController: Controller get() = controllers[selectedIndex]
+
+    constructor(
+        activity: AppActivity,
+        delegate: HomeProtocols.Delegate?,
+        childControllers: List<Pair<String, Controller>>,
+        selected: Int
+        ) : super(activity) {
+        this.delegate = delegate
+        this.controllersTitles = childControllers.map { it.first }
+        this.controllers = childControllers.map { it.second }
+        this.selectedIndex = selected
+    }
 
     override fun createView(): View {
-        val screen = HomeScreen(activity)
+        val screen = HomeScreen(activity, tabs = controllersTitles)
         screen.delegate = this
-        screen.highlight(highlighted)
+        screen.highlight(selectedIndex)
+        screen.containerView.addView(selectedController.view)
         this.screen = screen
-
-        screen.containerView.addView(embeddedController.view)
-        embeddedController.assignParent(this, isVisible = true)
 
         return screen.contentView
     }
 
     override fun onStart() {
+        for ((index, controller) in controllers.withIndex()) {
+            controller.assignParent(this, isVisible = index == selectedIndex)
+        }
     }
 
-    override fun tabSelected(tab: HomeScreen.Tab) {
-        delegate.homeTabSelected(tab)
+    override fun tabSelected(tab: Int) {
+        if (selectedIndex == tab)  return
+
+        screen.containerView.removeView(selectedController.view)
+        selectedController.disappear()
+
+        selectedIndex = tab
+        screen.highlight(tab)
+        screen.containerView.addView(selectedController.view)
+        selectedController.appear()
+
+        delegate?.homeTabSelected(tab)
     }
 }

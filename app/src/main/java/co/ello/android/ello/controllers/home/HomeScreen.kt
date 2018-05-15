@@ -16,45 +16,37 @@ class HomeScreen : HomeProtocols.Screen {
 
     override val contentView: View
     override val containerView: ViewGroup
+    private val linearLayout: ViewGroup
+    private val tabHolders: List<TabHolder>
 
-    private val firstBlackBar: View
-    private val secondBlackBar: View
-    private val thirdBlackBar: View
-
-    enum class Tab {
-        First, Second, Third
+    data class TabHolder(val view: View) {
+        val button = view.findViewById<Button>(R.id.button)
+        val blackBar = view.findViewById<View>(R.id.blackBar)
     }
 
-    constructor(activity: Activity) {
+    constructor(activity: Activity, tabs: List<String>) {
         contentView = activity.layoutInflater.inflate(R.layout.home_layout, null)
         containerView = contentView.findViewById(R.id.containerView)
+        linearLayout = contentView.findViewById(R.id.linearLayout)
 
-        firstBlackBar = contentView.findViewById(R.id.firstBlackBar)
-        secondBlackBar = contentView.findViewById(R.id.secondBlackBar)
-        thirdBlackBar = contentView.findViewById(R.id.thirdBlackBar)
-
-        val firstButton = contentView.findViewById<Button>(R.id.firstButton)
-        firstButton.setOnClickListener { tabSelected(Tab.First) }
-
-        val secondButton = contentView.findViewById<Button>(R.id.secondButton)
-        secondButton.setOnClickListener { tabSelected(Tab.Second) }
-        val thirdButton = contentView.findViewById<Button>(R.id.thirdButton)
-        thirdButton.setOnClickListener { tabSelected(Tab.Third) }
-    }
-
-    override fun highlight(tab: Tab) {
-        firstBlackBar.visibility = View.INVISIBLE
-        secondBlackBar.visibility = View.INVISIBLE
-        thirdBlackBar.visibility = View.INVISIBLE
-
-        when(tab) {
-            Tab.First  -> firstBlackBar.visibility = View.VISIBLE
-            Tab.Second -> secondBlackBar.visibility = View.VISIBLE
-            Tab.Third  -> thirdBlackBar.visibility = View.VISIBLE
+        tabHolders = tabs.map { title ->
+            val tabHolder = TabHolder(activity.layoutInflater.inflate(R.layout.home_tab_layout, linearLayout, false))
+            tabHolder.blackBar.visibility = View.INVISIBLE
+            tabHolder.button.setText(title)
+            tabHolder.button.setOnClickListener { tabSelected(tabHolder) }
+            linearLayout.addView(tabHolder.view)
+            tabHolder
         }
     }
 
-    private fun tabSelected(tab: Tab) {
-        delegate?.tabSelected(tab)
+    override fun highlight(tab: Int) {
+        for ((index, tabHolder) in tabHolders.withIndex()) {
+            tabHolder.blackBar.visibility = if (index == tab) View.VISIBLE else View.INVISIBLE
+        }
+    }
+
+    private fun tabSelected(tab: TabHolder) {
+        val index = tabHolders.indexOf(tab)
+        delegate?.tabSelected(index)
     }
 }

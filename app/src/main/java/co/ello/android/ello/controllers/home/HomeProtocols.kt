@@ -10,14 +10,14 @@ class HomeProtocols {
         val contentView: View
         val containerView: ViewGroup
 
-        fun highlight(tab: HomeScreen.Tab)
+        fun highlight(tab: Int)
     }
 
     interface Controller {
-        fun tabSelected(tab: HomeScreen.Tab)
+        fun tabSelected(tab: Int)
     }
 
     interface Delegate {
-        fun homeTabSelected(tab: HomeScreen.Tab)
+        fun homeTabSelected(tab: Int)
     }
 }

@@ -22,5 +22,9 @@
     <string name="Category.subscribed">Subscribed</string>
     <string name="Category.zeroState">Choose communities to subscribe to here.</string>
 
+    <string name="Editorials.title">Editorials</string>
+    <string name="ArtistInvites.title">Artist Invites</string>
+    <string name="Discover.title">Discover</string>
+
     <string name="OK">OK</string>
 </resources>

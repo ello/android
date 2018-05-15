@@ -10,64 +10,37 @@ class LoggedOutController(
 {
     private lateinit var screen: LoggedOutProtocols.Screen
 
-    private val editorialsNavController = NavigationController(activity)
-    private val artistInvitesNavController = NavigationController(activity)
-    private val discoverNavController = NavigationController(activity)
-    private var selectedNavController = discoverNavController
+    private val editorialsController = CategoryController(activity)
+    private val artistInvitesController = CategoryController(activity)
+    private val discoverController = CategoryController(activity)
+    private val homeController: HomeController
 
-    override val childControllers: Iterable<Controller> get() { return listOf(editorialsNavController, artistInvitesNavController, discoverNavController) }
-    override val visibleChildControllers: Iterable<Controller> get() { return listOf(selectedNavController) }
+    init {
+        homeController = HomeController(activity, delegate = this,
+            childControllers = listOf(
+                Pair(T(R.string.Editorials_title), editorialsController),
+                Pair(T(R.string.ArtistInvites_title), artistInvitesController),
+                Pair(T(R.string.Discover_title), discoverController)
+                ),
+            selected = 2)
+     }
+
+    override val childControllers: Iterable<Controller> get() { return listOf(homeController) }
+    override val visibleChildControllers: Iterable<Controller> get() { return childControllers }
 
     override fun createView(): View {
         val screen = LoggedOutScreen(activity)
-        screen.containerView.addView(selectedNavController.view)
+        screen.containerView.addView(homeController.view)
         screen.delegate = this
         this.screen = screen
         return screen.contentView
     }
 
-    override fun onViewCreated() {
-        super.onViewCreated()
-
-        editorialsNavController.assignParent(this, isVisible = selectedNavController == editorialsNavController)
-        artistInvitesNavController.assignParent(this, isVisible = selectedNavController == artistInvitesNavController)
-        discoverNavController.assignParent(this, isVisible = selectedNavController == discoverNavController)
+    override fun homeTabSelected(tab: Int) {
     }
 
     override fun onStart() {
-        editorialsNavController.push(HomeController(activity,
-                delegate = this,
-                embeddedController = CategoryController(activity),
-                highlighted = HomeScreen.Tab.First))
-
-        artistInvitesNavController.push(HomeController(activity,
-                delegate = this,
-                embeddedController = CategoryController(activity),
-                highlighted = HomeScreen.Tab.Second))
-
-        discoverNavController.push(HomeController(activity,
-                delegate = this,
-                embeddedController = CategoryController(activity),
-                highlighted = HomeScreen.Tab.Third))
-    }
-
-    override fun homeTabSelected(tab: HomeScreen.Tab) {
-        when(tab) {
-            HomeScreen.Tab.First -> show(editorialsNavController)
-            HomeScreen.Tab.Second -> show(artistInvitesNavController)
-            HomeScreen.Tab.Third -> show(discoverNavController)
-        }
-    }
-
-    private fun show(controller: NavigationController) {
-        if (selectedNavController == controller)  return
-
-        screen.containerView.removeView(selectedNavController.view)
-        selectedNavController.disappear()
-
-        selectedNavController = controller
-        screen.containerView.addView(controller.view)
-        controller.appear()
+        homeController.assignParent(this, isVisible = true)
     }
 
     override fun showJoinScreen() {
