@@ -38,7 +38,7 @@ class StyledButton @JvmOverloads constructor(
             val textAlign: Alignment? = null,
             val customization: ((StyledButton) -> Unit) = {}
     ) {
-        Default(color = R.color.white, backgroundColor = R.color.black),
+        Default(color = R.color.black),
         Green(color = R.color.white, highlightedColor = R.color.black, backgroundColor = R.color.green, cornerRadius = Corner.Rounded),
         ClearWhite(color = R.color.white),
         ClearGray(color = R.color.gray, highlightedColor = R.color.black),
