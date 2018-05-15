@@ -5,11 +5,14 @@ import android.support.v7.app.AppCompatActivity
 import com.orhanobut.hawk.Hawk
 
 
+var App: AppActivity? = null
+
 class AppActivity : AppCompatActivity() {
     private var controller: RootController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        App = this
 
         Hawk.init(this).build()
         API.init()

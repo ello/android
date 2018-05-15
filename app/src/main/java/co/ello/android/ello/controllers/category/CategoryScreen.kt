@@ -45,7 +45,7 @@ class CategoryScreen : CategoryProtocols.Screen {
 
         for (info in categories) {
             val cardHolder = CardHolder(LayoutInflater.from(contentView.context).inflate(R.layout.category_card_view, null))
-            cardHolder.label.setText(info.title.gen(contentView.context))
+            cardHolder.label.setText(info.title.gen())
             cardHolder.label.style = if (info == CardInfo.All) StyledLabel.Style.BoldWhiteUnderline else StyledLabel.Style.White
             cardHolder.imageView.setImageURL(info.imageURL)
             cardHolder.overlay.alpha = if (info == CardInfo.All) 0.8f else 0.5f
