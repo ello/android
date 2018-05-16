@@ -1,11 +1,9 @@
 package co.ello.android.ello
 
-import android.content.res.Resources
+import java.net.URL
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.TimeZone
-import java.util.UUID
+import java.util.*
 
 
 val String.uppercaseFirst: String get() = when (this.length) {
@@ -57,3 +55,11 @@ fun randomUUID(): UUID = UUID.randomUUID()
 fun UUIDString(): String = UUID.randomUUID().toString()
 
 fun T(res: Int): String = App!!.resources.getString(res)
+
+fun String.toURL(): URL? =
+    try {
+        URL(this)
+    }
+    catch (e: java.net.MalformedURLException) {
+        null
+    }

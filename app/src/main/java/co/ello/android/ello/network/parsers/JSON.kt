@@ -255,7 +255,7 @@ val JSON.date: Date?
     get() = string?.toDate()
 
 val JSON.url: URL?
-    get() = string?.let { URL(it) }
+    get() = string?.toURL()
 
 val JSON.idValue: String
     get() = string ?: int?.let { "$it" } ?: ""
