@@ -1,7 +1,15 @@
 package co.ello.android.ello
 
 
-class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
+class Fragments {
+    val string: String
+    val needs: List<Fragments>
+
+    constructor(string: String, needs: List<Fragments> = emptyList()) {
+        this.string = string.trimIndent()
+        this.needs = needs
+    }
+
     companion object {
         val categoryPostActions = Fragments("""
             fragment categoryPostActions on CategoryPostActions {
@@ -67,6 +75,13 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
             }
             """, needs = listOf(tshirtProps, responsiveProps))
 
+        val categoryProps = Fragments("""
+            fragment categoryProps on Category {
+              id name slug order allowInOnboarding isCreatorType level
+              tileImage { ...tshirtProps }
+            }
+            """, needs = listOf(tshirtProps))
+
         val postStream = Fragments("""
             fragment contentProps on ContentBlocks {
               linkUrl
@@ -84,11 +99,6 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
               content { ...contentProps }
             }
 
-            fragment categoryProps on Category {
-              id name slug order allowInOnboarding isCreatorType level
-              tileImage { ...tshirtProps }
-            }
-
             fragment postSummary on Post {
               id
               token
@@ -100,7 +110,7 @@ class Fragments(val string: String, val needs: List<Fragments> = emptyList()) {
               postStats { lovesCount commentsCount viewsCount repostsCount }
               currentUserState { watching loved reposted }
             }
-            """, needs = listOf(imageProps, tshirtProps, responsiveProps, authorProps))
+            """, needs = listOf(imageProps, tshirtProps, responsiveProps, authorProps, categoryProps))
 
         val categoriesBody = Fragments("""
             id

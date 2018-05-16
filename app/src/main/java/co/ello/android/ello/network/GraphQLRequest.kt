@@ -160,7 +160,7 @@ class GraphQLRequest<T>(
         val fragments = body?.dependencies
 
         if (fragments != null && fragments.isNotEmpty()) {
-            val fragmentsQuery = fragments.map { it.string }.joinToString("\n")
+            val fragmentsQuery = fragments.distinctBy { it.string }.map { it.string }.joinToString("\n")
             query += fragmentsQuery + "\n"
         }
 
