@@ -112,6 +112,26 @@ class Fragments {
             }
             """, needs = listOf(imageProps, tshirtProps, responsiveProps, authorProps, categoryProps))
 
+        val editorialsContent = Fragments("""
+            fragment editorialImageVersions on ResponsiveImageVersions {
+                xhdpi { ...imageProps }
+                original { ...imageProps }
+            }
+
+            fragment editorial on Editorial {
+                id
+                kind
+                title
+                subtitle
+                url
+                path
+                oneByOneImage { ...editorialImageVersions }
+                twoByTwoImage { ...editorialImageVersions }
+                stream { query tokens }
+                post { ...postSummary }
+            }
+            """, needs = listOf(imageProps, postStream))
+
         val categoriesBody = Fragments("""
             id
             name
@@ -150,6 +170,12 @@ class Fragments {
                 }
             }
             """, needs = listOf(postStream, categoryPostActions))
+        val editorialsBody = Fragments("""
+            next isLastPage
+            editorials {
+                ...editorial
+            }
+            """, needs = listOf(editorialsContent))
     }
 
     val dependencies: List<Fragments> get() {

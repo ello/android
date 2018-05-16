@@ -27,7 +27,7 @@ sealed class MappingType {
     object CategoryPostsType : MappingType(name = "category_posts", singularKey = "categoryPost", parser = { CategoryPostParser() })
     object CommentsType : MappingType(name = "comments", singularKey = "comment", parser = { CommentParser() })
     object DynamicSettingsType : MappingType(name = "settings", singularKey = "setting")
-    object Editorials : MappingType(name = "editorials", singularKey = "editorial")
+    object Editorials : MappingType(name = "editorials", singularKey = "editorial", parser = { EditorialParser() })
     object ErrorsType : MappingType(name = "errors", singularKey = "error")
     object ErrorType : MappingType(name = "error", singularKey = "error", pluralKey = "errors")
     object LovesType : MappingType(name = "loves", singularKey = "love")

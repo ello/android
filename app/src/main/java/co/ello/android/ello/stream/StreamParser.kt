@@ -15,6 +15,7 @@ class StreamParser {
 
                 listOf(header) + content + listOf(footer)
             }
+            else if (model is Editorial) {}
             else emptyList()
         }
     }

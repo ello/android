@@ -10,19 +10,21 @@ data class Editorial(
     val title: String,
     val subtitle: String?,
     val renderedSubtitle: String?,
-    val postStreamURL: URL?,
-    val url: URL?
+    val url: URL?,
+    val path: URL?
     ) : Model() {
 
     data class JoinInfo(
         val email: String?,
         val username: String?,
         val password: String?,
-        val submitted: Boolean)
+        val submitted: Boolean
+        )
 
     data class InviteInfo(
         val emails: String,
-        val sent: Date?)
+        val sent: Date?
+        )
 
     enum class Kind(val value: String) {
         Post("post"),
@@ -31,27 +33,33 @@ data class Editorial(
         Internal("internal"),
         Invite("invite"),
         Join("join"),
-        Unknown("unknown")
+        Unknown("unknown");
+
+        companion object {
+            fun create(value: String): Kind = when(value) {
+                "POST" -> Kind.Post
+                "POST_STREAM" -> Kind.PostStream
+                "EXTERNAL" -> Kind.External
+                "INTERNAL" -> Kind.Internal
+                "INVITE" -> Kind.Invite
+                "JOIN" -> Kind.Join
+                else -> Unknown
+            }
+        }
     }
 
     enum class Size(val value: String) {
-        Size1x1("one_by_one_image"),
-        // Size2x1("two_by_one_image"),
-        // Size1x2("one_by_two_image"),
-        Size2x2("two_by_two_image");
+        Size1x1("oneByOneImage"),
+        Size2x2("twoByTwoImage");
 
         companion object {
             val all: List<Size> = listOf(Size1x1, Size2x2)
         }
     }
 
-    var join: JoinInfo? = null
-    var invite: InviteInfo? = null
-
     val postId: String? get() = post?.id
     val post: Post? get() = getLinkObject("post")
 
     var posts: List<Post>? = null
     val images: MutableMap<Size, Asset> = mutableMapOf()
-
 }

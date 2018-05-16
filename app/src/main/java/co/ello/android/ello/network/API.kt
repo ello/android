@@ -4,9 +4,9 @@ package co.ello.android.ello
 class API {
     companion object {
         fun init() {
-            key = BuildConfig.NINJA_CLIENT_KEY
-            secret = BuildConfig.NINJA_CLIENT_SECRET
-            domain = BuildConfig.NINJA_DOMAIN
+            key = BuildConfig.RAINBOW_CLIENT_KEY
+            secret = BuildConfig.RAINBOW_CLIENT_SECRET
+            domain = BuildConfig.RAINBOW_DOMAIN
         }
 
         var key: String = ""
@@ -49,6 +49,19 @@ class API {
                 ManyParser<Category>(CategoryParser()).parse(json)
             }
             .setBody(Fragments.categoriesBody)
+    }
+
+    fun editorialStream(before: String? = null): GraphQLRequest<Pair<PageConfig, List<Editorial>>> {
+        return GraphQLRequest<Pair<PageConfig, List<Editorial>>>("editorialStream")
+            .parser { json ->
+                PageParser<Editorial>("editorials", EditorialParser()).parse(json)
+            }
+            .setVariables(
+                GraphQLRequest.Variable.optionalString("before", before),
+                GraphQLRequest.Variable.optionalBoolean("preview", false),
+                GraphQLRequest.Variable.optionalInt("perPage", null)
+            )
+            .setBody(Fragments.editorialsBody)
     }
 
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {

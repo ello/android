@@ -10,7 +10,7 @@ class LoggedOutController(
 {
     private lateinit var screen: LoggedOutProtocols.Screen
 
-    private val editorialsController = CategoryController(activity)
+    private val editorialsController = EditorialsController(activity)
     private val artistInvitesController = CategoryController(activity)
     private val discoverController = CategoryController(activity)
     private val homeController: HomeController
