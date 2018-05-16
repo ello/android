@@ -4,7 +4,6 @@ package co.ello.android.ello
 class CategoryGenerator(val delegate: CategoryProtocols.Controller?)
     : CategoryProtocols.Generator
 {
-
     override fun loadSubscribedCategories(queue: Queue) {
         API().subscribedCategories()
             .enqueue(queue)

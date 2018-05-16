@@ -13,8 +13,8 @@ class CategoryProtocols {
     }
 
     interface Controller {
-        fun loadedCategoryStream(posts: List<Post>)
         fun loadedSubscribedCategories(categories: List<Category>)
+        fun loadedCategoryStream(posts: List<Post>)
     }
 
     interface Generator {

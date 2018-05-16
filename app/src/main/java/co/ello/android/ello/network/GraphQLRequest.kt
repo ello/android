@@ -9,8 +9,8 @@ import java.util.UUID
 
 class GraphQLRequest<T>(
         val endpointName: String,
-        override val requiresAnyToken: Boolean,
-        override val supportsAnonymousToken: Boolean
+        override val requiresAnyToken: Boolean = true,
+        override val supportsAnonymousToken: Boolean = true
 ) : Request<JSON>(Request.Method.POST, "${API.domain}/api/v3/graphql", null), AuthenticationEndpoint {
     class CancelledRequest : Throwable()
     class ParsingError : Throwable()
@@ -26,8 +26,8 @@ class GraphQLRequest<T>(
         data class optionalInt(override val name: String    , override val value: Int?)     : Variable() { override val type: String get() { return "Int"    }}
         data class float(override val name: String          , override val value: Float)    : Variable() { override val type: String get() { return "Float!" }}
         data class optionalFloat(override val name: String  , override val value: Float?)   : Variable() { override val type: String get() { return "Float"  }}
-        data class bool(override val name: String           , override val value: Boolean)  : Variable() { override val type: String get() { return "Bool!"  }}
-        data class optionalBool(override val name: String   , override val value: Boolean?) : Variable() { override val type: String get() { return "Bool"   }}
+        data class boolean(override val name: String           , override val value: Boolean)  : Variable() { override val type: String get() { return "Bool!"  }}
+        data class optionalBoolean(override val name: String   , override val value: Boolean?) : Variable() { override val type: String get() { return "Bool"   }}
         data class enum(override val name: String           , override val value: String, val typeName: String) : Variable() { override val type: String get() { return "$typeName!" }}
         data class optionalEnum(override val name: String   , override val value: String?, val typeName: String) : Variable() { override val type: String get() { return typeName }}
     }
@@ -44,6 +44,11 @@ class GraphQLRequest<T>(
     private var retryBlock: Block? = null
     private var cancelBlock: Block? = null
     private val future = CompletableFuture<T>()
+
+    init {
+        this.addHeader("Accept", "application/json")
+        this.addHeader("Content-Type", "application/json")
+    }
 
     fun parser(parser: ((JSON) -> T)): GraphQLRequest<T> {
         parserCompletion = parser
@@ -84,6 +89,11 @@ class GraphQLRequest<T>(
             }
         }
         .onFailure { exception ->
+            println("${this.endpointName} failed: $exception")
+            if (exception is VolleyError) {
+                println("server error:\n${String(exception.networkResponse.data)}")
+            }
+
             future.completeExceptionally(exception)
         }
 

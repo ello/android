@@ -32,7 +32,7 @@ class API {
     }
 
     fun globalPostStream(filter: CategoryFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
-        return GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream", requiresAnyToken = true, supportsAnonymousToken = true)
+        return GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream")
             .parser { json ->
                 PageParser<Post>("posts", PostParser()).parse(json)
             }
@@ -41,30 +41,24 @@ class API {
                 GraphQLRequest.Variable.optionalString("before", before)
             )
             .setBody(Fragments.postStreamBody)
-            .addHeader("Accept", "application/json")
-            .addHeader("Content-Type", "application/json")
     }
 
     fun subscribedCategories(): GraphQLRequest<List<Category>> {
-        return GraphQLRequest<List<Category>>("categoryNav", requiresAnyToken = true, supportsAnonymousToken = true)
+        return GraphQLRequest<List<Category>>("categoryNav")
             .parser { json ->
                 ManyParser<Category>(CategoryParser()).parse(json)
             }
             .setBody(Fragments.categoriesBody)
-            .addHeader("Accept", "application/json")
-            .addHeader("Content-Type", "application/json")
     }
 
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/v2/join"
 
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = true, supportsAnonymousToken = true)
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path)
                 .parser { gson, json ->
                     println("join $json")
                     gson.fromJson(json, Credentials::class.java)
                 }
-                .addHeader("Accept", "application/json")
-                .addHeader("Content-Type", "application/json")
                 .setBody(mapOf(
                     "email" to email,
                     "username" to username,
@@ -84,8 +78,6 @@ class API {
             .parser { gson, json ->
                 gson.fromJson(json, Credentials::class.java)
             }
-            .addHeader("Accept", "application/json")
-            .addHeader("Content-Type", "application/json")
             .setBody(mapOf(
                 "email" to username,
                 "password" to password,
@@ -104,8 +96,6 @@ class API {
             .parser { gson, json ->
                 gson.fromJson(json, Credentials::class.java)
             }
-            .addHeader("Accept", "application/json")
-            .addHeader("Content-Type", "application/json")
             .setBody(mapOf(
                 "client_id" to API.key,
                 "client_secret" to API.secret,
@@ -123,8 +113,6 @@ class API {
             .parser { gson, json ->
                 gson.fromJson(json, Credentials::class.java)
             }
-            .addHeader("Accept", "application/json")
-            .addHeader("Content-Type", "application/json")
             .setBody(mapOf(
                 "client_id" to API.key,
                 "client_secret" to API.secret,

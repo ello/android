@@ -10,8 +10,8 @@ import java.util.UUID
 class ElloRequest<T>(
         method: Int,
         path: String,
-        override val requiresAnyToken: Boolean,
-        override val supportsAnonymousToken: Boolean
+        override val requiresAnyToken: Boolean = true,
+        override val supportsAnonymousToken: Boolean = true
 ) : Request<String>(method, "${API.domain}$path", null), AuthenticationEndpoint {
     class CancelledRequest : Throwable()
 
@@ -19,8 +19,8 @@ class ElloRequest<T>(
         method: Method,
         path: String,
         parameters: Map<String, Any>? = null,
-        requiresAnyToken: Boolean,
-        supportsAnonymousToken: Boolean
+        requiresAnyToken: Boolean = true,
+        supportsAnonymousToken: Boolean = true
     ) : this(when(method) {
             Method.GET -> Request.Method.GET
             Method.POST -> Request.Method.POST
@@ -48,6 +48,11 @@ class ElloRequest<T>(
     }
 
     private var body: ByteArray? = null
+
+    init {
+        this.addHeader("Accept", "application/json")
+        this.addHeader("Content-Type", "application/json")
+    }
 
     fun parser(completion: ((Gson, String) -> T)?): ElloRequest<T> {
         parserCompletion = completion
