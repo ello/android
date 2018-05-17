@@ -47,6 +47,7 @@ class PostTextCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.co
 
     private fun assignHeight(height: Int) {
         webView.layoutParams = FrameLayout.LayoutParams(webView.measuredWidth, height)
+        streamCellItem?.height = height
     }
 
     private fun calculateHeight(height: Float) {
