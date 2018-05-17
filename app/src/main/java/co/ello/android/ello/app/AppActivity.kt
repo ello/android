@@ -2,6 +2,7 @@ package co.ello.android.ello
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import com.orhanobut.hawk.Hawk
 
 
@@ -23,17 +24,35 @@ class AppActivity : AppCompatActivity() {
     }
 
     private fun showAppScreen() {
-        val controller = AppController(this)
-        this.controller = controller
+        var controller = getLastCustomNonConfigurationInstance() as? AppController
+        if (controller == null) {
+            controller = AppController(this)
+            controller.start()
+            setContentView(controller.view)
+            controller.appear()
+        }
+        else {
+            setContentView(controller.view)
+        }
 
-        setContentView(controller.view)
-        controller.start()
-        controller.appear()
+        this.controller = controller
     }
 
     override fun onDestroy() {
-        controller?.disappear()
-        controller?.finish()
+        controller?.let {
+            it.disappear()
+            it.finish()
+        }
         super.onDestroy()
+    }
+
+    override fun onRetainCustomNonConfigurationInstance(): Any {
+        val controller = this.controller
+        if (controller != null) {
+            this.controller = null
+            setContentView(View(this))
+            return controller
+        }
+        else  return super.onRetainCustomNonConfigurationInstance()
     }
 }
