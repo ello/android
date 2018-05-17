@@ -11,10 +11,11 @@ class HomeController : BaseController, HomeProtocols.Controller {
     private val controllersTitles: List<String>
     private val controllers: List<Controller>
     private var selectedIndex: Int
+    private val selectedController: Controller get() = controllers[selectedIndex]
 
     override val childControllers: Iterable<Controller> get() { return controllers }
     override val visibleChildControllers: Iterable<Controller> get() { return listOf(selectedController) }
-    private val selectedController: Controller get() = controllers[selectedIndex]
+    override val firstResponder: Controller get() = selectedController.firstResponder
 
     constructor(
         activity: AppActivity,

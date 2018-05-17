@@ -5,11 +5,10 @@ import android.view.Window
 
 
 abstract class Controller(val activity: AppActivity) {
-    val window: Window get() { return activity.window }
-    val requestQueue: Queue get() { return VolleyQueue(activity) }
-
     private var _parent: Controller? = null
-    val parent: Controller? get() { return _parent }
+    private var _isStarted = false
+    private var _isVisible = false
+
     open val isRunning: Boolean get() {
         var ancestor = parent
         if (parent == null)  return false
@@ -19,15 +18,16 @@ abstract class Controller(val activity: AppActivity) {
         }
         return true
     }
-    open val childControllers: Iterable<Controller> get() { return emptyList() }
-    open val visibleChildControllers: Iterable<Controller> get() { return emptyList() }
+    open val childControllers: Iterable<Controller> get() = emptyList()
+    open val visibleChildControllers: Iterable<Controller> get() = emptyList()
+    open val firstResponder: Controller get() = this
 
-    private var _isStarted = false
     val isStarted: Boolean get() { return _isStarted }
-
-    private var _isVisible = false
     val isVisible: Boolean get() { return _isVisible }
 
+    val window: Window get() { return activity.window }
+    val requestQueue: Queue get() { return VolleyQueue(activity) }
+    val parent: Controller? get() { return _parent }
     val rootController: RootController? get() { return findParent<RootController>() }
     val navigationController: NavigationController? get() { return findParent<NavigationController>() }
 
@@ -41,6 +41,11 @@ abstract class Controller(val activity: AppActivity) {
             _view = view
         }
         return view
+    }
+
+    open val canGoBack: Boolean get() = firstResponder.navigationController?.canGoBack ?: false
+    open fun goBack() {
+        firstResponder.navigationController?.goBack()
     }
 
     fun removeFromParent() {

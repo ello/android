@@ -12,8 +12,11 @@ abstract class RootController(a: AppActivity) : Controller(a) {
     override val isRunning: Boolean get() { return true }
     override val childControllers: Iterable<Controller> get() { return childController?.let { listOf(it) } ?: emptyList() }
     override val visibleChildControllers: Iterable<Controller> get() { return childControllers }
+    override val firstResponder: Controller get() = childController?.firstResponder ?: super.firstResponder
 
     abstract val containerView: ViewGroup?
+
+    val history = BackStack(this)
 
     fun show(controller: Controller) {
         val containerView = this.containerView ?: return

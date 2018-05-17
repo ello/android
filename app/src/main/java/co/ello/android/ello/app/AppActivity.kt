@@ -46,6 +46,11 @@ class AppActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    override fun onBackPressed() {
+        if (controller?.history?.goBack() == Success)  return
+        super.onBackPressed()
+    }
+
     override fun onRetainCustomNonConfigurationInstance(): Any {
         val controller = this.controller
         if (controller != null) {

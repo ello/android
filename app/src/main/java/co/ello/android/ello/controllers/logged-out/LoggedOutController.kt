@@ -27,6 +27,7 @@ class LoggedOutController(
 
     override val childControllers: Iterable<Controller> get() { return listOf(homeController) }
     override val visibleChildControllers: Iterable<Controller> get() { return childControllers }
+    override val firstResponder: Controller get() = homeController.firstResponder
 
     override fun createView(): View {
         val screen = LoggedOutScreen(activity)

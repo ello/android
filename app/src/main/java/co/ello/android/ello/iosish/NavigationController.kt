@@ -9,7 +9,14 @@ class NavigationController(a: AppActivity) : Controller(a) {
 
     override val childControllers: Iterable<Controller> get() { return controllers }
     override val visibleChildControllers: Iterable<Controller> get() { return visibleController?.let { listOf(it) } ?: emptyList() }
+    override val firstResponder: Controller get() = visibleController?.firstResponder ?: super.firstResponder
+
     val visibleController: Controller? get() { return controllers.peek() }
+    override val canGoBack: Boolean get() = controllers.size > 1
+
+    override fun goBack() {
+        pop(animated = true)
+    }
 
     override fun createView(): View {
         return NavigationLayout(activity)
