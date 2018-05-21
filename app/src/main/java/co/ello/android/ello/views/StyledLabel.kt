@@ -20,6 +20,7 @@ class StyledLabel @JvmOverloads constructor(
     ) {
         Default(color = R.color.black),
         White(color = R.color.white),
+        Gray(color = R.color.gray),
         BoldWhite(font = "Bold", color = R.color.white),
         BoldWhiteUnderline(font = "Bold", color = R.color.white, underline = true),
 
@@ -42,6 +43,7 @@ class StyledLabel @JvmOverloads constructor(
 
         this.style = when (styleName) {
             "white" -> Style.White
+            "gray" -> Style.Gray
             "bold white" -> Style.BoldWhite
             "small white" -> Style.SmallWhite
             "large white" -> Style.LargeWhite

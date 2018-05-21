@@ -38,8 +38,9 @@ class PostFooterCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
     fun viewsButtonTapped() {
         val item = streamCellItem ?: return
         val streamController = streamController ?: return
+        val post = item.model as? Post ?: return
 
-        streamController.toolbarTappedViews(cell = this, item = item)
+        streamController.streamTappedPost(cell = this, item = item, post = post)
     }
 
     fun lovesButtonTapped() {

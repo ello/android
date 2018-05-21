@@ -8,7 +8,8 @@ class PostHeaderPresenter {
 
             cell.config = PostHeaderCell.Config(
                 username = post.author?.atName,
-                avatarURL = post.author?.avatarURL()
+                avatarURL = post.author?.avatarURL(),
+                postedAt = post.createdAt
                 )
         }
     }

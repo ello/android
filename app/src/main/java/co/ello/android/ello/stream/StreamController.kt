@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 
 
 class StreamController(a: AppActivity)
-    : BaseController(a), PostToolbarResponder
+    : BaseController(a), StreamResponder, PostToolbarResponder
 {
     private lateinit var screen: RecyclerView
     private var adapter: Adapter = Adapter(emptyList(), streamController = this)
@@ -48,7 +48,10 @@ class StreamController(a: AppActivity)
         if (isViewLoaded)  screen.adapter = adapter
     }
 
-    override fun toolbarTappedViews(cell: StreamCell, item: StreamCellItem) {
+    override fun streamTappedPost(cell: StreamCell, item: StreamCellItem, post: Post) {
+    }
+
+    override fun streamTappedUser(cell: StreamCell, item: StreamCellItem, user: User) {
     }
 
     override fun toolbarTappedLoves(cell: StreamCell, item: StreamCellItem) {
