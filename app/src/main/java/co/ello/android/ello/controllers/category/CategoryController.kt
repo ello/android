@@ -6,7 +6,7 @@ import android.view.ViewGroup
 
 class CategoryController(a: AppActivity) : StreamableController(a), CategoryProtocols.Controller {
     private lateinit var screen: CategoryProtocols.Screen
-    private val generator: CategoryProtocols.Generator = CategoryGenerator(delegate = this)
+    private var generator: CategoryProtocols.Generator = CategoryGenerator(delegate = this)
 
     private var categoryInfo: List<CategoryScreen.CardInfo>? = null
 
@@ -27,7 +27,7 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
 
     override fun loadedCategoryStream(posts: List<Post>) {
         val items = StreamParser().parse(posts)
-        streamController.addAll(items)
+        streamController.replaceAll(items)
     }
 
     override fun loadedSubscribedCategories(categories: List<Category>) {

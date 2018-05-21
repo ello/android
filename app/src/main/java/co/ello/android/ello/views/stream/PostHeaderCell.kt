@@ -28,7 +28,7 @@ class PostHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
         timestampLabel = itemView.findViewById(R.id.timestampLabel)
 
         cellButton.setOnClickListener { cellTapped() }
-        imageButton.setOnClickListener{ usernameButtonTapped() }
+        imageButton.setOnClickListener { usernameButtonTapped() }
         usernameButton.setOnClickListener{ usernameButtonTapped() }
     }
 

@@ -43,7 +43,7 @@ class StreamController(a: AppActivity)
         return screen
     }
 
-    fun addAll(items: List<StreamCellItem>) {
+    fun replaceAll(items: List<StreamCellItem>) {
         adapter = Adapter(items, streamController = this)
         if (isViewLoaded)  screen.adapter = adapter
     }

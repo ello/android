@@ -5,7 +5,7 @@ import android.view.View
 
 class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : BaseController(a), LoginProtocols.Controller {
     private lateinit var screen: LoginProtocols.Screen
-    private val generator: LoginProtocols.Generator = LoginGenerator(delegate = this)
+    private var generator: LoginProtocols.Generator = LoginGenerator(delegate = this)
 
     override fun createView(): View {
         val screen = LoginScreen(activity)

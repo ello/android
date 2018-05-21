@@ -5,7 +5,7 @@ import android.view.View
 
 class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : BaseController(a), JoinProtocols.Controller {
     private lateinit var screen: JoinProtocols.Screen
-    private val generator: JoinProtocols.Generator = JoinGenerator(delegate = this)
+    private var generator: JoinProtocols.Generator = JoinGenerator(delegate = this)
 
     override fun createView(): View {
         val screen = JoinScreen(activity)
