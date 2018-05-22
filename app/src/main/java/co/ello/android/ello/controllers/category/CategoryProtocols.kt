@@ -15,10 +15,11 @@ class CategoryProtocols {
     interface Controller {
         fun loadedSubscribedCategories(categories: List<Category>)
         fun loadedCategoryStream(posts: List<Post>)
+        fun categorySelected(info: CategoryScreen.CardInfo)
     }
 
     interface Generator {
-        fun loadSubscribedCategories(queue: Queue)
-        fun loadCategoryStream(queue: Queue)
+        fun loadSubscribedCategories()
+        fun loadStream(stream: CategoryGenerator.Stream)
     }
 }

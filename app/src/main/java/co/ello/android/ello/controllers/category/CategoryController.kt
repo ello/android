@@ -6,7 +6,7 @@ import android.view.ViewGroup
 
 class CategoryController(a: AppActivity) : StreamableController(a), CategoryProtocols.Controller {
     private lateinit var screen: CategoryProtocols.Screen
-    private var generator: CategoryProtocols.Generator = CategoryGenerator(delegate = this)
+    private var generator: CategoryProtocols.Generator = CategoryGenerator(delegate = this, queue = requestQueue)
 
     private var categoryInfo: List<CategoryScreen.CardInfo>? = null
 
@@ -20,9 +20,15 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
         return screen.contentView
     }
 
+    override fun onAppear() {
+        if (categoryInfo == null) {
+            streamController.replaceAll(listOf(StreamCellItem(type = StreamCellType.Spinner)))
+        }
+    }
+
     override fun onStart() {
-        generator.loadSubscribedCategories(requestQueue)
-        generator.loadCategoryStream(requestQueue)
+        generator.loadSubscribedCategories()
+        generator.loadStream(CategoryGenerator.Stream.All)
     }
 
     override fun loadedCategoryStream(posts: List<Post>) {
@@ -38,7 +44,22 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
         categoryInfo.addAll(categories.map { CategoryScreen.CardInfo.Category(it) })
         this.categoryInfo = categoryInfo
 
-        if (isViewLoaded)
+        if (isViewLoaded) {
             screen.updateSubscribedCategories(categoryInfo)
+        }
+    }
+
+    override fun categorySelected(info: CategoryScreen.CardInfo) {
+        val stream = when(info) {
+            is CategoryScreen.CardInfo.All -> CategoryGenerator.Stream.All
+            is CategoryScreen.CardInfo.Subscribed -> CategoryGenerator.Stream.Subscribed
+            is CategoryScreen.CardInfo.Category -> CategoryGenerator.Stream.Category(ID(info.category.id))
+            else -> null
+        } ?: return
+
+        println("=============== CategoryController.kt at line 46 ===============")
+        println("stream: ${stream}")
+        streamController.replaceAll(listOf(StreamCellItem(type = StreamCellType.Spinner)))
+        generator.loadStream(stream)
     }
 }

@@ -31,7 +31,7 @@ class CategoryScreen : CategoryProtocols.Screen {
         object All : CardInfo(title = Res(R.string.Category_all), kind = Kind.All, imageURL = null)
         object Subscribed : CardInfo(title = Res(R.string.Category_subscribed), kind = Kind.Subscribed, imageURL = null)
         object ZeroState : CardInfo(title = Res(R.string.Category_zeroState), kind = Kind.ZeroState, imageURL = null)
-        class Category(category: co.ello.android.ello.Category) : CardInfo(title = Lit(category.name), kind = Kind.Category, imageURL = category.tileURL)
+        class Category(val category: co.ello.android.ello.Category) : CardInfo(title = Lit(category.name), kind = Kind.Category, imageURL = category.tileURL)
     }
 
     data class CardHolder(val view: View) {
@@ -44,12 +44,7 @@ class CategoryScreen : CategoryProtocols.Screen {
         cardListContainer.removeAllViews()
 
         for (info in categories) {
-            val cardHolder = CardHolder(LayoutInflater.from(contentView.context).inflate(R.layout.category_card_view, null))
-            cardHolder.label.setText(info.title.gen())
-            cardHolder.label.style = if (info == CardInfo.All) StyledLabel.Style.BoldWhiteUnderline else StyledLabel.Style.White
-            cardHolder.imageView.setImageURL(info.imageURL)
-            cardHolder.overlay.alpha = if (info == CardInfo.All) 0.8f else 0.5f
-
+            val view = LayoutInflater.from(contentView.context).inflate(R.layout.category_card_view, null)
             val width = (when(info.kind) {
                 CardInfo.Kind.All -> 50
                 CardInfo.Kind.ZeroState -> 300
@@ -58,10 +53,21 @@ class CategoryScreen : CategoryProtocols.Screen {
 
             val height = LinearLayout.LayoutParams.MATCH_PARENT
             val layoutParams = LinearLayout.LayoutParams(width, height)
-            cardHolder.view.layoutParams = layoutParams
+            view.layoutParams = layoutParams
 
-            cardListContainer.addView(cardHolder.view)
+            val cardHolder = CardHolder(view)
+            cardHolder.label.setText(info.title.gen())
+            cardHolder.label.style = if (info == CardInfo.All) StyledLabel.Style.BoldWhiteUnderline else StyledLabel.Style.White
+            cardHolder.imageView.setImageURL(info.imageURL)
+            cardHolder.imageView.setOnClickListener { categoryCardTapped(info) }
+            cardHolder.overlay.alpha = if (info == CardInfo.All) 0.8f else 0.5f
+
+            cardListContainer.addView(view)
         }
+    }
+
+    private fun categoryCardTapped(info: CardInfo) {
+        delegate?.categorySelected(info)
     }
 
 }

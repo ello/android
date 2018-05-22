@@ -22,7 +22,7 @@ class PostHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
         )
 
     init {
-        imageButton = itemView.findViewById(R.id.imageButton)
+        imageButton = itemView.findViewById(R.id.imageView)
         cellButton = itemView.findViewById(R.id.cellButton)
         usernameButton = itemView.findViewById(R.id.usernameButton)
         timestampLabel = itemView.findViewById(R.id.timestampLabel)

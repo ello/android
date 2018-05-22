@@ -144,13 +144,13 @@ class GraphQLRequest<T>(
 
     private fun queryVariables(): String? {
         return variables?.let { it.map { variable ->
-            return "$${variable.name}: ${variable.type}"
+            "$${variable.name}: ${variable.type}"
         }.joinToString(", ") }
     }
 
     private fun endpointVariables(): String? {
         return variables?.let { it.map { variable ->
-            return "${variable.name}: $${variable.name}"
+            "${variable.name}: $${variable.name}"
         }.joinToString(", ") }
     }
 

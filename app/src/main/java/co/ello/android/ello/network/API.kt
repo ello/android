@@ -43,6 +43,36 @@ class API {
             .setBody(Fragments.postStreamBody)
     }
 
+    fun subscribedPostStream(filter: CategoryFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
+        return GraphQLRequest<Pair<PageConfig, List<Post>>>("subscribedPostStream")
+            .parser { json ->
+                PageParser<Post>("posts", PostParser()).parse(json)
+            }
+            .setVariables(
+                GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
+                GraphQLRequest.Variable.optionalString("before", before)
+            )
+            .setBody(Fragments.postStreamBody)
+    }
+
+    fun categoryPostStream(filter: CategoryFilter, category: Token, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
+        val categoryVar: GraphQLRequest.Variable = when(category) {
+            is ID -> GraphQLRequest.Variable.optionalInt("id", category.id.toInt())
+            is Slug -> GraphQLRequest.Variable.optionalInt("slug", category.slug.toInt())
+        }
+
+        return GraphQLRequest<Pair<PageConfig, List<Post>>>("categoryPostStream")
+                .parser { json ->
+                    PageParser<Post>("posts", PostParser()).parse(json)
+                }
+                .setVariables(
+                        GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
+                        categoryVar,
+                        GraphQLRequest.Variable.optionalString("before", before)
+                )
+                .setBody(Fragments.postStreamBody)
+    }
+
     fun subscribedCategories(): GraphQLRequest<List<Category>> {
         return GraphQLRequest<List<Category>>("categoryNav")
             .parser { json ->

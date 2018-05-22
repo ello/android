@@ -123,12 +123,12 @@ data class Asset(val id: String) : Model() {
     fun replace(type: AttachmentType, withAttachment: Attachment?) {
         when(type) {
             AttachmentType.Optimized -> optimized = withAttachment
-            AttachmentType.Mdpi ->      mdpi = withAttachment
-            AttachmentType.Hdpi ->      hdpi = withAttachment
-            AttachmentType.Xhdpi ->     xhdpi = withAttachment
-            AttachmentType.Original ->  original = withAttachment
-            AttachmentType.Large ->     large = withAttachment
-            AttachmentType.Regular ->   regular = withAttachment
+            AttachmentType.Mdpi      -> mdpi = withAttachment
+            AttachmentType.Hdpi      -> hdpi = withAttachment
+            AttachmentType.Xhdpi     -> xhdpi = withAttachment
+            AttachmentType.Original  -> original = withAttachment
+            AttachmentType.Large     -> large = withAttachment
+            AttachmentType.Regular   -> regular = withAttachment
         }
     }
 }

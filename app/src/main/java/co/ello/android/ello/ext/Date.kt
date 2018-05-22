@@ -38,20 +38,20 @@ fun Date.timeAgo(): String {
 
     return when (deltaInMinutes) {
         in 0..1 -> when(deltaInSeconds) {
-            in 0..4 ->   TimeAgoInWordsStrings.LessThan + "5" + TimeAgoInWordsStrings.Seconds
-            in 5..9 ->   TimeAgoInWordsStrings.LessThan + "10" + TimeAgoInWordsStrings.Seconds
+            in 0..4   -> TimeAgoInWordsStrings.LessThan + "5" + TimeAgoInWordsStrings.Seconds
+            in 5..9   -> TimeAgoInWordsStrings.LessThan + "10" + TimeAgoInWordsStrings.Seconds
             in 10..19 -> TimeAgoInWordsStrings.LessThan + "20" + TimeAgoInWordsStrings.Seconds
             in 20..39 -> "30" + TimeAgoInWordsStrings.Seconds
             in 40..59 -> TimeAgoInWordsStrings.LessThan + "1" + TimeAgoInWordsStrings.Minutes
-            else  ->     "1" + TimeAgoInWordsStrings.Minutes
+            else      -> "1" + TimeAgoInWordsStrings.Minutes
         }
-        in 2..45 ->                        "${deltaInMinutes}" + TimeAgoInWordsStrings.Minutes
-        in 45..90 ->                       TimeAgoInWordsStrings.About + "1" + TimeAgoInWordsStrings.Hours
-        in 90..ONE_DAY ->                  TimeAgoInWordsStrings.About + "${deltaInMinutes / 60}" + TimeAgoInWordsStrings.Hours
-        in ONE_DAY..ONE_AND_HALF_DAY ->    "1" + TimeAgoInWordsStrings.Days
-        in ONE_AND_HALF_DAY..THIRTY_DAYS ->"${deltaInMinutes / ONE_DAY}" + TimeAgoInWordsStrings.Days
-        in THIRTY_DAYS..SIXTY_DAYS ->      TimeAgoInWordsStrings.About + "${deltaInMinutes / THIRTY_DAYS}" + TimeAgoInWordsStrings.Months
-        in SIXTY_DAYS..ONE_YEAR ->         "${deltaInMinutes / THIRTY_DAYS}" + TimeAgoInWordsStrings.Months
+        in 2..45                         -> "${deltaInMinutes}" + TimeAgoInWordsStrings.Minutes
+        in 45..90                        -> TimeAgoInWordsStrings.About + "1" + TimeAgoInWordsStrings.Hours
+        in 90..ONE_DAY                   -> TimeAgoInWordsStrings.About + "${deltaInMinutes / 60}" + TimeAgoInWordsStrings.Hours
+        in ONE_DAY..ONE_AND_HALF_DAY     -> "1" + TimeAgoInWordsStrings.Days
+        in ONE_AND_HALF_DAY..THIRTY_DAYS -> "${deltaInMinutes / ONE_DAY}" + TimeAgoInWordsStrings.Days
+        in THIRTY_DAYS..SIXTY_DAYS       -> TimeAgoInWordsStrings.About + "${deltaInMinutes / THIRTY_DAYS}" + TimeAgoInWordsStrings.Months
+        in SIXTY_DAYS..ONE_YEAR          -> "${deltaInMinutes / THIRTY_DAYS}" + TimeAgoInWordsStrings.Months
         else -> {
             val remainder = deltaInMinutes / ONE_YEAR
             val distanceInYears = deltaInMinutes / ONE_YEAR

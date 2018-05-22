@@ -1,11 +1,12 @@
 package co.ello.android.ello
 
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import java.net.URL
 
 
 sealed class StreamCellType {
+    object Spinner : StreamCellType()
+
     object PostHeader : StreamCellType()
     object PostFooter : StreamCellType()
     data class PostText(val content: String) : StreamCellType()
@@ -17,6 +18,7 @@ sealed class StreamCellType {
         viewHolder.streamCellItem = item
 
         return when(this) {
+            is Spinner -> SpinnerPresenter.configure(viewHolder as SpinnerCell)
             is PostHeader -> PostHeaderPresenter.configure(viewHolder as PostHeaderCell, item)
             is PostFooter -> PostFooterPresenter.configure(viewHolder as PostFooterCell, item)
             is PostText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
@@ -28,6 +30,7 @@ sealed class StreamCellType {
         fun createViewHolder(parent: ViewGroup, viewType: Int): StreamCell {
             val type = StreamCellType::class.nestedClasses.elementAt(viewType)
             return when (type) {
+                Spinner::class -> SpinnerCell(parent = parent)
                 PostHeader::class -> PostHeaderCell(parent = parent)
                 PostFooter::class -> PostFooterCell(parent = parent)
                 PostText::class -> PostTextCell(parent = parent)
