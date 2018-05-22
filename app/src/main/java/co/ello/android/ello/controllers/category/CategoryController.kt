@@ -4,13 +4,19 @@ import android.view.View
 import android.view.ViewGroup
 
 
-class CategoryController(a: AppActivity) : StreamableController(a), CategoryProtocols.Controller {
+class CategoryController(a: AppActivity) : StreamableController(a), CategoryProtocols.Controller, StreamSelectionDelegate {
     private lateinit var screen: CategoryProtocols.Screen
     private var generator: CategoryProtocols.Generator = CategoryGenerator(delegate = this, queue = requestQueue)
 
     private var categoryInfo: List<CategoryScreen.CardInfo>? = null
+    private var stream: CategoryGenerator.Stream = CategoryGenerator.Stream.All
+    private var filter: API.StreamFilter = API.StreamFilter.Featured
 
     override val viewForStream: ViewGroup get() = screen.streamContainer
+
+    init {
+        streamController.streamSelectionDelegate = this
+    }
 
     override fun createView(): View {
         val screen = CategoryScreen(activity)
@@ -22,18 +28,13 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
 
     override fun onAppear() {
         if (categoryInfo == null) {
-            streamController.replaceAll(listOf(StreamCellItem(type = StreamCellType.Spinner)))
+            streamController.replaceAll(listOf(StreamCellItem(type = StreamCellType.Spinner, placeholderType = StreamCellType.PlaceholderType.Spinner)))
         }
     }
 
     override fun onStart() {
         generator.loadSubscribedCategories()
-        generator.loadStream(CategoryGenerator.Stream.All)
-    }
-
-    override fun loadedCategoryStream(posts: List<Post>) {
-        val items = StreamParser().parse(posts)
-        streamController.replaceAll(items)
+        generator.loadStream(filter, stream)
     }
 
     override fun loadedSubscribedCategories(categories: List<Category>) {
@@ -49,6 +50,18 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
         }
     }
 
+    override fun loadedCategoryStream(posts: List<Post>) {
+        if (!streamController.hasPlaceholderItems(StreamCellType.PlaceholderType.StreamFilter)) {
+            val streamSelection = StreamCellItem(type = StreamCellType.StreamSelection)
+            streamSelection.extra = 0
+            streamController.replacePlaceholder(StreamCellType.PlaceholderType.StreamFilter, listOf(streamSelection))
+        }
+
+        val items = StreamParser().parse(posts)
+        streamController.replacePlaceholder(StreamCellType.PlaceholderType.Spinner, emptyList())
+        streamController.replacePlaceholder(StreamCellType.PlaceholderType.StreamItems, items)
+    }
+
     override fun categorySelected(info: CategoryScreen.CardInfo) {
         val stream = when(info) {
             is CategoryScreen.CardInfo.All -> CategoryGenerator.Stream.All
@@ -56,10 +69,23 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
             is CategoryScreen.CardInfo.Category -> CategoryGenerator.Stream.Category(ID(info.category.id))
             else -> null
         } ?: return
+        if (this.stream.equals(stream))  return
 
-        println("=============== CategoryController.kt at line 46 ===============")
-        println("stream: ${stream}")
-        streamController.replaceAll(listOf(StreamCellItem(type = StreamCellType.Spinner)))
-        generator.loadStream(stream)
+        this.stream = stream
+        streamController.replaceAll(listOf(StreamCellItem(type = StreamCellType.Spinner, placeholderType = StreamCellType.PlaceholderType.Spinner)))
+        generator.loadStream(filter, stream)
     }
+
+    override fun streamSelectionChanged(index: Int) {
+        filter = when(index) {
+            1 -> API.StreamFilter.Trending
+            2 -> API.StreamFilter.Recent
+            3 -> API.StreamFilter.Shop
+            else -> API.StreamFilter.Featured
+        }
+
+        streamController.replacePlaceholder(StreamCellType.PlaceholderType.StreamItems, listOf(StreamCellItem(type = StreamCellType.Spinner)))
+        generator.loadStream(filter, stream)
+    }
+
 }

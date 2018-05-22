@@ -3,7 +3,7 @@ package co.ello.android.ello
 
 class StreamParser {
     fun parse(models: List<Model>): List<StreamCellItem> {
-        return models.flatMap { model ->
+        val items = models.flatMap { model ->
             if (model is Post) {
                 val header = StreamCellItem(model = model, type = StreamCellType.PostHeader)
                 val footer = StreamCellItem(model = model, type = StreamCellType.PostFooter)
@@ -20,6 +20,7 @@ class StreamParser {
             }
             else emptyList()
         }
+        return items
     }
 
     private fun parseContent(model: Model, region: Regionable): List<StreamCellItem> {

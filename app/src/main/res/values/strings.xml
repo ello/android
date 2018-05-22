@@ -21,6 +21,10 @@
     <string name="Category.all">All</string>
     <string name="Category.subscribed">Subscribed</string>
     <string name="Category.zeroState">Choose communities to subscribe to here.</string>
+    <string name="Category.featured">Featured</string>
+    <string name="Category.trending">Trending</string>
+    <string name="Category.recent">Recent</string>
+    <string name="Category.shop">Shop</string>
 
     <string name="Editorials.title">Editorials</string>
     <string name="ArtistInvites.title">Artist Invites</string>

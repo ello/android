@@ -14,24 +14,24 @@ class API {
         var domain: String = ""
     }
 
-    enum class CategoryFilter(val value: String) {
+    enum class StreamFilter(val value: String) {
         Featured("FEATURED"),
         Trending("TRENDING"),
         Recent("RECENT"),
         Shop("SHOP");
 
         companion object {
-            fun create(value: String): CategoryFilter? = when(value) {
-                "FEATURED" -> CategoryFilter.Featured
-                "TRENDING" -> CategoryFilter.Trending
-                "RECENT" -> CategoryFilter.Recent
-                "SHOP" -> CategoryFilter.Shop
+            fun create(value: String): StreamFilter? = when(value) {
+                "FEATURED" -> StreamFilter.Featured
+                "TRENDING" -> StreamFilter.Trending
+                "RECENT" -> StreamFilter.Recent
+                "SHOP" -> StreamFilter.Shop
                 else -> null
             }
         }
     }
 
-    fun globalPostStream(filter: CategoryFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
+    fun globalPostStream(filter: StreamFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream")
             .parser { json ->
                 PageParser<Post>("posts", PostParser()).parse(json)
@@ -43,7 +43,7 @@ class API {
             .setBody(Fragments.postStreamBody)
     }
 
-    fun subscribedPostStream(filter: CategoryFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
+    fun subscribedPostStream(filter: StreamFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("subscribedPostStream")
             .parser { json ->
                 PageParser<Post>("posts", PostParser()).parse(json)
@@ -55,7 +55,7 @@ class API {
             .setBody(Fragments.postStreamBody)
     }
 
-    fun categoryPostStream(filter: CategoryFilter, category: Token, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
+    fun categoryPostStream(filter: StreamFilter, category: Token, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         val categoryVar: GraphQLRequest.Variable = when(category) {
             is ID -> GraphQLRequest.Variable.optionalInt("id", category.id.toInt())
             is Slug -> GraphQLRequest.Variable.optionalInt("slug", category.slug.toInt())

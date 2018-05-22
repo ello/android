@@ -9,7 +9,8 @@ class CategoryProtocols {
         var delegate: Controller?
         val contentView: View
         val streamContainer: ViewGroup
-        fun updateSubscribedCategories(categories: List<CategoryScreen.CardInfo>)
+        fun updateSubscribedCategories(categoryInfo: List<CategoryScreen.CardInfo>)
+        fun highlightSubscribedCategory(selectedInfo: CategoryScreen.CardInfo)
     }
 
     interface Controller {
@@ -20,6 +21,6 @@ class CategoryProtocols {
 
     interface Generator {
         fun loadSubscribedCategories()
-        fun loadStream(stream: CategoryGenerator.Stream)
+        fun loadStream(filter: API.StreamFilter, stream: CategoryGenerator.Stream)
     }
 }

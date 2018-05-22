@@ -7,10 +7,12 @@ import android.support.v7.widget.LinearLayoutManager
 
 
 class StreamController(a: AppActivity)
-    : BaseController(a), StreamResponder, PostToolbarResponder
+    : BaseController(a)
 {
     private lateinit var screen: RecyclerView
     private var adapter: Adapter = Adapter(emptyList(), streamController = this)
+
+    var streamSelectionDelegate: StreamSelectionDelegate? = null
 
     class Adapter(val items: List<StreamCellItem>, val streamController: StreamController) : RecyclerView.Adapter<StreamCell>() {
         init {
@@ -43,26 +45,60 @@ class StreamController(a: AppActivity)
         return screen
     }
 
+    fun hasPlaceholderItems(placeholder: StreamCellType.PlaceholderType): Boolean {
+        return adapter.items.any { it.placeholderType == placeholder }
+    }
+
+    fun replacePlaceholder(placeholder: StreamCellType.PlaceholderType, with: List<StreamCellItem>) {
+        for (item in with) {
+            item.placeholderType = placeholder
+        }
+
+        var didInsert = false
+        val items: MutableList<StreamCellItem> = mutableListOf()
+        for (item in adapter.items) {
+            if (item.placeholderType == placeholder) {
+                if (!didInsert) {
+                    didInsert = true
+                    items.addAll(with)
+                }
+            }
+            else {
+                items.add(item)
+            }
+        }
+
+        if (!didInsert) {
+            items.addAll(with)
+        }
+
+        replaceAll(items)
+    }
+
     fun replaceAll(items: List<StreamCellItem>) {
         adapter = Adapter(items, streamController = this)
         if (isViewLoaded)  screen.adapter = adapter
     }
 
-    override fun streamTappedPost(cell: StreamCell, item: StreamCellItem, post: Post) {
+    fun streamTappedPost(cell: StreamCell, item: StreamCellItem, post: Post) {
     }
 
-    override fun streamTappedUser(cell: StreamCell, item: StreamCellItem, user: User) {
+    fun streamTappedUser(cell: StreamCell, item: StreamCellItem, user: User) {
     }
 
-    override fun toolbarTappedLoves(cell: StreamCell, item: StreamCellItem) {
+    fun toolbarTappedLoves(cell: StreamCell, item: StreamCellItem) {
     }
 
-    override fun toolbarTappedComments(cell: StreamCell, item: StreamCellItem) {
+    fun toolbarTappedComments(cell: StreamCell, item: StreamCellItem) {
     }
 
-    override fun toolbarTappedRepost(cell: StreamCell, item: StreamCellItem) {
+    fun toolbarTappedRepost(cell: StreamCell, item: StreamCellItem) {
     }
 
-    override fun toolbarTappedShare(cell: StreamCell, item: StreamCellItem) {
+    fun toolbarTappedShare(cell: StreamCell, item: StreamCellItem) {
+    }
+
+    fun streamSelectionChanged(index: Int) {
+        streamSelectionDelegate?.streamSelectionChanged(index)
     }
 }

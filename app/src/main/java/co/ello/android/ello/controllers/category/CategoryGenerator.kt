@@ -10,6 +10,15 @@ class CategoryGenerator(val delegate: CategoryProtocols.Controller?, val queue: 
         object All : Stream()
         object Subscribed : Stream()
         data class Category(val id: Token) : Stream()
+
+        override fun equals(other: Any?): Boolean {
+            if (other == null)  return false
+            if (other !is Stream)  return false
+            if (other is All && this is All)  return true
+            if (other is Subscribed && this is Subscribed)  return true
+            if (other is Category && this is Category)  return other.id == this.id
+            return false
+        }
     }
 
     var streamToken: UUID? = null
@@ -28,13 +37,13 @@ class CategoryGenerator(val delegate: CategoryProtocols.Controller?, val queue: 
             }
     }
 
-    override fun loadStream(stream: Stream) {
+    override fun loadStream(filter: API.StreamFilter, stream: Stream) {
         val currentToken = newUUID()
 
         API().let { when(stream) {
-            is Stream.All        -> it.globalPostStream(API.CategoryFilter.Featured)
-            is Stream.Subscribed -> it.subscribedPostStream(API.CategoryFilter.Featured)
-            is Stream.Category   -> it.categoryPostStream(API.CategoryFilter.Featured, category = stream.id)
+            is Stream.All        -> it.globalPostStream(filter)
+            is Stream.Subscribed -> it.subscribedPostStream(filter)
+            is Stream.Category   -> it.categoryPostStream(filter, category = stream.id)
         } }.enqueue(queue)
             .onSuccess exit@ { (_, posts) ->
                 if (currentToken != streamToken)  return@exit

@@ -1,6 +1,7 @@
 package co.ello.android.ello
 
 import android.app.Activity
+import android.support.constraint.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ class CategoryScreen : CategoryProtocols.Screen {
 
     override val contentView: View
     override val streamContainer: ViewGroup
+    private var categoryCards: List<CardHolder> = emptyList()
     val cardListContainer: LinearLayout
 
     constructor(activity: Activity) {
@@ -32,30 +34,31 @@ class CategoryScreen : CategoryProtocols.Screen {
         object Subscribed : CardInfo(title = Res(R.string.Category_subscribed), kind = Kind.Subscribed, imageURL = null)
         object ZeroState : CardInfo(title = Res(R.string.Category_zeroState), kind = Kind.ZeroState, imageURL = null)
         class Category(val category: co.ello.android.ello.Category) : CardInfo(title = Lit(category.name), kind = Kind.Category, imageURL = category.tileURL)
+
+        override fun equals(other: Any?): Boolean {
+            if (other == null)  return false
+            if (other !is CardInfo)  return false
+            if (other is All && this is All)  return true
+            if (other is Subscribed && this is Subscribed)  return true
+            if (other is ZeroState && this is ZeroState)  return true
+            if (other is Category && this is Category)  return other.category.id == this.category.id
+            return false
+        }
     }
 
-    data class CardHolder(val view: View) {
+    data class CardHolder(val info: CardInfo, val view: View) {
         val label = view.findViewById<StyledLabel>(R.id.label)
         val imageView = view.findViewById<ImageView>(R.id.imageView)
         val overlay = view.findViewById<View>(R.id.overlay)
     }
 
-    override fun updateSubscribedCategories(categories: List<CardInfo>) {
+    override fun updateSubscribedCategories(categoryInfo: List<CardInfo>) {
         cardListContainer.removeAllViews()
 
-        for (info in categories) {
-            val view = LayoutInflater.from(contentView.context).inflate(R.layout.category_card_view, null)
-            val width = (when(info.kind) {
-                CardInfo.Kind.All -> 50
-                CardInfo.Kind.ZeroState -> 300
-                CardInfo.Kind.Subscribed, CardInfo.Kind.Category-> 100
-            }).dp
-
-            val height = LinearLayout.LayoutParams.MATCH_PARENT
-            val layoutParams = LinearLayout.LayoutParams(width, height)
-            view.layoutParams = layoutParams
-
-            val cardHolder = CardHolder(view)
+        val inflater = LayoutInflater.from(contentView.context)
+        this.categoryCards = categoryInfo.map { info ->
+            val view = inflater.inflate(R.layout.category_card_view, cardListContainer, false)
+            val cardHolder = CardHolder(info, view)
             cardHolder.label.setText(info.title.gen())
             cardHolder.label.style = if (info == CardInfo.All) StyledLabel.Style.BoldWhiteUnderline else StyledLabel.Style.White
             cardHolder.imageView.setImageURL(info.imageURL)
@@ -63,10 +66,28 @@ class CategoryScreen : CategoryProtocols.Screen {
             cardHolder.overlay.alpha = if (info == CardInfo.All) 0.8f else 0.5f
 
             cardListContainer.addView(view)
+
+            val width = (when(info.kind) {
+                CardInfo.Kind.All -> 50
+                CardInfo.Kind.ZeroState -> 300
+                CardInfo.Kind.Subscribed, CardInfo.Kind.Category-> 100
+            }).dp
+            val height = LinearLayout.LayoutParams.MATCH_PARENT
+            val layoutParams = LinearLayout.LayoutParams(width, height)
+            view.layoutParams = layoutParams
+
+            cardHolder
+        }
+    }
+
+    override fun highlightSubscribedCategory(selectedInfo: CardInfo) {
+        for (cardHolder in categoryCards) {
+            cardHolder.overlay.alpha = if (cardHolder.info == selectedInfo) 0.8f else 0.5f
         }
     }
 
     private fun categoryCardTapped(info: CardInfo) {
+        highlightSubscribedCategory(info)
         delegate?.categorySelected(info)
     }
 
