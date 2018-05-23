@@ -27,6 +27,10 @@ class HomeController : BaseController, HomeProtocols.Controller {
         this.controllersTitles = childControllers.map { it.first }
         this.controllers = childControllers.map { it.second }
         this.selectedIndex = selected
+
+        for (controller in controllers) {
+            controller.assignParent(this, isVisible = false)
+        }
     }
 
     override fun createView(): View {
@@ -34,14 +38,7 @@ class HomeController : BaseController, HomeProtocols.Controller {
         screen.highlight(selectedIndex)
         screen.containerView.addView(selectedController.view)
         this.screen = screen
-
         return screen.contentView
-    }
-
-    override fun onStart() {
-        for ((index, controller) in controllers.withIndex()) {
-            controller.assignParent(this, isVisible = index == selectedIndex)
-        }
     }
 
     override fun tabSelected(tab: Int) {
