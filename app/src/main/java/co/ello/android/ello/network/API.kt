@@ -94,6 +94,16 @@ class API {
             .setBody(Fragments.editorialsBody)
     }
 
+    fun postDetail(token: Token, username: String?): GraphQLRequest<Post> {
+        return GraphQLRequest<Post>("post")
+            .parser { json -> OneParser<Post>(PostParser()).parse(json) }
+            .setVariables(
+                token.variable,
+                GraphQLRequest.Variable.optionalString("username", username)
+            )
+            .setBody(Fragments.postBody)
+    }
+
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/v2/join"
 

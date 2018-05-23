@@ -21,12 +21,14 @@ class GraphQLRequest<T>(
 
         data class string(override val name: String         , override val value: String)   : Variable() { override val type: String get() { return "String!"}}
         data class optionalString(override val name: String , override val value: String?)  : Variable() { override val type: String get() { return "String" }}
+        data class id(override val name: String             , override val value: String)   : Variable() { override val type: String get() { return "ID!"}}
+        data class optionalID(override val name: String     , override val value: String?)  : Variable() { override val type: String get() { return "ID" }}
         data class int(override val name: String            , override val value: Int)      : Variable() { override val type: String get() { return "Int!"   }}
         data class optionalInt(override val name: String    , override val value: Int?)     : Variable() { override val type: String get() { return "Int"    }}
         data class float(override val name: String          , override val value: Float)    : Variable() { override val type: String get() { return "Float!" }}
         data class optionalFloat(override val name: String  , override val value: Float?)   : Variable() { override val type: String get() { return "Float"  }}
-        data class boolean(override val name: String           , override val value: Boolean)  : Variable() { override val type: String get() { return "Bool!"  }}
-        data class optionalBoolean(override val name: String   , override val value: Boolean?) : Variable() { override val type: String get() { return "Bool"   }}
+        data class boolean(override val name: String        , override val value: Boolean)  : Variable() { override val type: String get() { return "Bool!"  }}
+        data class optionalBoolean(override val name: String, override val value: Boolean?) : Variable() { override val type: String get() { return "Bool"   }}
         data class enum(override val name: String           , override val value: String, val typeName: String) : Variable() { override val type: String get() { return "$typeName!" }}
         data class optionalEnum(override val name: String   , override val value: String?, val typeName: String) : Variable() { override val type: String get() { return typeName }}
     }

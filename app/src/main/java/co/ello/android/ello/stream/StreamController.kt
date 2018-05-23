@@ -81,6 +81,8 @@ class StreamController(a: AppActivity)
     }
 
     fun streamTappedPost(cell: StreamCell, item: StreamCellItem, post: Post) {
+        val postDetailController = PostDetailController(activity, post = post)
+        navigationController?.push(postDetailController)
     }
 
     fun streamTappedUser(cell: StreamCell, item: StreamCellItem, user: User) {
