@@ -6,7 +6,6 @@ import android.view.ViewGroup
 
 class HomeProtocols {
     interface Screen {
-        var delegate: Controller?
         val contentView: View
         val containerView: ViewGroup
 

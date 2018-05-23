@@ -19,8 +19,7 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
     }
 
     override fun createView(): View {
-        val screen = CategoryScreen(activity)
-        screen.delegate = this
+        val screen = CategoryScreen(activity, delegate = this)
         this.screen = screen
         categoryInfo?.let { screen.updateSubscribedCategories(it) }
         return screen.contentView

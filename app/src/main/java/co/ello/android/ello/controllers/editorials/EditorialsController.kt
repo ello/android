@@ -11,8 +11,7 @@ class EditorialsController(a: AppActivity) : StreamableController(a), Editorials
     override val viewForStream: ViewGroup get() = screen.streamContainer
 
     override fun createView(): View {
-        val screen = EditorialsScreen(activity)
-        screen.delegate = this
+        val screen = EditorialsScreen(activity, delegate = this)
         this.screen = screen
         return screen.contentView
     }

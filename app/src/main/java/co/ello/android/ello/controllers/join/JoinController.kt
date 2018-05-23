@@ -8,8 +8,7 @@ class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : Bas
     private var generator: JoinProtocols.Generator = JoinGenerator(delegate = this)
 
     override fun createView(): View {
-        val screen = JoinScreen(activity)
-        screen.delegate = this
+        val screen = JoinScreen(activity, delegate = this)
         this.screen = screen
         return screen.contentView
     }

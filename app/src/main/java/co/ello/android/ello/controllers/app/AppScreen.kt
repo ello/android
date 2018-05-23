@@ -21,9 +21,9 @@ class AppScreen : AppProtocols.Screen {
     constructor(activity: Activity) {
         contentView = activity.layoutInflater.inflate(R.layout.app_layout, null)
 
-        containerView = contentView.findViewById<ViewGroup>(R.id.containerView)
+        containerView = contentView.findViewById(R.id.containerView)
         spinnerContainer = contentView.findViewById<View>(R.id.spinnerContainer)
-        spinnerImageView = contentView.findViewById<ImageView>(R.id.spinner)
+        spinnerImageView = contentView.findViewById(R.id.spinner)
 
         val rotationAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
         rotationAnimation.duration = 250

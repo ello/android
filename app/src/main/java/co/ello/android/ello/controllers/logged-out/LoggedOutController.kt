@@ -17,9 +17,8 @@ class LoggedOutController(
     override val firstResponder: Controller get() = discoverController.firstResponder
 
     override fun createView(): View {
-        val screen = LoggedOutScreen(activity)
+        val screen = LoggedOutScreen(activity, delegate = this)
         screen.containerView.addView(discoverController.view)
-        screen.delegate = this
         this.screen = screen
         return screen.contentView
     }

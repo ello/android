@@ -7,18 +7,19 @@ import android.widget.Button
 
 
 class HomeScreen : HomeProtocols.Screen {
-    override var delegate: HomeProtocols.Controller? = null
+    private val delegate: HomeProtocols.Controller?
 
     override val contentView: View
     override val containerView: ViewGroup
     private val linearLayout: ViewGroup
     private val tabHolders: List<UnderbarTabHolder>
 
-    constructor(activity: Activity, tabs: List<String>) {
+    constructor(activity: Activity, tabs: List<String>, delegate: HomeProtocols.Controller?) {
+        this.delegate = delegate
+
         contentView = activity.layoutInflater.inflate(R.layout.home_layout, null)
         containerView = contentView.findViewById(R.id.containerView)
         linearLayout = contentView.findViewById(R.id.linearLayout)
-
         tabHolders = tabs.map { tabTitle ->
             val tabHolder = UnderbarTabHolder(activity.layoutInflater.inflate(R.layout.underbar_tab_layout, linearLayout, false))
             tabHolder.blackBar.visibility = View.INVISIBLE

@@ -7,7 +7,7 @@ import android.widget.Button
 
 
 class LoggedOutScreen : LoggedOutProtocols.Screen {
-    override var delegate: LoggedOutProtocols.Controller? = null
+    private val delegate: LoggedOutProtocols.Controller?
 
     override val contentView: View
     override val containerView: ViewGroup
@@ -15,11 +15,13 @@ class LoggedOutScreen : LoggedOutProtocols.Screen {
     private val loginButton: Button
     private val joinButton: Button
 
-    constructor(activity: Activity) {
+    constructor(activity: Activity, delegate: LoggedOutProtocols.Controller?) {
+        this.delegate = delegate
+
         contentView = activity.layoutInflater.inflate(R.layout.logged_out_layout, null)
-        loginButton = contentView.findViewById<Button>(R.id.loginButton)
-        joinButton = contentView.findViewById<Button>(R.id.joinButton)
-        containerView = contentView.findViewById<ViewGroup>(R.id.containerView)
+        loginButton = contentView.findViewById(R.id.loginButton)
+        joinButton = contentView.findViewById(R.id.joinButton)
+        containerView = contentView.findViewById(R.id.containerView)
 
         joinButton.setOnClickListener {
             delegate?.showJoinScreen()

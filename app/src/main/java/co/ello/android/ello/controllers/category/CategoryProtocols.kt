@@ -6,7 +6,6 @@ import android.view.ViewGroup
 
 class CategoryProtocols {
     interface Screen {
-        var delegate: Controller?
         val contentView: View
         val streamContainer: ViewGroup
         fun updateSubscribedCategories(categoryInfo: List<CategoryScreen.CardInfo>)

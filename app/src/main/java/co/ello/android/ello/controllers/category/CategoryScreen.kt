@@ -12,14 +12,16 @@ import java.net.URL
 
 
 class CategoryScreen : CategoryProtocols.Screen {
-    override var delegate: CategoryProtocols.Controller? = null
+    private val delegate: CategoryProtocols.Controller?
 
     override val contentView: View
     override val streamContainer: ViewGroup
-    private var categoryCards: List<CardHolder> = emptyList()
     val cardListContainer: LinearLayout
+    private var categoryCards: List<CardHolder> = emptyList()
 
-    constructor(activity: Activity) {
+    constructor(activity: Activity, delegate: CategoryProtocols.Controller?) {
+        this.delegate = delegate
+
         contentView = activity.layoutInflater.inflate(R.layout.category_layout, null)
         cardListContainer = contentView.findViewById(R.id.cardListContainer)
         streamContainer = contentView.findViewById(R.id.streamContainer)

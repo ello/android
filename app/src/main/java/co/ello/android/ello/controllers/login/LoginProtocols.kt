@@ -6,7 +6,6 @@ import android.view.Window
 
 class LoginProtocols {
     interface Screen {
-        var delegate: Controller?
         val contentView: View
         var interactive: Boolean
         fun showErrors(usernameMessage: String?, passwordMessage: String?)

@@ -35,14 +35,14 @@ sealed class StreamCellType {
         fun createViewHolder(parent: ViewGroup, viewType: Int): StreamCell {
             val type = StreamCellType::class.nestedClasses.elementAt(viewType)
             return when (type) {
-                Spinner::class -> SpinnerCell(parent = parent)
+                Spinner::class -> SpinnerCell(parent)
 
-                StreamSelection::class -> StreamSelectionCell(parent = parent)
+                StreamSelection::class -> StreamSelectionCell(parent)
 
-                PostHeader::class -> PostHeaderCell(parent = parent)
-                PostFooter::class -> PostFooterCell(parent = parent)
-                PostText::class -> PostTextCell(parent = parent)
-                PostImage::class -> PostImageCell(parent = parent)
+                PostHeader::class -> PostHeaderCell(parent)
+                PostFooter::class -> PostFooterCell(parent)
+                PostText::class -> PostTextCell(parent)
+                PostImage::class -> PostImageCell(parent)
                 else -> throw IllegalArgumentException("Unhandled type $type")
             }
         }

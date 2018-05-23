@@ -5,9 +5,9 @@ import android.view.ViewGroup
 
 
 class HomeController : BaseController, HomeProtocols.Controller {
+    private val delegate: HomeProtocols.Delegate?
     private lateinit var screen: HomeProtocols.Screen
 
-    private val delegate: HomeProtocols.Delegate?
     private val controllersTitles: List<String>
     private val controllers: List<Controller>
     private var selectedIndex: Int
@@ -30,8 +30,7 @@ class HomeController : BaseController, HomeProtocols.Controller {
     }
 
     override fun createView(): View {
-        val screen = HomeScreen(activity, tabs = controllersTitles)
-        screen.delegate = this
+        val screen = HomeScreen(activity, tabs = controllersTitles, delegate = this)
         screen.highlight(selectedIndex)
         screen.containerView.addView(selectedController.view)
         this.screen = screen

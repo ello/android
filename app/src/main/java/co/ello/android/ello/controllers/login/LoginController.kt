@@ -8,8 +8,7 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : B
     private var generator: LoginProtocols.Generator = LoginGenerator(delegate = this)
 
     override fun createView(): View {
-        val screen = LoginScreen(activity)
-        screen.delegate = this
+        val screen = LoginScreen(activity, delegate = this)
         this.screen = screen
         return screen.contentView
     }

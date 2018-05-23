@@ -5,7 +5,6 @@ import android.view.View
 
 class JoinProtocols {
     interface Screen {
-        var delegate: Controller?
         val contentView: View
         var interactive: Boolean
         fun showErrors(emailMessage: String?, usernameMessage: String?, passwordMessage: String?)
