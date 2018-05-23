@@ -5,7 +5,7 @@ import android.view.View
 
 class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : BaseController(a), JoinProtocols.Controller {
     private lateinit var screen: JoinProtocols.Screen
-    private var generator: JoinProtocols.Generator = JoinGenerator(delegate = this)
+    private var generator: JoinProtocols.Generator = JoinGenerator(delegate = this, queue = requestQueue)
 
     override fun createView(): View {
         val screen = JoinScreen(activity, delegate = this)
@@ -37,7 +37,7 @@ class JoinController(a: AppActivity, val delegate: JoinProtocols.Delegate) : Bas
             showSpinner()
             screen.interactive = false
 
-            generator.join(requestQueue, email, username, password)
+            generator.join(email, username, password)
         }
     }
 

@@ -18,7 +18,7 @@ class JoinProtocols {
     }
 
     interface Generator {
-        fun join(queue: Queue, email: String, username: String, password: String)
+        fun join(email: String, username: String, password: String)
     }
 
     interface Delegate {

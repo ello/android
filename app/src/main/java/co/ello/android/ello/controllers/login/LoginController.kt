@@ -5,7 +5,7 @@ import android.view.View
 
 class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : BaseController(a), LoginProtocols.Controller {
     private lateinit var screen: LoginProtocols.Screen
-    private var generator: LoginProtocols.Generator = LoginGenerator(delegate = this)
+    private var generator: LoginProtocols.Generator = LoginGenerator(delegate = this, queue = requestQueue)
 
     override fun createView(): View {
         val screen = LoginScreen(activity, delegate = this)
@@ -32,7 +32,7 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : B
             showSpinner()
             screen.interactive = false
 
-            generator.login(requestQueue, username, password)
+            generator.login(username, password)
         }
     }
 

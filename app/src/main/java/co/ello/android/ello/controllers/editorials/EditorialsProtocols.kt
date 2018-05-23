@@ -15,6 +15,6 @@ class EditorialsProtocols {
     }
 
     interface Generator {
-        fun loadEditorialsStream(queue: Queue)
+        fun loadEditorialsStream()
     }
 }
