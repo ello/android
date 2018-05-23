@@ -11,20 +11,22 @@ class LoggedOutController(
     private lateinit var screen: LoggedOutProtocols.Screen
 
     private val discoverController = CategoryController(activity)
+    private val childNavigationController = NavigationController(activity)
 
-    override val childControllers: Iterable<Controller> get() { return listOf(discoverController) }
+    override val childControllers: Iterable<Controller> get() { return listOf(childNavigationController) }
     override val visibleChildControllers: Iterable<Controller> get() { return childControllers }
-    override val firstResponder: Controller get() = discoverController.firstResponder
+    override val firstResponder: Controller get() = childNavigationController.firstResponder
+
+    init {
+        childNavigationController.assignParent(this, isVisible = false)
+        childNavigationController.push(discoverController)
+    }
 
     override fun createView(): View {
         val screen = LoggedOutScreen(activity, delegate = this)
-        screen.containerView.addView(discoverController.view)
+        screen.containerView.addView(childNavigationController.view)
         this.screen = screen
         return screen.contentView
-    }
-
-    override fun onStart() {
-        discoverController.assignParent(this, isVisible = true)
     }
 
     override fun showJoinScreen() {
