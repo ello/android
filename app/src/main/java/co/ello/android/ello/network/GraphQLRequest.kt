@@ -90,7 +90,7 @@ class GraphQLRequest<T>(
         }
         .onFailure { exception ->
             println("${this.endpointName} failed: $exception")
-            if (exception is VolleyError) {
+            if (exception is VolleyError && exception.networkResponse != null) {
                 println("server error:\n${String(exception.networkResponse.data)}")
             }
 
