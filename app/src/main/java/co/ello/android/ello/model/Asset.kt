@@ -86,7 +86,7 @@ data class Asset(val id: String) : Model() {
     }
 
     constructor(url: URL) : this(id = UUIDString()) {
-        val attachment = Attachment(url = url)
+        val attachment = Attachment(url)
         this.optimized = attachment
         this.mdpi = attachment
         this.hdpi = attachment
@@ -97,14 +97,14 @@ data class Asset(val id: String) : Model() {
     }
 
     constructor(url: URL, gifData: ByteArray, posterImage: Image) : this(id = UUIDString()) {
-        val optimized = Attachment(url = url)
+        val optimized = Attachment(url)
         optimized.type = "image/gif"
         optimized.size = gifData.size
         optimized.width = posterImage.width
         optimized.height = posterImage.height
         this.optimized = optimized
 
-        val hdpi = Attachment(url = url)
+        val hdpi = Attachment(url)
         hdpi.width = posterImage.width
         hdpi.height = posterImage.height
         hdpi.image = posterImage
@@ -112,7 +112,7 @@ data class Asset(val id: String) : Model() {
     }
 
     constructor(url: URL, image: Image) : this(id = UUIDString()) {
-        val optimized = Attachment(url = url)
+        val optimized = Attachment(url)
         optimized.width = image.width
         optimized.height = image.height
         optimized.image = image

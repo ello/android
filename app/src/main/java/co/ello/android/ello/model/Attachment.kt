@@ -19,7 +19,7 @@ data class Attachment(
     companion object {
         fun fromJSON(json: JSON): Attachment {
             val url = json["url"].url!!
-            val attachment = Attachment(url = url)
+            val attachment = Attachment(url)
             attachment.size = json["metadata"]["size"].int
             attachment.width = json["metadata"]["width"].int
             attachment.height = json["metadata"]["height"].int
