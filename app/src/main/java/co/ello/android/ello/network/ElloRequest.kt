@@ -13,7 +13,7 @@ class ElloRequest<T>(
         override val requiresAnyToken: Boolean = true,
         override val supportsAnonymousToken: Boolean = true
 ) : Request<String>(method, "${API.domain}$path", null), AuthenticationEndpoint {
-    class CancelledRequest : Throwable()
+    object CancelledRequest : Throwable()
 
     constructor(
         method: Method,
@@ -75,7 +75,7 @@ class ElloRequest<T>(
 
     fun enqueue(queue: Queue): CompletableFuture<T> {
         retryBlock = { this.enqueue(queue) }
-        cancelBlock = { future.completeExceptionally(CancelledRequest()) }
+        cancelBlock = { future.completeExceptionally(CancelledRequest) }
 
         this.onSuccess { json ->
             try {

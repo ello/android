@@ -12,8 +12,7 @@ class GraphQLRequest<T>(
         override val requiresAnyToken: Boolean = true,
         override val supportsAnonymousToken: Boolean = true
 ) : Request<JSON>(Request.Method.POST, "${API.domain}/api/v3/graphql", null), AuthenticationEndpoint {
-    class CancelledRequest : Throwable()
-    class ParsingError : Throwable()
+    object CancelledRequest : Throwable()
 
     sealed class Variable {
         abstract val name: String
@@ -72,7 +71,7 @@ class GraphQLRequest<T>(
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
 
         retryBlock = { this.enqueue(queue) }
-        cancelBlock = { future.completeExceptionally(CancelledRequest()) }
+        cancelBlock = { future.completeExceptionally(CancelledRequest) }
 
         this.onSuccess { json ->
             val resultJson = json["data"][endpointName]
