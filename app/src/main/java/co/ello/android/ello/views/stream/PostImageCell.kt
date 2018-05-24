@@ -9,7 +9,8 @@ import kotlin.math.roundToInt
 
 
 class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.post_image_cell, parent, false)) {
-    val imageView: ImageView
+    private val imageView: ImageView
+    private var aspectRatio: Float? = null
 
     data class Config(
         val imageURL: URL
@@ -17,10 +18,12 @@ class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.c
 
     init {
         imageView = itemView.findViewById(R.id.imageView)
+        imageView.viewTreeObserver.addOnGlobalLayoutListener { didResize() }
     }
 
     var config: Config? = null
         set(value) {
+            aspectRatio = null
             streamCellItem?.height?.let { assignHeight(it) }
             imageView.setImageURL(value?.imageURL, onSuccess = { calculateHeight() }, onError = {
                 println("error: ${value?.imageURL}")
@@ -35,14 +38,19 @@ class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.c
         val imageWidth = imageView.drawable.intrinsicWidth
         val imageHeight = imageView.drawable.intrinsicHeight
         if (imageWidth > 0 && imageHeight > 0) {
-            val aspectRatio = imageWidth.toFloat() / imageHeight.toFloat()
-            val width = imageView.measuredWidth
-            val height = (width.toFloat() / aspectRatio).roundToInt()
+            aspectRatio = imageWidth.toFloat() / imageHeight.toFloat()
+            didResize()
+        }
+    }
 
-            if (width > 0 && streamCellItem?.height != height) {
-                streamCellItem?.height = height
-                assignHeight(height)
-            }
+    private fun didResize() {
+        val aspectRatio = this.aspectRatio ?: return
+        val width = imageView.measuredWidth
+        val height = (width.toFloat() / aspectRatio).roundToInt()
+
+        if (width > 0 && streamCellItem?.height != height) {
+            streamCellItem?.height = height
+            assignHeight(height)
         }
     }
 }
