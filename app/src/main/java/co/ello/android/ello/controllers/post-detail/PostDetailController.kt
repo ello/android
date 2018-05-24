@@ -21,6 +21,10 @@ class PostDetailController(a: AppActivity) : StreamableController(a), PostDetail
         this.post = post
     }
 
+    fun isShowing(post: Post): Boolean {
+        return token.matches(post.id, post.token)
+    }
+
     override fun createView(): View {
         val screen = PostDetailScreen(activity, delegate = this)
         this.screen = screen

@@ -88,6 +88,9 @@ class StreamController(a: AppActivity)
     }
 
     fun streamTappedPost(cell: StreamCell, item: StreamCellItem, post: Post) {
+        val parentController = findParent<PostDetailController>()
+        if (parentController != null && parentController.isShowing(post))  return
+
         val postDetailController = PostDetailController(activity, post = post)
         navigationController?.push(postDetailController)
     }
