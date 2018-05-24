@@ -37,6 +37,13 @@ class StreamController(a: AppActivity)
         }
     }
 
+    override fun onRotate() {
+        for (item in adapter.items) {
+            item.height = null
+        }
+        replaceAll(adapter.items)
+    }
+
     override fun createView(): View {
         val recycler = RecyclerView(activity)
         recycler.layoutManager = LinearLayoutManager(activity)

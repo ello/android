@@ -32,6 +32,7 @@ class AppActivity : AppCompatActivity() {
             controller.appear()
         }
         else {
+            controller.rotate()
             setContentView(controller.view)
         }
 

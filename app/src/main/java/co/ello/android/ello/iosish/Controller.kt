@@ -92,9 +92,10 @@ abstract class Controller(val activity: AppActivity) {
 
     // could be called many times, for instance in a tab controller
     open fun onAppear() {}
+    open fun onRotate() {}
     open fun onDisappear() {}
 
-    open fun start() {
+    fun start() {
         if (!isRunning || isStarted)  return
         _isStarted = true
         // println("calling onStart in $this (parent: ${this.parent})")
@@ -104,7 +105,7 @@ abstract class Controller(val activity: AppActivity) {
         }
     }
 
-    open fun appear() {
+    fun appear() {
         if (!isStarted || isVisible)  return
         if (!isViewLoaded) {
             throw IllegalArgumentException("$this View should be loaded before appear() is called")
@@ -117,7 +118,16 @@ abstract class Controller(val activity: AppActivity) {
         }
     }
 
-    open fun disappear() {
+    fun rotate() {
+        if (!isVisible)  return
+        // println("calling onRotate in $this (parent: ${this.parent})")
+        onRotate()
+        for (controller in childControllers) {
+            controller.rotate()
+        }
+    }
+
+    fun disappear() {
         if (!isVisible)  return
         _isVisible = false
         for (controller in visibleChildControllers) {
@@ -127,7 +137,7 @@ abstract class Controller(val activity: AppActivity) {
         onDisappear()
     }
 
-    open fun finish() {
+    fun finish() {
         if (!isStarted)  return
         _isStarted = false
         for (controller in childControllers) {
