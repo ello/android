@@ -45,11 +45,16 @@ class StreamController(a: AppActivity)
     }
 
     override fun createView(): View {
-        val recycler = RecyclerView(activity)
-        recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.adapter = adapter
-        screen = recycler
+        val screen = RecyclerView(activity)
+        screen.layoutManager = LinearLayoutManager(activity)
+        this.screen = screen
         return screen
+    }
+
+    override fun onStart() {
+        if (screen.adapter == null) {
+            screen.adapter = adapter
+        }
     }
 
     fun hasPlaceholderItems(placeholder: StreamCellType.PlaceholderType): Boolean {
