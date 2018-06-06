@@ -2,10 +2,10 @@ package co.ello.android.ello
 
 
 class ManyParser<T: Model>(val parser: Parser) {
-    class NotAnArray : Throwable()
+    object NotAnArray : Throwable()
 
     fun parse(json: JSON): List<T> {
-        val objects = json.list ?: throw NotAnArray()
+        val objects = json.list ?: throw NotAnArray
 
         val db: Database = mutableMapOf()
         val ids: MutableList<Parser.Identifier> = mutableListOf()

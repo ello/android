@@ -28,9 +28,9 @@ class StreamParser {
             return listOf(StreamCellItem(model = model, type = StreamCellType.PostText(region.content)))
         }
         else if (region is ImageRegion) {
-            region.asset?.oneColumnAttachment?.url?.let {
-                return listOf(StreamCellItem(model = model, type = StreamCellType.PostImage(it)))
-            }
+            return region.asset?.oneColumnAttachment?.url?.let {
+                listOf(StreamCellItem(model = model, type = StreamCellType.PostImage(it)))
+            } ?: emptyList()
         }
         return emptyList()
     }

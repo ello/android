@@ -37,12 +37,24 @@ class StreamController(a: AppActivity)
         }
     }
 
+    override fun onRotate() {
+        for (item in adapter.items) {
+            item.height = null
+        }
+        replaceAll(adapter.items)
+    }
+
     override fun createView(): View {
-        val recycler = RecyclerView(activity)
-        recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.adapter = adapter
-        screen = recycler
+        val screen = RecyclerView(activity)
+        screen.layoutManager = LinearLayoutManager(activity)
+        this.screen = screen
         return screen
+    }
+
+    override fun onStart() {
+        if (screen.adapter == null) {
+            screen.adapter = adapter
+        }
     }
 
     fun hasPlaceholderItems(placeholder: StreamCellType.PlaceholderType): Boolean {
@@ -81,6 +93,11 @@ class StreamController(a: AppActivity)
     }
 
     fun streamTappedPost(cell: StreamCell, item: StreamCellItem, post: Post) {
+        val parentController = findParent<PostDetailController>()
+        if (parentController != null && parentController.isShowing(post))  return
+
+        val postDetailController = PostDetailController(activity, post = post)
+        navigationController?.push(postDetailController)
     }
 
     fun streamTappedUser(cell: StreamCell, item: StreamCellItem, user: User) {

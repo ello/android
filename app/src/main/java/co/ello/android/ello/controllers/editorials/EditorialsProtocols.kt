@@ -6,7 +6,6 @@ import android.view.ViewGroup
 
 class EditorialsProtocols {
     interface Screen {
-        var delegate: Controller?
         val contentView: View
         val streamContainer: ViewGroup
     }
@@ -16,6 +15,6 @@ class EditorialsProtocols {
     }
 
     interface Generator {
-        fun loadEditorialsStream(queue: Queue)
+        fun loadEditorialsStream()
     }
 }

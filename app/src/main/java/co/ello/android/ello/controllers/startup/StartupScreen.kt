@@ -15,7 +15,7 @@ class StartupScreen : StartupProtocols.Screen {
     constructor(activity: Activity) {
         contentView = activity.layoutInflater.inflate(R.layout.startup_layout, null) as ConstraintLayout
 
-        spinnerImageView = contentView.findViewById<ImageView>(R.id.spinner)
+        spinnerImageView = contentView.findViewById(R.id.spinner)
         val rotationAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
         rotationAnimation.duration = 250
         rotationAnimation.repeatCount = Animation.INFINITE

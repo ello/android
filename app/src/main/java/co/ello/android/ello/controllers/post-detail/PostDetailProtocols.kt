@@ -4,19 +4,17 @@ import android.view.View
 import android.view.ViewGroup
 
 
-class HomeProtocols {
+class PostDetailProtocols {
     interface Screen {
         val contentView: View
-        val containerView: ViewGroup
-
-        fun highlight(tab: Int)
+        val streamContainer: ViewGroup
     }
 
     interface Controller {
-        fun tabSelected(tab: Int)
+        fun loadedPostDetail(post: Post)
     }
 
-    interface Delegate {
-        fun homeTabSelected(tab: Int)
+    interface Generator {
+        fun loadPostDetail(token: Token)
     }
 }

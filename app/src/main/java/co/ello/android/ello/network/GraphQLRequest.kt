@@ -12,8 +12,7 @@ class GraphQLRequest<T>(
         override val requiresAnyToken: Boolean = true,
         override val supportsAnonymousToken: Boolean = true
 ) : Request<JSON>(Request.Method.POST, "${API.domain}/api/v3/graphql", null), AuthenticationEndpoint {
-    class CancelledRequest : Throwable()
-    class ParsingError : Throwable()
+    object CancelledRequest : Throwable()
 
     sealed class Variable {
         abstract val name: String
@@ -22,12 +21,14 @@ class GraphQLRequest<T>(
 
         data class string(override val name: String         , override val value: String)   : Variable() { override val type: String get() { return "String!"}}
         data class optionalString(override val name: String , override val value: String?)  : Variable() { override val type: String get() { return "String" }}
+        data class id(override val name: String             , override val value: String)   : Variable() { override val type: String get() { return "ID!"}}
+        data class optionalID(override val name: String     , override val value: String?)  : Variable() { override val type: String get() { return "ID" }}
         data class int(override val name: String            , override val value: Int)      : Variable() { override val type: String get() { return "Int!"   }}
         data class optionalInt(override val name: String    , override val value: Int?)     : Variable() { override val type: String get() { return "Int"    }}
         data class float(override val name: String          , override val value: Float)    : Variable() { override val type: String get() { return "Float!" }}
         data class optionalFloat(override val name: String  , override val value: Float?)   : Variable() { override val type: String get() { return "Float"  }}
-        data class boolean(override val name: String           , override val value: Boolean)  : Variable() { override val type: String get() { return "Bool!"  }}
-        data class optionalBoolean(override val name: String   , override val value: Boolean?) : Variable() { override val type: String get() { return "Bool"   }}
+        data class boolean(override val name: String        , override val value: Boolean)  : Variable() { override val type: String get() { return "Bool!"  }}
+        data class optionalBoolean(override val name: String, override val value: Boolean?) : Variable() { override val type: String get() { return "Bool"   }}
         data class enum(override val name: String           , override val value: String, val typeName: String) : Variable() { override val type: String get() { return "$typeName!" }}
         data class optionalEnum(override val name: String   , override val value: String?, val typeName: String) : Variable() { override val type: String get() { return typeName }}
     }
@@ -72,7 +73,7 @@ class GraphQLRequest<T>(
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
 
         retryBlock = { this.enqueue(queue) }
-        cancelBlock = { future.completeExceptionally(CancelledRequest()) }
+        cancelBlock = { future.completeExceptionally(CancelledRequest) }
 
         this.onSuccess { json ->
             val resultJson = json["data"][endpointName]
@@ -90,7 +91,7 @@ class GraphQLRequest<T>(
         }
         .onFailure { exception ->
             println("${this.endpointName} failed: $exception")
-            if (exception is VolleyError) {
+            if (exception is VolleyError && exception.networkResponse != null) {
                 println("server error:\n${String(exception.networkResponse.data)}")
             }
 

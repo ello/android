@@ -82,7 +82,7 @@ class Fragments {
             }
             """, needs = listOf(tshirtProps))
 
-        val postStream = Fragments("""
+        val postSummary = Fragments("""
             fragment contentProps on ContentBlocks {
               linkUrl
               kind
@@ -112,6 +112,23 @@ class Fragments {
             }
             """, needs = listOf(imageProps, tshirtProps, responsiveProps, authorProps, categoryProps))
 
+        val postDetails = Fragments("""
+            fragment postDetails on Post {
+                ...postSummary
+                ...postContent
+                repostContent { ...contentProps }
+                categoryPosts {
+                    id actions { ...categoryPostActions } status
+                    category { ...categoryProps }
+                    featuredAt submittedAt removedAt unfeaturedAt
+                    featuredBy { id username name } submittedBy { id username name }
+                }
+                repostedSource {
+                    ...postSummary
+                }
+            }
+            """, needs = listOf(postSummary, categoryPostActions))
+
         val editorialsContent = Fragments("""
             fragment editorialImageVersions on ResponsiveImageVersions {
                 xhdpi { ...imageProps }
@@ -130,7 +147,7 @@ class Fragments {
                 stream { query tokens }
                 post { ...postSummary }
             }
-            """, needs = listOf(imageProps, postStream))
+            """, needs = listOf(imageProps, postSummary))
 
         val categoriesBody = Fragments("""
             id
@@ -156,26 +173,18 @@ class Fragments {
         val postStreamBody = Fragments("""
             next isLastPage
             posts {
-                ...postSummary
-                ...postContent
-                repostContent { ...contentProps }
-                categoryPosts {
-                    id actions { ...categoryPostActions } status
-                    category { ...categoryProps }
-                    featuredAt submittedAt removedAt unfeaturedAt
-                    featuredBy { id username name } submittedBy { id username name }
-                }
-                repostedSource {
-                    ...postSummary
-                }
+                ...postDetails
             }
-            """, needs = listOf(postStream, categoryPostActions))
+            """, needs = listOf(postDetails))
         val editorialsBody = Fragments("""
             next isLastPage
             editorials {
                 ...editorial
             }
             """, needs = listOf(editorialsContent))
+        val postBody = Fragments("""
+            ...postDetails
+            """, needs = listOf(postDetails))
     }
 
     val dependencies: List<Fragments> get() {

@@ -6,19 +6,18 @@ import android.view.ViewGroup
 
 class EditorialsController(a: AppActivity) : StreamableController(a), EditorialsProtocols.Controller {
     private lateinit var screen: EditorialsProtocols.Screen
-    private var generator: EditorialsProtocols.Generator = EditorialsGenerator(delegate = this)
+    private var generator: EditorialsProtocols.Generator = EditorialsGenerator(delegate = this, queue = requestQueue)
 
     override val viewForStream: ViewGroup get() = screen.streamContainer
 
     override fun createView(): View {
-        val screen = EditorialsScreen(activity)
-        screen.delegate = this
+        val screen = EditorialsScreen(activity, delegate = this)
         this.screen = screen
         return screen.contentView
     }
 
     override fun onStart() {
-        generator.loadEditorialsStream(requestQueue)
+        generator.loadEditorialsStream()
     }
 
     override fun loadedEditorialsStream(editorials: List<Editorial>) {

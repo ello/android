@@ -10,7 +10,7 @@ import android.widget.TextView
 
 
 class JoinScreen : JoinProtocols.Screen {
-    override var delegate: JoinProtocols.Controller? = null
+    private val delegate: JoinProtocols.Controller?
 
     override val contentView: View
     override var interactive: Boolean = true
@@ -29,24 +29,25 @@ class JoinScreen : JoinProtocols.Screen {
     private val usernameFieldError: ImageView
     private val passwordFieldError: ImageView
 
-    constructor(activity: Activity) {
+    constructor(activity: Activity, delegate: JoinProtocols.Controller?) {
+        this.delegate = delegate
         contentView = activity.layoutInflater.inflate(R.layout.join_layout, null)
-        continueButton = contentView.findViewById<Button>(R.id.continueButton)
+        continueButton = contentView.findViewById(R.id.continueButton)
         continueButton.setOnClickListener {
             continueButtonTapped()
         }
-        backButton = contentView.findViewById<Button>(R.id.backButton)
+        backButton = contentView.findViewById(R.id.backButton)
         backButton.setOnClickListener {
             backButtonTapped()
         }
 
-        errorLabel = contentView.findViewById<TextView>(R.id.errorLabel)
-        emailField = contentView.findViewById<EditText>(R.id.emailField)
-        usernameField = contentView.findViewById<EditText>(R.id.usernameField)
-        passwordField = contentView.findViewById<EditText>(R.id.passwordField)
-        emailFieldError = contentView.findViewById<ImageView>(R.id.emailFieldError)
-        usernameFieldError = contentView.findViewById<ImageView>(R.id.usernameFieldError)
-        passwordFieldError = contentView.findViewById<ImageView>(R.id.passwordFieldError)
+        errorLabel = contentView.findViewById(R.id.errorLabel)
+        emailField = contentView.findViewById(R.id.emailField)
+        usernameField = contentView.findViewById(R.id.usernameField)
+        passwordField = contentView.findViewById(R.id.passwordField)
+        emailFieldError = contentView.findViewById(R.id.emailFieldError)
+        usernameFieldError = contentView.findViewById(R.id.usernameFieldError)
+        passwordFieldError = contentView.findViewById(R.id.passwordFieldError)
 
         passwordField.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE){

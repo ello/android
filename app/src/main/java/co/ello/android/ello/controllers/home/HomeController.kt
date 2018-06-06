@@ -5,9 +5,9 @@ import android.view.ViewGroup
 
 
 class HomeController : BaseController, HomeProtocols.Controller {
+    private val delegate: HomeProtocols.Delegate?
     private lateinit var screen: HomeProtocols.Screen
 
-    private val delegate: HomeProtocols.Delegate?
     private val controllersTitles: List<String>
     private val controllers: List<Controller>
     private var selectedIndex: Int
@@ -27,22 +27,18 @@ class HomeController : BaseController, HomeProtocols.Controller {
         this.controllersTitles = childControllers.map { it.first }
         this.controllers = childControllers.map { it.second }
         this.selectedIndex = selected
+
+        for (controller in controllers) {
+            controller.assignParent(this, isVisible = false)
+        }
     }
 
     override fun createView(): View {
-        val screen = HomeScreen(activity, tabs = controllersTitles)
-        screen.delegate = this
+        val screen = HomeScreen(activity, tabs = controllersTitles, delegate = this)
         screen.highlight(selectedIndex)
         screen.containerView.addView(selectedController.view)
         this.screen = screen
-
         return screen.contentView
-    }
-
-    override fun onStart() {
-        for ((index, controller) in controllers.withIndex()) {
-            controller.assignParent(this, isVisible = index == selectedIndex)
-        }
     }
 
     override fun tabSelected(tab: Int) {

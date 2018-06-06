@@ -10,7 +10,7 @@ import android.widget.TextView
 
 
 class LoginScreen : LoginProtocols.Screen {
-    override var delegate: LoginProtocols.Controller? = null
+    private val delegate: LoginProtocols.Controller?
 
     override val contentView: View
     override var interactive: Boolean = true
@@ -27,22 +27,24 @@ class LoginScreen : LoginProtocols.Screen {
     private val usernameFieldError: ImageView
     private val passwordFieldError: ImageView
 
-    constructor(activity: Activity) {
+    constructor(activity: Activity, delegate: LoginProtocols.Controller?) {
+        this.delegate = delegate
+
         contentView = activity.layoutInflater.inflate(R.layout.login_layout, null)
-        continueButton = contentView.findViewById<Button>(R.id.continueButton)
+        continueButton = contentView.findViewById(R.id.continueButton)
         continueButton.setOnClickListener {
             continueButtonTapped()
         }
-        backButton = contentView.findViewById<Button>(R.id.backButton)
+        backButton = contentView.findViewById(R.id.backButton)
         backButton.setOnClickListener {
             backButtonTapped()
         }
 
-        errorLabel = contentView.findViewById<TextView>(R.id.errorLabel)
-        usernameField = contentView.findViewById<EditText>(R.id.usernameField)
-        passwordField = contentView.findViewById<EditText>(R.id.passwordField)
-        usernameFieldError = contentView.findViewById<ImageView>(R.id.usernameFieldError)
-        passwordFieldError = contentView.findViewById<ImageView>(R.id.passwordFieldError)
+        errorLabel = contentView.findViewById(R.id.errorLabel)
+        usernameField = contentView.findViewById(R.id.usernameField)
+        passwordField = contentView.findViewById(R.id.passwordField)
+        usernameFieldError = contentView.findViewById(R.id.usernameFieldError)
+        passwordFieldError = contentView.findViewById(R.id.passwordFieldError)
 
         passwordField.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
