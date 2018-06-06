@@ -1,8 +1,8 @@
 package co.ello.android.ello
 
+import android.support.constraint.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import java.net.URL
 import kotlin.math.roundToInt
@@ -31,7 +31,8 @@ class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.c
         }
 
     private fun assignHeight(height: Int) {
-        imageView.layoutParams = FrameLayout.LayoutParams(imageView.measuredWidth, height)
+        itemView.layoutParams.height = height
+        imageView.layoutParams = ConstraintLayout.LayoutParams(imageView.measuredWidth, height)
     }
 
     private fun calculateHeight() {
