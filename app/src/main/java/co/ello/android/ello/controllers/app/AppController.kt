@@ -20,6 +20,7 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
     }
 
     private fun showStartup() {
+        loadStaticBadges(requestQueue)
         show(StartupController(activity, this))
     }
 
@@ -34,11 +35,11 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
     }
 
     override fun loggedOutDidLogin(credentials: Credentials) {
-        println("=============== AppController.kt at line 34 ===============");
         showHomeScreen()
     }
 
     private fun showHomeScreen() {
+        println("=============== AppController.kt at line 41 ===============")
         // show(HomeController(activity, this))
     }
 
