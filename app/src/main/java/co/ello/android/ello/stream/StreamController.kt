@@ -100,7 +100,12 @@ class StreamController(a: AppActivity)
         navigationController?.push(postDetailController)
     }
 
-    fun streamTappedUser(cell: StreamCell, item: StreamCellItem, user: User) {
+    fun streamTappedUser(user: User) {
+        val parentController = findParent<ProfileController>()
+        if (parentController != null && parentController.isShowing(user))  return
+
+        val profileController = ProfileController(activity, user = user)
+        navigationController?.push(profileController)
     }
 
     fun toolbarTappedLoves(cell: StreamCell, item: StreamCellItem) {

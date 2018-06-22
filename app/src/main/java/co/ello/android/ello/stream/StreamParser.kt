@@ -15,6 +15,40 @@ class StreamParser {
         return items
     }
 
+    fun userProfileItems(user: User): List<StreamCellItem> {
+        val items = mutableListOf(
+            StreamCellItem(model = user, type = StreamCellType.ProfileHeaderButtons),
+            StreamCellItem(model = user, type = StreamCellType.ProfileHeaderAvatar),
+            StreamCellItem(model = user, type = StreamCellType.ProfileHeaderName)
+            )
+
+        if (user.badges.size > 0 ||
+            user.hasProfileData && user.totalViewsCount?.let({ it > 0 }) == true)
+        {
+            items.add(StreamCellItem(type = StreamCellType.ProfileHeaderSeparator))
+            items.add(StreamCellItem(model = user, type = StreamCellType.ProfileHeaderTotalAndBadges))
+        }
+
+        items.add(StreamCellItem(type = StreamCellType.ProfileHeaderSeparator))
+        items.add(StreamCellItem(model = user, type = StreamCellType.ProfileHeaderStats))
+
+        if (user.formattedShortBio?.isEmpty() == false) {
+            items.add(StreamCellItem(type = StreamCellType.ProfileHeaderSeparator))
+            items.add(StreamCellItem(model = user, type = StreamCellType.ProfileHeaderBio))
+        }
+
+        if (user.location?.isEmpty() == false) {
+            items.add(StreamCellItem(type = StreamCellType.ProfileHeaderSeparator))
+            items.add(StreamCellItem(model = user, type = StreamCellType.ProfileHeaderLocation))
+        }
+
+        if (user.externalLinksList?.size?.let({ it > 0 }) == true) {
+            items.add(StreamCellItem(type = StreamCellType.ProfileHeaderSeparator))
+            items.add(StreamCellItem(model = user, type = StreamCellType.ProfileHeaderLinks))
+        }
+        return items
+    }
+
     private fun postItems(model: Post): List<StreamCellItem> {
         val header = StreamCellItem(model = model, type = StreamCellType.PostHeader)
         val footer = StreamCellItem(model = model, type = StreamCellType.PostFooter)

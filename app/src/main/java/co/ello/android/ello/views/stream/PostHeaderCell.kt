@@ -53,6 +53,6 @@ class PostHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
         val post = item.model as? Post ?: return
         val user = post.author ?: return
 
-        streamController.streamTappedUser(cell = this, item = item, user = user)
+        streamController.streamTappedUser(user)
     }
 }
