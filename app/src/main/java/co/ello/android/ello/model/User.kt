@@ -69,6 +69,13 @@ data class User(
         return count.numberToHuman(rounding = 1, showZero = true)
     }
 
+    fun coverImageURL(viewsAdultContent: Boolean? = false, animated: Boolean = false): URL? {
+        if (animated && (!postsAdultContent || viewsAdultContent == true) && coverImage?.original?.url?.path?.endsWith(".gif") == true) {
+            return coverImage?.original?.url
+        }
+        return coverImage?.oneColumnAttachment?.url
+    }
+
     fun avatarURL(viewsAdultContent: Boolean? = false, animated: Boolean = false): URL? {
          if (animated && (!postsAdultContent || viewsAdultContent == true) && avatar?.original?.url?.path?.endsWith(".gif") == true) {
              return avatar?.original?.url

@@ -16,8 +16,8 @@ class OneParser<T: Model>(val parser: Parser) {
             val tableParser = table.parser ?: continue
 
             for ((_, objectJson) in dbObjects) {
-                val identifier = tableParser.identifier(json = objectJson) ?: continue
-                Parser.saveToDB(parser = tableParser, identifier = identifier, db = db)
+                val objectIdentifier = tableParser.identifier(json = objectJson) ?: continue
+                Parser.saveToDB(parser = tableParser, identifier = objectIdentifier, db = db)
             }
         }
 

@@ -129,6 +129,31 @@ class Fragments {
             }
             """, needs = listOf(postSummary, categoryPostActions))
 
+        val userDetails = Fragments("""
+            fragment userDetails on User {
+              id
+              username
+              name
+              formattedShortBio
+              location
+              badges
+              externalLinksList { url text icon }
+              # isCommunity
+              userStats { totalViewsCount postsCount lovesCount followersCount followingCount }
+              currentUserState { relationshipPriority }
+              settings {
+                hasCommentingEnabled hasLovesEnabled hasRepostingEnabled hasSharingEnabled
+                isCollaborateable isHireable
+              }
+              avatar {
+                ...tshirtProps
+              }
+              coverImage {
+                ...responsiveProps
+              }
+            }
+            """, needs = listOf(tshirtProps, responsiveProps))
+
         val editorialsContent = Fragments("""
             fragment editorialImageVersions on ResponsiveImageVersions {
                 xhdpi { ...imageProps }
@@ -185,6 +210,9 @@ class Fragments {
         val postBody = Fragments("""
             ...postDetails
             """, needs = listOf(postDetails))
+        val userBody = Fragments("""
+            ...userDetails
+            """, needs = listOf(userDetails))
     }
 
     val dependencies: List<Fragments> get() {

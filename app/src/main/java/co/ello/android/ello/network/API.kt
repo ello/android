@@ -33,9 +33,7 @@ class API {
 
     fun globalPostStream(filter: StreamFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream")
-            .parser { json ->
-                PageParser<Post>("posts", PostParser()).parse(json)
-            }
+            .parser { PageParser<Post>("posts", PostParser()).parse(it) }
             .setVariables(
                 GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
                 GraphQLRequest.Variable.optionalString("before", before)
@@ -45,9 +43,7 @@ class API {
 
     fun subscribedPostStream(filter: StreamFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("subscribedPostStream")
-            .parser { json ->
-                PageParser<Post>("posts", PostParser()).parse(json)
-            }
+            .parser { PageParser<Post>("posts", PostParser()).parse(it) }
             .setVariables(
                 GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
                 GraphQLRequest.Variable.optionalString("before", before)
@@ -62,9 +58,7 @@ class API {
         }
 
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("categoryPostStream")
-                .parser { json ->
-                    PageParser<Post>("posts", PostParser()).parse(json)
-                }
+                .parser { PageParser<Post>("posts", PostParser()).parse(it) }
                 .setVariables(
                         GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
                         categoryVar,
@@ -75,17 +69,13 @@ class API {
 
     fun subscribedCategories(): GraphQLRequest<List<Category>> {
         return GraphQLRequest<List<Category>>("categoryNav")
-            .parser { json ->
-                ManyParser<Category>(CategoryParser()).parse(json)
-            }
+            .parser { ManyParser<Category>(CategoryParser()).parse(it) }
             .setBody(Fragments.categoriesBody)
     }
 
     fun editorialStream(before: String? = null): GraphQLRequest<Pair<PageConfig, List<Editorial>>> {
         return GraphQLRequest<Pair<PageConfig, List<Editorial>>>("editorialStream")
-            .parser { json ->
-                PageParser<Editorial>("editorials", EditorialParser()).parse(json)
-            }
+            .parser { PageParser<Editorial>("editorials", EditorialParser()).parse(it) }
             .setVariables(
                 GraphQLRequest.Variable.optionalString("before", before),
                 GraphQLRequest.Variable.optionalBoolean("preview", false),
@@ -96,12 +86,21 @@ class API {
 
     fun postDetail(token: Token, username: String?): GraphQLRequest<Post> {
         return GraphQLRequest<Post>("post")
-            .parser { json -> OneParser<Post>(PostParser()).parse(json) }
+            .parser { OneParser<Post>(PostParser()).parse(it) }
             .setVariables(
                 token.variable,
                 GraphQLRequest.Variable.optionalString("username", username)
             )
             .setBody(Fragments.postBody)
+    }
+
+    fun userDetail(token: Token): GraphQLRequest<User> {
+        return GraphQLRequest<User>("findUser")
+            .parser { OneParser<User>(UserParser()).parse(it) }
+            .setVariables(
+                token.variable
+            )
+            .setBody(Fragments.userBody)
     }
 
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
