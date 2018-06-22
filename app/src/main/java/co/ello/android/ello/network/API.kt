@@ -106,12 +106,8 @@ class API {
 
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/v2/join"
-
         val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path)
-                .parser { gson, json ->
-                    println("join $json")
-                    gson.fromJson(json, Credentials::class.java)
-                }
+                .parser { CredentialsParser(isAnonymous = false).parse(it) }
                 .setBody(mapOf(
                     "email" to email,
                     "username" to username,
@@ -126,11 +122,8 @@ class API {
 
     fun login(username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/oauth/token"
-
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false, supportsAnonymousToken = true)
-            .parser { gson, json ->
-                gson.fromJson(json, Credentials::class.java)
-            }
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false)
+            .parser { CredentialsParser(isAnonymous = false).parse(it) }
             .setBody(mapOf(
                 "email" to username,
                 "password" to password,
@@ -142,13 +135,10 @@ class API {
         return elloRequest
     }
 
-    fun reauth(refreshToken: String): ElloRequest<Credentials> {
+    fun reauth(refreshToken: String, isAnonymous: Boolean): ElloRequest<Credentials> {
         val path = "/api/oauth/token"
-
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false, supportsAnonymousToken = true)
-            .parser { gson, json ->
-                gson.fromJson(json, Credentials::class.java)
-            }
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false)
+            .parser { CredentialsParser(isAnonymous = isAnonymous).parse(it) }
             .setBody(mapOf(
                 "client_id" to API.key,
                 "client_secret" to API.secret,
@@ -161,11 +151,8 @@ class API {
 
     fun anonymousCreds(): ElloRequest<Credentials> {
         val path = "/api/oauth/token"
-
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false, supportsAnonymousToken = true)
-            .parser { gson, json ->
-                gson.fromJson(json, Credentials::class.java)
-            }
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false)
+            .parser { CredentialsParser(isAnonymous = true).parse(it) }
             .setBody(mapOf(
                 "client_id" to API.key,
                 "client_secret" to API.secret,

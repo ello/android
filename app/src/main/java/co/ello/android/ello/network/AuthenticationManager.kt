@@ -89,7 +89,7 @@ class AuthenticationManager(val requestQueue: Queue) {
 
                     val refreshToken= AuthToken.shared.refreshToken
                     if (refreshToken != null) {
-                        API().reauth(refreshToken)
+                        API().reauth(refreshToken, isAnonymous = AuthToken.shared.isAnonymous)
                             .enqueue(requestQueue)
                             .onSuccess { credentials ->
                                 AuthToken.update(credentials)
