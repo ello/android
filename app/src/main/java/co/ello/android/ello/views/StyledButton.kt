@@ -33,22 +33,28 @@ class StyledButton @JvmOverloads constructor(
             val color: Int,
             val highlightedColor: Int? = null,
             val backgroundColor: Int? = null,
-            val highlightedBackgroundColor: Int? = null,
-            val cornerRadius: Corner = Corner.None,
+            val corners: Corner = Corner.None,
             val textAlign: Alignment? = null,
             val customization: ((StyledButton) -> Unit) = {}
     ) {
         Default(color = R.color.black),
-        Green(color = R.color.white, highlightedColor = R.color.black, backgroundColor = R.color.green, cornerRadius = Corner.Rounded),
+
+        Green(color = R.color.white, highlightedColor = R.color.black, backgroundColor = R.color.green, corners = Corner.Rounded),
+        White(color = R.color.black, backgroundColor = R.color.white),
+
+        BlackPill(color = R.color.white, backgroundColor = R.color.black, corners = Corner.Pill, textAlign = Alignment.Center),
+        GreenPill(color = R.color.white, backgroundColor = R.color.green, corners = Corner.Pill, textAlign = Alignment.Center),
+
         ClearWhite(color = R.color.white),
         ClearGray(color = R.color.gray, highlightedColor = R.color.black),
         ClearBlack(color = R.color.black),
+
         ForgotPassword(size = 11f, color = R.color.gray, highlightedColor = R.color.white),
         Postbar(color = R.color.gray, highlightedColor = R.color.black, textAlign = Alignment.Center, customization = { button ->
             button.setCompoundDrawablePadding(5.dp)
-            }),
-        White(color = R.color.black, backgroundColor = R.color.white),
-        RoundedGrayOutline(color = R.color.greyA, highlightedColor = R.color.black, cornerRadius = Corner.Rounded)
+        }),
+
+        RoundedGrayOutline(color = R.color.greyA, highlightedColor = R.color.black, corners = Corner.Rounded)
     }
 
     var style: Style = Style.Default
@@ -76,6 +82,8 @@ class StyledButton @JvmOverloads constructor(
             "clear white"          -> Style.ClearWhite
             "clear gray"           -> Style.ClearGray
             "clear black"          -> Style.ClearBlack
+            "black pill"           -> Style.BlackPill
+            "green pill"           -> Style.GreenPill
             "green"                -> Style.Green
             "forgot password"      -> Style.ForgotPassword
             "white"                -> Style.White
@@ -129,9 +137,9 @@ class StyledButton @JvmOverloads constructor(
             val p = Paint()
             p.strokeWidth = 1.dpf
 
-            val rect = RectF(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
+            val rect = RectF(paddingStart.toFloat(), paddingTop.toFloat(), measuredWidth.toFloat(), measuredHeight.toFloat())
 
-            when(style.cornerRadius) {
+            when(style.corners) {
                 Corner.Pill -> {
                     if (backgroundColor != null) {
                         p.setColor(backgroundColor)

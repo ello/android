@@ -30,5 +30,11 @@
     <string name="ArtistInvites.title">Artist Invites</string>
     <string name="Discover.title">Discover</string>
 
+    <string name="Profile.mention">\@ Mention</string>
+    <string name="Profile.hire">Hire</string>
+    <string name="Profile.collaborate">Collab</string>
+    <string name="Profile.follow">+ Follow</string>
+    <string name="Profile.views">Views</string>
+
     <string name="OK">OK</string>
 </resources>

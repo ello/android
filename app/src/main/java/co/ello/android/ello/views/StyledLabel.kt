@@ -21,11 +21,13 @@ class StyledLabel @JvmOverloads constructor(
         Default(color = R.color.black),
         White(color = R.color.white),
         Gray(color = R.color.gray),
+        SmallGray(size = 12f, color = R.color.gray),
         BoldWhite(font = "Bold", color = R.color.white),
         BoldWhiteUnderline(font = "Bold", color = R.color.white, underline = true),
 
         SmallWhite(size = 12f, color = R.color.white),
         LargeWhite(size = 18f, color = R.color.white),
+        LargeBlack(size = 18f, color = R.color.black),
         LargeBoldWhite(font = "Bold", size = 18f, color = R.color.white)
     }
 
@@ -46,6 +48,8 @@ class StyledLabel @JvmOverloads constructor(
             "gray" -> Style.Gray
             "bold white" -> Style.BoldWhite
             "small white" -> Style.SmallWhite
+            "small gray" -> Style.SmallGray
+            "large black" -> Style.LargeBlack
             "large white" -> Style.LargeWhite
             "large bold white" -> Style.LargeBoldWhite
             else -> Style.Default
