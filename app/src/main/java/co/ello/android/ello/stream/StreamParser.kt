@@ -5,15 +5,7 @@ class StreamParser {
     fun parse(models: List<Model>): List<StreamCellItem> {
         val items = models.flatMap { model ->
             if (model is Post) {
-                val header = StreamCellItem(model = model, type = StreamCellType.PostHeader)
-                val footer = StreamCellItem(model = model, type = StreamCellType.PostFooter)
-                val content = if (model.isRepost)
-                    model.repostContent.flatMap { parseContent(model, it) } +
-                    model.content.flatMap { parseContent(model, it) }
-                else
-                    model.content.flatMap { parseContent(model, it) }
-
-                listOf(header) + content + listOf(footer)
+                postItems(model)
             }
             else if (model is Editorial) {
                 emptyList()
@@ -21,6 +13,18 @@ class StreamParser {
             else emptyList()
         }
         return items
+    }
+
+    private fun postItems(model: Post): List<StreamCellItem> {
+        val header = StreamCellItem(model = model, type = StreamCellType.PostHeader)
+        val footer = StreamCellItem(model = model, type = StreamCellType.PostFooter)
+        val content = if (model.isRepost) {
+            model.repostContent.flatMap { parseContent(model, it) } +
+            model.content.flatMap { parseContent(model, it) }
+        } else {
+            model.content.flatMap { parseContent(model, it) }
+        }
+        return listOf(header) + content + listOf(footer)
     }
 
     private fun parseContent(model: Model, region: Regionable): List<StreamCellItem> {

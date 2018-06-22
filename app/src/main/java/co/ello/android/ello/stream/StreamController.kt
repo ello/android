@@ -92,7 +92,7 @@ class StreamController(a: AppActivity)
         if (isViewLoaded)  screen.adapter = adapter
     }
 
-    fun streamTappedPost(cell: StreamCell, item: StreamCellItem, post: Post) {
+    fun streamTappedPost(post: Post) {
         val parentController = findParent<PostDetailController>()
         if (parentController != null && parentController.isShowing(post))  return
 
