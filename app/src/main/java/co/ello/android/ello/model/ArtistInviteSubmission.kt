@@ -59,7 +59,11 @@ data class ArtistInviteSubmission(
                 val label = json["label"].string ?: return null
                 val parameters = json["body"].obj ?: return null
                 val name = Name.create(nameStr) ?: return null
-                return Action(name = name, label = label, request = ElloRequest<CategoryPost>(method = method, path = path, parameters = parameters, requiresAnyToken = true, supportsAnonymousToken = false))
+                val request = ElloRequest<CategoryPost>(
+                    method = method, path = path, parameters = parameters,
+                    requiresAnyToken = true, supportsAnonymousToken = false
+                )
+                return Action(name = name, label = label, request = request)
             }
         }
     }
