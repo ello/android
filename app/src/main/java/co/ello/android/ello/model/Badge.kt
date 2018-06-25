@@ -45,8 +45,6 @@ fun loadStaticBadges(queue: Queue) {
         }
         .enqueue(queue)
         .onSuccess { badges ->
-            println("=============== Badge.kt at line 51 ===============")
-            println("badges: ${badges}")
             val badgeMap: MutableMap<String, Badge> = mutableMapOf()
             for (badge in badges) {
                 badgeMap[badge.slug] = badge
