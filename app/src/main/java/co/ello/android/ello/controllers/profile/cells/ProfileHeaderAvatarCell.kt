@@ -7,18 +7,13 @@ import java.net.URL
 
 
 class ProfileHeaderAvatarCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.profile_header_avatar_cell, parent, false)) {
-    val avatarImageView: ImageView
-    val coverImageView: ImageView
+    val avatarImageView: ImageView = itemView.findViewById(R.id.avatarImageView)
+    val coverImageView: ImageView = itemView.findViewById(R.id.coverImageView)
 
     data class Config(
             var avatarURL: URL? = null,
             var coverImageURL: URL? = null
         )
-
-    init {
-        avatarImageView = itemView.findViewById(R.id.avatarImageView)
-        coverImageView = itemView.findViewById(R.id.coverImageView)
-    }
 
     var config: Config? = null
         set(value) {

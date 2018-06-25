@@ -6,18 +6,13 @@ import android.widget.TextView
 
 
 class ProfileHeaderNameCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.profile_header_name_cell, parent, false)) {
-    val nameLabel: TextView
-    val usernameLabel: TextView
+    val nameLabel: TextView = itemView.findViewById(R.id.nameLabel)
+    val usernameLabel: TextView = itemView.findViewById(R.id.usernameLabel)
 
     data class Config(
         val name: String,
         val atName: String
         )
-
-    init {
-        nameLabel = itemView.findViewById(R.id.nameLabel)
-        usernameLabel = itemView.findViewById(R.id.usernameLabel)
-    }
 
     var config: Config? = null
         set(value) {

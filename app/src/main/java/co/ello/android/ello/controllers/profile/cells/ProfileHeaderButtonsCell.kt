@@ -7,11 +7,11 @@ import android.widget.Button
 
 
 class ProfileHeaderButtonsCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.profile_header_buttons_cell, parent, false)) {
-    val editButton: Button
-    val relationshipControl: Button
-    val hireButton: Button
-    val collaborateButton: Button
-    val mentionButton: Button
+    val editButton: Button = itemView.findViewById(R.id.editButton)
+    val relationshipControl: Button = itemView.findViewById(R.id.relationshipControl)
+    val hireButton: Button = itemView.findViewById(R.id.hireButton)
+    val collaborateButton: Button = itemView.findViewById(R.id.collaborateButton)
+    val mentionButton: Button = itemView.findViewById(R.id.mentionButton)
 
     data class Config(
         val isCurrentUser: Boolean,
@@ -19,14 +19,6 @@ class ProfileHeaderButtonsCell(parent: ViewGroup) : StreamCell(LayoutInflater.fr
         val showCollabButton: Boolean,
         val showMentionButton: Boolean
         )
-
-    init {
-        editButton = itemView.findViewById(R.id.editButton)
-        relationshipControl = itemView.findViewById(R.id.relationshipControl)
-        hireButton = itemView.findViewById(R.id.hireButton)
-        collaborateButton = itemView.findViewById(R.id.collaborateButton)
-        mentionButton = itemView.findViewById(R.id.mentionButton)
-    }
 
     var config: Config? = null
         set(value) {

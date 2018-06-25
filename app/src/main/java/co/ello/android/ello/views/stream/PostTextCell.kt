@@ -8,7 +8,7 @@ import android.webkit.WebViewClient
 
 
 class PostTextCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.post_text_cell, parent, false)) {
-    val webView: WebView
+    val webView: WebView = itemView.findViewById(R.id.webView)
 
     data class Config(
         val content: String
@@ -22,10 +22,6 @@ class PostTextCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.co
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
         }
-    }
-
-    init {
-        webView = itemView.findViewById(R.id.webView)
     }
 
     var config: Config? = null

@@ -9,12 +9,11 @@ import android.widget.ImageView
 
 
 class SpinnerCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.spinner_cell, parent, false)) {
-    private val imageView: ImageView
+    private val imageView: ImageView = itemView.findViewById(R.id.imageView)
     private val rotationAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
     private var spinning = false
 
     init {
-        imageView = itemView.findViewById(R.id.imageView)
         rotationAnimation.duration = 250
         rotationAnimation.repeatCount = Animation.INFINITE
         rotationAnimation.repeatMode = Animation.RESTART

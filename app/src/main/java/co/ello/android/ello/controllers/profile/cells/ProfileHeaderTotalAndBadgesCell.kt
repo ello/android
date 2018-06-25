@@ -9,24 +9,16 @@ import android.widget.TextView
 
 
 class ProfileHeaderTotalAndBadgesCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.profile_header_total_and_badges_cell, parent, false)) {
-    val totalCountContainer: View
-    val badgesContainer: View
-    val badgesLinearContainer: LinearLayout
-    val separator: View
-    val totalCountLabel: TextView
+    val totalCountContainer: View = itemView.findViewById(R.id.totalCountContainer)
+    val badgesContainer: View = itemView.findViewById(R.id.badgesContainer)
+    val badgesLinearContainer: LinearLayout = itemView.findViewById(R.id.badgesLinearContainer)
+    val separator: View = itemView.findViewById(R.id.separator)
+    val totalCountLabel: TextView = itemView.findViewById(R.id.totalCountLabel)
 
     data class Config(
         val totalCount: Int?,
         val badges: List<Badge>
         )
-
-    init {
-        totalCountContainer = itemView.findViewById(R.id.totalCountContainer)
-        badgesContainer = itemView.findViewById(R.id.badgesContainer)
-        badgesLinearContainer = itemView.findViewById(R.id.badgesLinearContainer)
-        separator = itemView.findViewById(R.id.separator)
-        totalCountLabel = itemView.findViewById(R.id.totalCountLabel)
-    }
 
     var config: Config? = null
         set(value) {
@@ -36,7 +28,7 @@ class ProfileHeaderTotalAndBadgesCell(parent: ViewGroup) : StreamCell(LayoutInfl
 
             val totalCount = value?.totalCount
             if (totalCount != null && totalCount > 0) {
-                totalCountLabel.text = totalCount.let { it.numberToHuman() } ?: ""
+                totalCountLabel.text = totalCount.numberToHuman()
             }
             else {
                 totalCountContainer.visibility = View.GONE

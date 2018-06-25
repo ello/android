@@ -23,7 +23,7 @@ data class User(
 
     var postsCount: Int? = null
     var lovesCount: Int? = null
-    var followersCount: String? = null // string due to this returning "∞" for the ello user
+    var followersCount: Int? = null
     var followingCount: Int? = null
 
     var formattedShortBio: String? = null

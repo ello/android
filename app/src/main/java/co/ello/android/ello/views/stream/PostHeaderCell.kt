@@ -10,10 +10,10 @@ import java.util.*
 
 
 class PostHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.post_header_cell, parent, false)) {
-    private val imageButton: ImageView
-    private val usernameButton: Button
-    private val cellButton: Button
-    private val timestampLabel: TextView
+    private val imageButton: ImageView = itemView.findViewById(R.id.imageView)
+    private val usernameButton: Button = itemView.findViewById(R.id.usernameButton)
+    private val cellButton: Button = itemView.findViewById(R.id.cellButton)
+    private val timestampLabel: TextView = itemView.findViewById(R.id.timestampLabel)
 
     data class Config(
         val username: String?,
@@ -22,11 +22,6 @@ class PostHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
         )
 
     init {
-        imageButton = itemView.findViewById(R.id.imageView)
-        cellButton = itemView.findViewById(R.id.cellButton)
-        usernameButton = itemView.findViewById(R.id.usernameButton)
-        timestampLabel = itemView.findViewById(R.id.timestampLabel)
-
         cellButton.setOnClickListener { cellTapped() }
         imageButton.setOnClickListener { usernameButtonTapped() }
         usernameButton.setOnClickListener{ usernameButtonTapped() }
