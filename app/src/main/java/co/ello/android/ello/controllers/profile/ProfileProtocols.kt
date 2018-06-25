@@ -11,10 +11,13 @@ class ProfileProtocols {
     }
 
     interface Controller {
-        fun loadedUser(user: User)
+        fun loadedUser(user: User, items: List<StreamCellItem>)
+        fun loadedUserPosts(items: List<StreamCellItem>)
     }
 
     interface Generator {
         fun loadUser(token: Token)
+        fun parseUser(user: User): List<StreamCellItem>
+        fun loadUserPosts(username: String)
     }
 }

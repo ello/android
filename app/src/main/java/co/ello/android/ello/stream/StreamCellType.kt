@@ -5,8 +5,9 @@ import java.net.URL
 
 
 sealed class StreamCellType {
-    object Spinner : StreamCellType()
+    object Placeholder : StreamCellType()
 
+    object Spinner : StreamCellType()
     object StreamSelection : StreamCellType()
 
     object PostHeader : StreamCellType()
@@ -30,8 +31,9 @@ sealed class StreamCellType {
         viewHolder.streamCellItem = item
 
         return when(this) {
-            is Spinner -> SpinnerPresenter.configure(viewHolder as SpinnerCell)
+            is Placeholder -> {}
 
+            is Spinner -> SpinnerPresenter.configure(viewHolder as SpinnerCell)
             is StreamSelection -> StreamSelectionPresenter.configure(viewHolder as StreamSelectionCell, item)
 
             is PostHeader -> PostHeaderPresenter.configure(viewHolder as PostHeaderCell, item)
@@ -55,8 +57,9 @@ sealed class StreamCellType {
         fun createViewHolder(parent: ViewGroup, viewType: Int): StreamCell {
             val type = StreamCellType::class.nestedClasses.elementAt(viewType)
             return when (type) {
-                Spinner::class -> SpinnerCell(parent)
+                Placeholder::class -> PlaceholderCell(parent)
 
+                Spinner::class -> SpinnerCell(parent)
                 StreamSelection::class -> StreamSelectionCell(parent)
 
                 PostHeader::class -> PostHeaderCell(parent)
@@ -80,6 +83,6 @@ sealed class StreamCellType {
     }
 
     enum class PlaceholderType {
-        Spinner, StreamFilter, StreamItems;
+        Header, Spinner, StreamFilter, StreamItems;
     }
 }

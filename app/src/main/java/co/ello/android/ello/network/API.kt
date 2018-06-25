@@ -103,6 +103,16 @@ class API {
             .setBody(Fragments.userBody)
     }
 
+    fun userPosts(username: String, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
+        return GraphQLRequest<Pair<PageConfig, List<Post>>>("userPostStream")
+            .parser { PageParser<Post>("posts", PostParser()).parse(it) }
+            .setVariables(
+                GraphQLRequest.Variable.string("username", username),
+                GraphQLRequest.Variable.optionalString("before", before)
+            )
+            .setBody(Fragments.postStreamBody)
+    }
+
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/v2/join"
         val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path)

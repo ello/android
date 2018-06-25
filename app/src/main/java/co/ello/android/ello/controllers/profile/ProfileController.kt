@@ -32,19 +32,32 @@ class ProfileController(a: AppActivity) : StreamableController(a), ProfileProtoc
     }
 
     override fun onStart() {
+        val placeholders = listOf(
+            StreamCellItem(type = StreamCellType.Spinner, placeholderType = StreamCellType.PlaceholderType.Header),
+            StreamCellItem(type = StreamCellType.Placeholder, placeholderType = StreamCellType.PlaceholderType.StreamItems)
+            )
+        streamController.replaceAll(placeholders)
+
         val user = this.user
         if (user?.hasProfileData != true) {
             generator.loadUser(token)
         }
 
         if (user != null) {
-            loadedUser(user)
+            loadedUser(user, generator.parseUser(user))
         }
     }
 
-    override fun loadedUser(user: User) {
+    override fun loadedUser(user: User, items: List<StreamCellItem>) {
         this.user = user
-        val items = StreamParser().userProfileItems(user)
-        streamController.replaceAll(items)
+        streamController.replacePlaceholder(StreamCellType.PlaceholderType.Header, with = items)
+        if (!streamController.hasPlaceholderItems(StreamCellType.PlaceholderType.StreamItems)) {
+            streamController.replacePlaceholder(StreamCellType.PlaceholderType.StreamItems, with = listOf(StreamCellItem(type = StreamCellType.Spinner)))
+        }
+        generator.loadUserPosts(user.username)
+    }
+
+    override fun loadedUserPosts(items: List<StreamCellItem>) {
+        streamController.replacePlaceholder(StreamCellType.PlaceholderType.StreamItems, items)
     }
 }

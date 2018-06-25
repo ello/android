@@ -58,33 +58,38 @@ class StreamController(a: AppActivity)
     }
 
     fun hasPlaceholderItems(placeholder: StreamCellType.PlaceholderType): Boolean {
-        return adapter.items.any { it.placeholderType == placeholder }
+        return adapter.items.any {
+            it.placeholderType == placeholder && it.type != StreamCellType.Placeholder
+        }
     }
 
     fun replacePlaceholder(placeholder: StreamCellType.PlaceholderType, with: List<StreamCellItem>) {
+        if (with.isEmpty()) {
+            replacePlaceholder(placeholder, listOf(StreamCellItem(type = StreamCellType.Placeholder)))
+            return
+        }
+
         for (item in with) {
             item.placeholderType = placeholder
         }
 
         var didInsert = false
-        val items: MutableList<StreamCellItem> = mutableListOf()
+        val newItems: MutableList<StreamCellItem> = mutableListOf()
         for (item in adapter.items) {
-            if (item.placeholderType == placeholder) {
-                if (!didInsert) {
-                    didInsert = true
-                    items.addAll(with)
-                }
+            if (item.placeholderType == placeholder && !didInsert) {
+                didInsert = true
+                newItems.addAll(with)
             }
-            else {
-                items.add(item)
+            else if (item.placeholderType != placeholder) {
+                newItems.add(item)
             }
         }
 
         if (!didInsert) {
-            items.addAll(with)
+            newItems.addAll(with)
         }
 
-        replaceAll(items)
+        replaceAll(newItems)
     }
 
     fun replaceAll(items: List<StreamCellItem>) {
