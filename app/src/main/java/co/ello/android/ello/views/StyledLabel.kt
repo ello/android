@@ -26,6 +26,8 @@ class StyledLabel @JvmOverloads constructor(
         BoldWhiteUnderline(font = "Bold", color = R.color.white, underline = true),
 
         SmallWhite(size = 12f, color = R.color.white),
+        StatsCount(size = 18f, color = R.color.black),
+        StatsCaption(size = 10f, color = R.color.greyA),
         LargeWhite(size = 18f, color = R.color.white),
         LargeBlack(size = 18f, color = R.color.black),
         LargeBoldWhite(font = "Bold", size = 18f, color = R.color.white)
@@ -48,6 +50,8 @@ class StyledLabel @JvmOverloads constructor(
             "gray" -> Style.Gray
             "bold white" -> Style.BoldWhite
             "small white" -> Style.SmallWhite
+            "stats count" -> Style.StatsCount
+            "stats caption" -> Style.StatsCaption
             "small gray" -> Style.SmallGray
             "large black" -> Style.LargeBlack
             "large white" -> Style.LargeWhite

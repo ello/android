@@ -35,6 +35,10 @@
     <string name="Profile.collaborate">Collab</string>
     <string name="Profile.follow">+ Follow</string>
     <string name="Profile.views">Views</string>
+    <string name="Profile.posts">Posts</string>
+    <string name="Profile.following">Following</string>
+    <string name="Profile.followers">Followers</string>
+    <string name="Profile.loves">Loves</string>
 
     <string name="OK">OK</string>
 </resources>
