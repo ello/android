@@ -47,7 +47,8 @@ class CategoryGenerator(val delegate: CategoryProtocols.Controller?, val queue: 
         } }.enqueue(queue)
             .onSuccess exit@ { (_, posts) ->
                 if (currentToken != streamToken)  return@exit
-                delegate?.loadedCategoryStream(posts)
+                val items = StreamParser().parse(posts)
+                delegate?.loadedCategoryStream(items)
             }
             .onFailure { error ->
                 println("stream fail: $error")

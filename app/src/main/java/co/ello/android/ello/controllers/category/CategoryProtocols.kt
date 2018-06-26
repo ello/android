@@ -14,7 +14,7 @@ class CategoryProtocols {
 
     interface Controller {
         fun loadedSubscribedCategories(categories: List<Category>)
-        fun loadedCategoryStream(posts: List<Post>)
+        fun loadedCategoryStream(items: List<StreamCellItem>)
         fun categorySelected(info: CategoryScreen.CardInfo)
     }
 
