@@ -3,6 +3,7 @@ package co.ello.android.ello
 import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
+import org.json.JSONException
 import java.util.concurrent.CompletableFuture
 import java.util.UUID
 
@@ -11,7 +12,8 @@ class ElloRequest<T>(
         method: Int,
         path: String,
         override val requiresAnyToken: Boolean = true,
-        override val supportsAnonymousToken: Boolean = true
+        override val supportsAnonymousToken: Boolean = true,
+        val shouldRetryAuth: Boolean = true
 ) : Request<String>(method, "${API.domain}$path", null), AuthenticationEndpoint {
     object CancelledRequest : Throwable()
 
@@ -20,13 +22,14 @@ class ElloRequest<T>(
         path: String,
         parameters: Map<String, Any>? = null,
         requiresAnyToken: Boolean = true,
-        supportsAnonymousToken: Boolean = true
+        supportsAnonymousToken: Boolean = true,
+        shouldRetryAuth: Boolean = true
     ) : this(when(method) {
             Method.GET -> Request.Method.GET
             Method.POST -> Request.Method.POST
             Method.PUT -> Request.Method.PUT
             Method.DELETE -> Request.Method.DELETE
-        }, path, requiresAnyToken, supportsAnonymousToken) {
+        }, path, requiresAnyToken, supportsAnonymousToken, shouldRetryAuth) {
         if (parameters != null) {
             setBody(parameters)
         }
@@ -74,7 +77,9 @@ class ElloRequest<T>(
     }
 
     fun enqueue(queue: Queue): CompletableFuture<T> {
-        retryBlock = { this.enqueue(queue) }
+        retryBlock = {
+            this.enqueue(queue)
+        }
         cancelBlock = { future.completeExceptionally(CancelledRequest) }
 
         this.onSuccess { jsonString ->
@@ -109,11 +114,19 @@ class ElloRequest<T>(
     }
 
     override fun deliverError(error: VolleyError) {
-        if (error is AuthFailureError) {
+        if (error is AuthFailureError && shouldRetryAuth) {
             manager!!.attemptAuthentication(uuid!!, RequestAttempt(this, retryBlock!!, cancelBlock!!))
         }
         else {
-            failureCompletion?.invoke(error)
+            val data = error.networkResponse.data
+            try {
+                val json = JSON(data)
+                val netError = NetworkError(json)
+                failureCompletion?.invoke(netError)
+            }
+            catch (e: JSONException) {
+                failureCompletion?.invoke(error)
+            }
         }
     }
 

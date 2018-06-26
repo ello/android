@@ -73,6 +73,12 @@ class LoginScreen : LoginProtocols.Screen {
         }
     }
 
+    override fun showNetworkError(message: String) {
+        usernameFieldError.visibility = View.VISIBLE
+        passwordFieldError.visibility = View.VISIBLE
+        errorLabel.setText(message)
+    }
+
     private fun updateInteractive() {
         usernameField.isFocusable = interactive
         usernameField.isFocusableInTouchMode = interactive

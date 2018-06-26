@@ -37,8 +37,8 @@ abstract class Controller(val activity: AppActivity) {
         var view = _view
         if (view == null) {
             view = createView()
-            onViewCreated()
             _view = view
+            onViewCreated()
         }
         return view
     }

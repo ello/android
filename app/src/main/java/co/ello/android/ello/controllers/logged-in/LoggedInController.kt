@@ -16,22 +16,15 @@ class LoggedInController(
     private val childTabControllers: List<BaseController>
     private val childNavControllers: List<NavigationController>
 
-    override val childControllers: Iterable<Controller> get() { return childTabControllers }
-    override val visibleChildControllers: Iterable<Controller> get() { return listOf(childNavControllers[selectedIndex]) }
-    override val firstResponder: Controller get() { return childNavControllers[selectedIndex].firstResponder }
+    override val childControllers: Iterable<Controller> get() { return childNavControllers }
+    override val visibleChildControllers: Iterable<Controller> get() { return listOf(selectedNavigationController) }
+    override val firstResponder: Controller get() { return selectedNavigationController.firstResponder }
 
     init {
-        val homeController = HomeController(activity,
-            delegate = null,
-            childControllers = listOf(
-                Pair("Editorial", CategoryController(activity)),
-                Pair("Artist Invites", CategoryController(activity)),
-                Pair("Following", CategoryController(activity))
-                )
-            )
+        val followingController = FollowingController(activity)
 
         childTabControllers = listOf(
-            homeController,
+            followingController,
             CategoryController(activity),
             CategoryController(activity),
             CategoryController(activity),

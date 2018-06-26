@@ -29,26 +29,17 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
 
     private fun showLoggedOutScreen() {
         val navController = NavigationController(activity)
-        // val loggedOutController = LoggedOutController(activity, this)
-        val loggedInController = LoggedInController(activity, this)
-        navController.push(loggedInController)
+        val loggedOutController = LoggedOutController(activity, this)
+        navController.push(loggedOutController)
         show(navController)
     }
 
-    override fun loggedInDidLogout() {
-        showLoggedOutScreen()
-    }
-
     override fun loggedOutDidLogin(credentials: Credentials) {
-        showHomeScreen()
+        val loggedInController = LoggedInController(activity, this)
+        show(loggedInController)
     }
 
-    private fun showHomeScreen() {
-        println("=============== AppController.kt at line 41 ===============")
-        // show(HomeController(activity, this))
-    }
-
-    private fun homeDidLogout() = showLoggedOutScreen()
+    override fun loggedInDidLogout() = showLoggedOutScreen()
 
     fun showAppSpinner() {
         screen.spinnerVisibility(true)
