@@ -9,7 +9,6 @@ data class Comment(
     val authorId: String,
     val postId: String,
     val content: List<Regionable>,
-    val body: List<Regionable>,
     val summary: List<Regionable>
     ) : Model() {
 
@@ -37,7 +36,6 @@ data class Comment(
                 authorId = currentUser.id,
                 postId = post.id,
                 content = emptyList(),
-                body = emptyList(),
                 summary = emptyList()
                 )
         }

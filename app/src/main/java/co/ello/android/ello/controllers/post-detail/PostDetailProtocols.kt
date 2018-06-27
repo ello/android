@@ -11,10 +11,12 @@ class PostDetailProtocols {
     }
 
     interface Controller {
-        fun loadedPostDetail(post: Post)
+        fun loadedPostDetail(items: List<StreamCellItem>)
+        fun loadedPostComments(items: List<StreamCellItem>)
     }
 
     interface Generator {
         fun loadPostDetail(token: Token)
+        fun parsePost(post: Post): List<StreamCellItem>
     }
 }

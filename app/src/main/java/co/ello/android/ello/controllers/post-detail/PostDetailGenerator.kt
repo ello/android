@@ -9,9 +9,27 @@ class PostDetailGenerator(val delegate: PostDetailProtocols.Controller?, val que
         API().postDetail(token, username = null)
             .enqueue(queue)
             .onSuccess { post ->
-                delegate?.loadedPostDetail(post)
+                val items = parsePost(post)
+                delegate?.loadedPostDetail(items)
             }
-            // .onFailure { error ->
-            // }
+            .onFailure { error ->
+                val error = StreamCellItem(type = StreamCellType.Error("Could not load post"))
+                delegate?.loadedPostDetail(listOf(error))
+            }
+
+        API().postComments(token)
+            .enqueue(queue)
+            .onSuccess { (_, comments) ->
+                val items = StreamParser().parse(comments)
+                delegate?.loadedPostComments(items)
+            }
+            .onFailure { error ->
+                val error = StreamCellItem(type = StreamCellType.Error("Could not load comments"))
+                delegate?.loadedPostComments(listOf(error))
+            }
+    }
+
+    override fun parsePost(post: Post): List<StreamCellItem> {
+        return StreamParser().parse(listOf(post))
     }
 }

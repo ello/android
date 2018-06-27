@@ -82,19 +82,23 @@ class Fragments {
             }
             """, needs = listOf(tshirtProps))
 
-        val postSummary = Fragments("""
+        val assetProps = Fragments("""
+            fragment assetProps on Asset {
+              id
+              attachment { ...responsiveProps }
+            }
+            """, needs = listOf(responsiveProps))
+
+        val contentProps = Fragments("""
             fragment contentProps on ContentBlocks {
               linkUrl
               kind
               data
               links { assets }
             }
+            """)
 
-            fragment assetProps on Asset {
-              id
-              attachment { ...responsiveProps }
-            }
-
+        val postSummary = Fragments("""
             fragment postContent on Post {
               content { ...contentProps }
             }
@@ -110,8 +114,7 @@ class Fragments {
               postStats { lovesCount commentsCount viewsCount repostsCount }
               currentUserState { watching loved reposted }
             }
-            """, needs = listOf(imageProps, tshirtProps, responsiveProps, authorProps, categoryProps))
-
+            """, needs = listOf(assetProps, authorProps, contentProps))
         val postDetails = Fragments("""
             fragment postDetails on Post {
                 ...postSummary
@@ -127,7 +130,16 @@ class Fragments {
                     ...postSummary
                 }
             }
-            """, needs = listOf(postSummary, categoryPostActions))
+            """, needs = listOf(postSummary, categoryPostActions, categoryProps, contentProps))
+        val commentDetails = Fragments("""
+            id
+            createdAt
+            parentPost { id }
+            content { ...contentProps }
+            summary { ...contentProps }
+            author { ...authorProps }
+            assets { ...assetProps }
+            """, needs = listOf(contentProps, authorProps, assetProps))
 
         val userDetails = Fragments("""
             fragment userDetails on User {
@@ -210,6 +222,12 @@ class Fragments {
         val postBody = Fragments("""
             ...postDetails
             """, needs = listOf(postDetails))
+        val commentStreamBody = Fragments("""
+            next isLastPage
+            comments {
+                ...commentDetails
+            }
+            """, needs = listOf(commentDetails))
         val userBody = Fragments("""
             ...userDetails
             """, needs = listOf(userDetails))

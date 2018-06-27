@@ -94,6 +94,16 @@ class API {
             .setBody(Fragments.postBody)
     }
 
+    fun postComments(token: Token, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Comment>>> {
+        return GraphQLRequest<Pair<PageConfig, List<Comment>>>("commentStream")
+            .parser { PageParser<Comment>("comments", CommentParser()).parse(it) }
+            .setVariables(
+                token.variable,
+                GraphQLRequest.Variable.optionalString("before", before)
+            )
+            .setBody(Fragments.commentStreamBody)
+    }
+
     fun userDetail(token: Token): GraphQLRequest<User> {
         return GraphQLRequest<User>("findUser")
             .parser { OneParser<User>(UserParser()).parse(it) }
