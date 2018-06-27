@@ -34,9 +34,8 @@ class ElloRequest<T>(
 
     private val headers = HashMap<String, String>()
     private var successCompletion: ((String) -> Unit)? = null
-    private var parserCompletion: ((Gson, String) -> T)? = null
+    private var parserCompletion: ((JSON) -> T)? = null
     private var failureCompletion: ((Throwable) -> Unit)? = null
-    private val gson = Gson()
     private var uuid: UUID? = null
     private var manager: AuthenticationManager? = null
     private var retryBlock: Block? = null
@@ -54,7 +53,7 @@ class ElloRequest<T>(
         this.addHeader("Content-Type", "application/json")
     }
 
-    fun parser(completion: ((Gson, String) -> T)?): ElloRequest<T> {
+    fun parser(completion: ((JSON) -> T)?): ElloRequest<T> {
         parserCompletion = completion
         return this
     }
@@ -70,6 +69,7 @@ class ElloRequest<T>(
     }
 
     fun setBody(body: Map<String, Any>): ElloRequest<T> {
+        val gson = Gson()
         return setBody(gson.toJson(body))
     }
 
@@ -77,9 +77,10 @@ class ElloRequest<T>(
         retryBlock = { this.enqueue(queue) }
         cancelBlock = { future.completeExceptionally(CancelledRequest) }
 
-        this.onSuccess { json ->
+        this.onSuccess { jsonString ->
             try {
-                val result = parserCompletion!!.invoke(gson, json)
+                val json = JSON(jsonString)
+                val result = parserCompletion!!.invoke(json)
                 future.complete(result)
             }
             catch(e: Throwable) {

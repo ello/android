@@ -49,8 +49,9 @@ class JSON {
         index = null
     }
 
-    constructor(bytes: ByteArray) {
-        val string = String(bytes, Charsets.UTF_8)
+    constructor(bytes: ByteArray) : this(String(bytes, Charsets.UTF_8))
+
+    constructor(string: String) {
         try {
             jsonObject = JSONObject(string)
         } catch (e: JSONException) {

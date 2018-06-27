@@ -33,9 +33,7 @@ class API {
 
     fun globalPostStream(filter: StreamFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream")
-            .parser { json ->
-                PageParser<Post>("posts", PostParser()).parse(json)
-            }
+            .parser { PageParser<Post>("posts", PostParser()).parse(it) }
             .setVariables(
                 GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
                 GraphQLRequest.Variable.optionalString("before", before)
@@ -45,9 +43,7 @@ class API {
 
     fun subscribedPostStream(filter: StreamFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("subscribedPostStream")
-            .parser { json ->
-                PageParser<Post>("posts", PostParser()).parse(json)
-            }
+            .parser { PageParser<Post>("posts", PostParser()).parse(it) }
             .setVariables(
                 GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
                 GraphQLRequest.Variable.optionalString("before", before)
@@ -62,9 +58,7 @@ class API {
         }
 
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("categoryPostStream")
-                .parser { json ->
-                    PageParser<Post>("posts", PostParser()).parse(json)
-                }
+                .parser { PageParser<Post>("posts", PostParser()).parse(it) }
                 .setVariables(
                         GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
                         categoryVar,
@@ -75,17 +69,13 @@ class API {
 
     fun subscribedCategories(): GraphQLRequest<List<Category>> {
         return GraphQLRequest<List<Category>>("categoryNav")
-            .parser { json ->
-                ManyParser<Category>(CategoryParser()).parse(json)
-            }
+            .parser { ManyParser<Category>(CategoryParser()).parse(it) }
             .setBody(Fragments.categoriesBody)
     }
 
     fun editorialStream(before: String? = null): GraphQLRequest<Pair<PageConfig, List<Editorial>>> {
         return GraphQLRequest<Pair<PageConfig, List<Editorial>>>("editorialStream")
-            .parser { json ->
-                PageParser<Editorial>("editorials", EditorialParser()).parse(json)
-            }
+            .parser { PageParser<Editorial>("editorials", EditorialParser()).parse(it) }
             .setVariables(
                 GraphQLRequest.Variable.optionalString("before", before),
                 GraphQLRequest.Variable.optionalBoolean("preview", false),
@@ -96,7 +86,7 @@ class API {
 
     fun postDetail(token: Token, username: String?): GraphQLRequest<Post> {
         return GraphQLRequest<Post>("post")
-            .parser { json -> OneParser<Post>(PostParser()).parse(json) }
+            .parser { OneParser<Post>(PostParser()).parse(it) }
             .setVariables(
                 token.variable,
                 GraphQLRequest.Variable.optionalString("username", username)
@@ -104,14 +94,29 @@ class API {
             .setBody(Fragments.postBody)
     }
 
+    fun userDetail(token: Token): GraphQLRequest<User> {
+        return GraphQLRequest<User>("findUser")
+            .parser { OneParser<User>(UserParser()).parse(it) }
+            .setVariables(
+                token.variable
+            )
+            .setBody(Fragments.userBody)
+    }
+
+    fun userPosts(username: String, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
+        return GraphQLRequest<Pair<PageConfig, List<Post>>>("userPostStream")
+            .parser { PageParser<Post>("posts", PostParser()).parse(it) }
+            .setVariables(
+                GraphQLRequest.Variable.string("username", username),
+                GraphQLRequest.Variable.optionalString("before", before)
+            )
+            .setBody(Fragments.postStreamBody)
+    }
+
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/v2/join"
-
         val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path)
-                .parser { gson, json ->
-                    println("join $json")
-                    gson.fromJson(json, Credentials::class.java)
-                }
+                .parser { CredentialsParser(isAnonymous = false).parse(it) }
                 .setBody(mapOf(
                     "email" to email,
                     "username" to username,
@@ -126,11 +131,8 @@ class API {
 
     fun login(username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/oauth/token"
-
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false, supportsAnonymousToken = true)
-            .parser { gson, json ->
-                gson.fromJson(json, Credentials::class.java)
-            }
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false)
+            .parser { CredentialsParser(isAnonymous = false).parse(it) }
             .setBody(mapOf(
                 "email" to username,
                 "password" to password,
@@ -142,13 +144,10 @@ class API {
         return elloRequest
     }
 
-    fun reauth(refreshToken: String): ElloRequest<Credentials> {
+    fun reauth(refreshToken: String, isAnonymous: Boolean): ElloRequest<Credentials> {
         val path = "/api/oauth/token"
-
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false, supportsAnonymousToken = true)
-            .parser { gson, json ->
-                gson.fromJson(json, Credentials::class.java)
-            }
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false)
+            .parser { CredentialsParser(isAnonymous = isAnonymous).parse(it) }
             .setBody(mapOf(
                 "client_id" to API.key,
                 "client_secret" to API.secret,
@@ -161,11 +160,8 @@ class API {
 
     fun anonymousCreds(): ElloRequest<Credentials> {
         val path = "/api/oauth/token"
-
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false, supportsAnonymousToken = true)
-            .parser { gson, json ->
-                gson.fromJson(json, Credentials::class.java)
-            }
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false)
+            .parser { CredentialsParser(isAnonymous = true).parse(it) }
             .setBody(mapOf(
                 "client_id" to API.key,
                 "client_secret" to API.secret,

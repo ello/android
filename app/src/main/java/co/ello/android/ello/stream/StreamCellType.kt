@@ -5,8 +5,9 @@ import java.net.URL
 
 
 sealed class StreamCellType {
-    object Spinner : StreamCellType()
+    object Placeholder : StreamCellType()
 
+    object Spinner : StreamCellType()
     object StreamSelection : StreamCellType()
 
     object PostHeader : StreamCellType()
@@ -14,20 +15,41 @@ sealed class StreamCellType {
     data class PostText(val content: String) : StreamCellType()
     data class PostImage(val imageURL: URL) : StreamCellType()
 
+    object ProfileHeaderButtons : StreamCellType()
+    object ProfileHeaderAvatar : StreamCellType()
+    object ProfileHeaderName : StreamCellType()
+    object ProfileHeaderTotalAndBadges : StreamCellType()
+    object ProfileHeaderStats : StreamCellType()
+    object ProfileHeaderBio : StreamCellType()
+    object ProfileHeaderLocation : StreamCellType()
+    object ProfileHeaderLinks : StreamCellType()
+    object ProfileHeaderSeparator : StreamCellType()
+
     val viewType: Int get() = StreamCellType::class.nestedClasses.indexOf(this::class)
 
     fun bindViewHolder(viewHolder: StreamCell, item: StreamCellItem) {
         viewHolder.streamCellItem = item
 
         return when(this) {
-            is Spinner -> SpinnerPresenter.configure(viewHolder as SpinnerCell)
+            is Placeholder -> {}
 
+            is Spinner -> SpinnerPresenter.configure(viewHolder as SpinnerCell)
             is StreamSelection -> StreamSelectionPresenter.configure(viewHolder as StreamSelectionCell, item)
 
             is PostHeader -> PostHeaderPresenter.configure(viewHolder as PostHeaderCell, item)
             is PostFooter -> PostFooterPresenter.configure(viewHolder as PostFooterCell, item)
             is PostText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
             is PostImage -> PostImagePresenter.configure(viewHolder as PostImageCell, item)
+
+            is ProfileHeaderButtons -> ProfileHeaderButtonsPresenter.configure(viewHolder as ProfileHeaderButtonsCell, item)
+            is ProfileHeaderAvatar -> ProfileHeaderAvatarPresenter.configure(viewHolder as ProfileHeaderAvatarCell, item)
+            is ProfileHeaderName -> ProfileHeaderNamePresenter.configure(viewHolder as ProfileHeaderNameCell, item)
+            is ProfileHeaderTotalAndBadges -> ProfileHeaderTotalAndBadgesPresenter.configure(viewHolder as ProfileHeaderTotalAndBadgesCell, item)
+            is ProfileHeaderStats -> ProfileHeaderStatsPresenter.configure(viewHolder as ProfileHeaderStatsCell, item)
+            is ProfileHeaderBio -> ProfileHeaderBioPresenter.configure(viewHolder as ProfileHeaderBioCell, item)
+            is ProfileHeaderLocation -> ProfileHeaderLocationPresenter.configure(viewHolder as ProfileHeaderLocationCell, item)
+            is ProfileHeaderLinks -> ProfileHeaderLinksPresenter.configure(viewHolder as ProfileHeaderLinksCell, item)
+            is ProfileHeaderSeparator -> {}
         }
     }
 
@@ -35,20 +57,32 @@ sealed class StreamCellType {
         fun createViewHolder(parent: ViewGroup, viewType: Int): StreamCell {
             val type = StreamCellType::class.nestedClasses.elementAt(viewType)
             return when (type) {
-                Spinner::class -> SpinnerCell(parent)
+                Placeholder::class -> PlaceholderCell(parent)
 
+                Spinner::class -> SpinnerCell(parent)
                 StreamSelection::class -> StreamSelectionCell(parent)
 
                 PostHeader::class -> PostHeaderCell(parent)
                 PostFooter::class -> PostFooterCell(parent)
                 PostText::class -> PostTextCell(parent)
                 PostImage::class -> PostImageCell(parent)
+
+                ProfileHeaderButtons::class -> ProfileHeaderButtonsCell(parent)
+                ProfileHeaderAvatar::class -> ProfileHeaderAvatarCell(parent)
+                ProfileHeaderName::class -> ProfileHeaderNameCell(parent)
+                ProfileHeaderTotalAndBadges::class -> ProfileHeaderTotalAndBadgesCell(parent)
+                ProfileHeaderStats::class -> ProfileHeaderStatsCell(parent)
+                ProfileHeaderBio::class -> ProfileHeaderBioCell(parent)
+                ProfileHeaderLocation::class -> ProfileHeaderLocationCell(parent)
+                ProfileHeaderLinks::class -> ProfileHeaderLinksCell(parent)
+                ProfileHeaderSeparator::class -> ProfileHeaderSeparatorCell(parent)
+
                 else -> throw IllegalArgumentException("Unhandled type $type")
             }
         }
     }
 
     enum class PlaceholderType {
-        Spinner, StreamFilter, StreamItems;
+        Header, Spinner, StreamFilter, StreamItems;
     }
 }

@@ -58,33 +58,38 @@ class StreamController(a: AppActivity)
     }
 
     fun hasPlaceholderItems(placeholder: StreamCellType.PlaceholderType): Boolean {
-        return adapter.items.any { it.placeholderType == placeholder }
+        return adapter.items.any {
+            it.placeholderType == placeholder && it.type != StreamCellType.Placeholder
+        }
     }
 
     fun replacePlaceholder(placeholder: StreamCellType.PlaceholderType, with: List<StreamCellItem>) {
+        if (with.isEmpty()) {
+            replacePlaceholder(placeholder, listOf(StreamCellItem(type = StreamCellType.Placeholder)))
+            return
+        }
+
         for (item in with) {
             item.placeholderType = placeholder
         }
 
         var didInsert = false
-        val items: MutableList<StreamCellItem> = mutableListOf()
+        val newItems: MutableList<StreamCellItem> = mutableListOf()
         for (item in adapter.items) {
-            if (item.placeholderType == placeholder) {
-                if (!didInsert) {
-                    didInsert = true
-                    items.addAll(with)
-                }
+            if (item.placeholderType == placeholder && !didInsert) {
+                didInsert = true
+                newItems.addAll(with)
             }
-            else {
-                items.add(item)
+            else if (item.placeholderType != placeholder) {
+                newItems.add(item)
             }
         }
 
         if (!didInsert) {
-            items.addAll(with)
+            newItems.addAll(with)
         }
 
-        replaceAll(items)
+        replaceAll(newItems)
     }
 
     fun replaceAll(items: List<StreamCellItem>) {
@@ -92,7 +97,7 @@ class StreamController(a: AppActivity)
         if (isViewLoaded)  screen.adapter = adapter
     }
 
-    fun streamTappedPost(cell: StreamCell, item: StreamCellItem, post: Post) {
+    fun streamTappedPost(post: Post) {
         val parentController = findParent<PostDetailController>()
         if (parentController != null && parentController.isShowing(post))  return
 
@@ -100,7 +105,12 @@ class StreamController(a: AppActivity)
         navigationController?.push(postDetailController)
     }
 
-    fun streamTappedUser(cell: StreamCell, item: StreamCellItem, user: User) {
+    fun streamTappedUser(user: User) {
+        val parentController = findParent<ProfileController>()
+        if (parentController != null && parentController.isShowing(user))  return
+
+        val profileController = ProfileController(activity, user = user)
+        navigationController?.push(profileController)
     }
 
     fun toolbarTappedLoves(cell: StreamCell, item: StreamCellItem) {

@@ -31,15 +31,17 @@ enum class RelationshipPriority(val value: String) {
             RelationshipPriority.Me
             )
 
-        fun create(value: String): RelationshipPriority? = when(value) {
-            "friend"   -> RelationshipPriority.Following
-            "block"    -> RelationshipPriority.Block
-            "mute"     -> RelationshipPriority.Mute
-            "inactive" -> RelationshipPriority.Inactive
-            "none"     -> RelationshipPriority.None
-            "null"     -> RelationshipPriority.Null
-            "self"     -> RelationshipPriority.Me
-            else       -> null
-        }
+        fun create(value: String?): RelationshipPriority =
+            value?.let {
+                when(value) {
+                    "friend"   -> RelationshipPriority.Following
+                    "block"    -> RelationshipPriority.Block
+                    "mute"     -> RelationshipPriority.Mute
+                    "inactive" -> RelationshipPriority.Inactive
+                    "none"     -> RelationshipPriority.None
+                    "self"     -> RelationshipPriority.Me
+                    else       -> RelationshipPriority.Null
+                }
+            } ?: RelationshipPriority.Null
     }
 }

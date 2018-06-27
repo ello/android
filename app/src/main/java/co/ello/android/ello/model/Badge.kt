@@ -33,5 +33,22 @@ data class Badge(
             return badges[slug]
         }
     }
+}
 
+
+fun loadStaticBadges(queue: Queue) {
+    val path = "/api/v2/badges.json"
+    ElloRequest<List<Badge>>(ElloRequest.Method.GET, path, requiresAnyToken = false)
+        .parser { json ->
+            val parser = BadgeParser()
+            json["badges"].listValue.map { parser.parse(it) }
+        }
+        .enqueue(queue)
+        .onSuccess { badges ->
+            val badgeMap: MutableMap<String, Badge> = mutableMapOf()
+            for (badge in badges) {
+                badgeMap[badge.slug] = badge
+            }
+            Badge.badges = badgeMap
+        }
 }

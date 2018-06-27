@@ -9,7 +9,7 @@ import kotlin.math.roundToInt
 
 
 class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.post_image_cell, parent, false)) {
-    private val imageView: ImageView
+    private val imageView: ImageView = itemView.findViewById(R.id.imageView)
     private var aspectRatio: Float? = null
 
     data class Config(
@@ -17,7 +17,6 @@ class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.c
         )
 
     init {
-        imageView = itemView.findViewById(R.id.imageView)
         imageView.viewTreeObserver.addOnGlobalLayoutListener { didResize() }
     }
 

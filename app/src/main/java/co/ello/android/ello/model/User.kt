@@ -23,7 +23,7 @@ data class User(
 
     var postsCount: Int? = null
     var lovesCount: Int? = null
-    var followersCount: String? = null // string due to this returning "∞" for the ello user
+    var followersCount: Int? = null
     var followingCount: Int? = null
 
     var formattedShortBio: String? = null
@@ -67,6 +67,13 @@ data class User(
             return "<1K"
         }
         return count.numberToHuman(rounding = 1, showZero = true)
+    }
+
+    fun coverImageURL(viewsAdultContent: Boolean? = false, animated: Boolean = false): URL? {
+        if (animated && (!postsAdultContent || viewsAdultContent == true) && coverImage?.original?.url?.path?.endsWith(".gif") == true) {
+            return coverImage?.original?.url
+        }
+        return coverImage?.oneColumnAttachment?.url
     }
 
     fun avatarURL(viewsAdultContent: Boolean? = false, animated: Boolean = false): URL? {

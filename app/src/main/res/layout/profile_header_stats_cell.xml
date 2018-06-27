@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/postsCountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/postsCountCaption"
+        app:layout_constraintEnd_toEndOf="@+id/postsCountCaption"
+        app:layout_constraintStart_toStartOf="@+id/postsCountCaption"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:styleName="stats count"
+        tools:text="1.1k" />
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/postsCountCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Profile.posts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/followingCountCaption"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postsCountLabel"
+        app:styleName="stats caption"
+        tools:text="Posts" />
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/followingCountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/followingCountCaption"
+        app:layout_constraintEnd_toEndOf="@+id/followingCountCaption"
+        app:layout_constraintStart_toStartOf="@+id/followingCountCaption"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:styleName="stats count"
+        tools:text="1.1k" />
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/followingCountCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Profile.following"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/followersCountCaption"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/postsCountCaption"
+        app:layout_constraintTop_toBottomOf="@+id/followingCountLabel"
+        app:styleName="stats caption"
+        tools:text="Following" />
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/followersCountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/followersCountCaption"
+        app:layout_constraintEnd_toEndOf="@+id/followersCountCaption"
+        app:layout_constraintStart_toStartOf="@+id/followersCountCaption"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:styleName="stats count"
+        tools:text="1.1k" />
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/followersCountCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Profile.followers"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/lovesCountCaption"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/followingCountCaption"
+        app:layout_constraintTop_toBottomOf="@+id/followersCountLabel"
+        app:styleName="stats caption"
+        tools:text="Followers" />
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/lovesCountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/lovesCountCaption"
+        app:layout_constraintEnd_toEndOf="@+id/lovesCountCaption"
+        app:layout_constraintStart_toStartOf="@+id/lovesCountCaption"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:styleName="stats count"
+        tools:text="1.1k" />
+
+    <co.ello.android.ello.StyledLabel
+        android:id="@+id/lovesCountCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Profile.loves"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/followersCountCaption"
+        app:layout_constraintTop_toBottomOf="@+id/lovesCountLabel"
+        app:styleName="stats caption"
+        tools:text="Loves" />
+
+</android.support.constraint.ConstraintLayout>
