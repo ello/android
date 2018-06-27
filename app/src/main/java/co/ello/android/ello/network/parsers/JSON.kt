@@ -58,13 +58,10 @@ class JSON {
             try {
                 jsonArray = JSONArray(string)
             } catch (e2: JSONException) {
-                try {
-                    val parent = JSON("[$string]".toByteArray(Charsets.UTF_8))
-                    if (parent.jsonArray?.length() == 1) {
-                        this.parent = parent
-                        index = 0
-                    }
-                } catch (e3: JSONException) {
+                val parent = JSON("[$string]".toByteArray(Charsets.UTF_8))
+                if (parent.jsonArray?.length() == 1) {
+                    this.parent = parent
+                    index = 0
                 }
             }
         }

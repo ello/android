@@ -131,7 +131,7 @@ class API {
 
     fun login(username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/oauth/token"
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false)
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false, shouldRetryAuth = false)
             .parser { CredentialsParser(isAnonymous = false).parse(it) }
             .setBody(mapOf(
                 "email" to username,
@@ -146,7 +146,7 @@ class API {
 
     fun reauth(refreshToken: String, isAnonymous: Boolean): ElloRequest<Credentials> {
         val path = "/api/oauth/token"
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false)
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false, shouldRetryAuth = false)
             .parser { CredentialsParser(isAnonymous = isAnonymous).parse(it) }
             .setBody(mapOf(
                 "client_id" to API.key,
@@ -160,7 +160,7 @@ class API {
 
     fun anonymousCreds(): ElloRequest<Credentials> {
         val path = "/api/oauth/token"
-        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false)
+        val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path, requiresAnyToken = false, shouldRetryAuth = false)
             .parser { CredentialsParser(isAnonymous = true).parse(it) }
             .setBody(mapOf(
                 "client_id" to API.key,

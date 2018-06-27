@@ -20,13 +20,12 @@ class HomeController : BaseController, HomeProtocols.Controller {
     constructor(
         activity: AppActivity,
         delegate: HomeProtocols.Delegate?,
-        childControllers: List<Pair<String, Controller>>,
-        selected: Int
+        childControllers: List<Pair<String, Controller>>
         ) : super(activity) {
         this.delegate = delegate
         this.controllersTitles = childControllers.map { it.first }
         this.controllers = childControllers.map { it.second }
-        this.selectedIndex = selected
+        this.selectedIndex = 0
 
         for (controller in controllers) {
             controller.assignParent(this, isVisible = false)

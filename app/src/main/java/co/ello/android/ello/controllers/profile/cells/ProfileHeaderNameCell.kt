@@ -14,9 +14,8 @@ class ProfileHeaderNameCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(
         val atName: String
         )
 
-    var config: Config? = null
-        set(value) {
-            nameLabel.text = value?.name
-            usernameLabel.text = value?.atName
-        }
+    fun config(value: Config) {
+        nameLabel.text = value.name
+        usernameLabel.text = value.atName
+    }
 }

@@ -49,14 +49,13 @@ class CategoryController(a: AppActivity) : StreamableController(a), CategoryProt
         }
     }
 
-    override fun loadedCategoryStream(posts: List<Post>) {
+    override fun loadedCategoryStream(items: List<StreamCellItem>) {
         if (!streamController.hasPlaceholderItems(StreamCellType.PlaceholderType.StreamFilter)) {
             val streamSelection = StreamCellItem(type = StreamCellType.StreamSelection)
             streamSelection.extra = 0
             streamController.replacePlaceholder(StreamCellType.PlaceholderType.StreamFilter, listOf(streamSelection))
         }
 
-        val items = StreamParser().parse(posts)
         streamController.replacePlaceholder(StreamCellType.PlaceholderType.Spinner, emptyList())
         streamController.replacePlaceholder(StreamCellType.PlaceholderType.StreamItems, items)
     }

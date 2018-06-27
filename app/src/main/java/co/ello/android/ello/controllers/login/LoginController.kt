@@ -41,11 +41,13 @@ class LoginController(a: AppActivity, val delegate: LoginProtocols.Delegate) : B
     }
 
     override fun success(credentials: Credentials) {
+        hideSpinner()
         AuthToken.update(credentials)
         delegate.loginDidLogin(credentials)
     }
 
-    override fun failure() {
+    override fun failure(reason: String?) {
+        reason?.let { screen.showNetworkError(it) }
         hideSpinner()
         screen.interactive = true
     }

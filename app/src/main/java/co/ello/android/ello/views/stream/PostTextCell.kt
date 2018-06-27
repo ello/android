@@ -24,12 +24,9 @@ class PostTextCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.co
         }
     }
 
-    var config: Config? = null
-        set(value) {
-            if (value == null)  return
-
-            webView.webViewClient = PostTextWebViewClient(webView)
-            webView.loadUrl("about:blank")
-            webView.loadData(value.content, "text/html; charset=utf-8", "UTF-8")
-        }
+    fun config(value: Config) {
+        webView.webViewClient = PostTextWebViewClient(webView)
+        webView.loadUrl("about:blank")
+        webView.loadData(value.content, "text/html; charset=utf-8", "UTF-8")
+    }
 }

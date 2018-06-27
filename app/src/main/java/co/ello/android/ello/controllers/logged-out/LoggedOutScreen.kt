@@ -6,23 +6,16 @@ import android.view.ViewGroup
 import android.widget.Button
 
 
-class LoggedOutScreen : LoggedOutProtocols.Screen {
+class LoggedOutScreen(
+    activity: Activity,
     private val delegate: LoggedOutProtocols.Controller?
+    ) : LoggedOutProtocols.Screen {
+    override val contentView: View = activity.layoutInflater.inflate(R.layout.logged_out_layout, null)
+    override val containerView: ViewGroup = contentView.findViewById(R.id.containerView)
+    private val loginButton: Button = contentView.findViewById(R.id.loginButton)
+    private val joinButton: Button = contentView.findViewById(R.id.joinButton)
 
-    override val contentView: View
-    override val containerView: ViewGroup
-
-    private val loginButton: Button
-    private val joinButton: Button
-
-    constructor(activity: Activity, delegate: LoggedOutProtocols.Controller?) {
-        this.delegate = delegate
-
-        contentView = activity.layoutInflater.inflate(R.layout.logged_out_layout, null)
-        loginButton = contentView.findViewById(R.id.loginButton)
-        joinButton = contentView.findViewById(R.id.joinButton)
-        containerView = contentView.findViewById(R.id.containerView)
-
+    init {
         joinButton.setOnClickListener {
             delegate?.showJoinScreen()
         }

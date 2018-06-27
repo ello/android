@@ -14,12 +14,9 @@ class ProfileHeaderBioCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(p
         val content: String
         )
 
-    var config: Config? = null
-        set(value) {
-            if (value == null)  return
-
-            webView.webViewClient = PostTextCell.PostTextWebViewClient(webView)
-            webView.loadUrl("about:blank")
-            webView.loadData(value.content, "text/html; charset=utf-8", "UTF-8")
-        }
+    fun config(value: Config) {
+        webView.webViewClient = PostTextCell.PostTextWebViewClient(webView)
+        webView.loadUrl("about:blank")
+        webView.loadData(value.content, "text/html; charset=utf-8", "UTF-8")
+    }
 }

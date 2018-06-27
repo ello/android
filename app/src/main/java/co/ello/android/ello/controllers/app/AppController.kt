@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 
 
-class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate {
+class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate, LoggedInProtocols.Delegate {
     private lateinit var screen: AppProtocols.Screen
 
     override val containerView: ViewGroup? get() = screen.containerView
@@ -35,15 +35,11 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
     }
 
     override fun loggedOutDidLogin(credentials: Credentials) {
-        showHomeScreen()
+        val loggedInController = LoggedInController(activity, this)
+        show(loggedInController)
     }
 
-    private fun showHomeScreen() {
-        println("=============== AppController.kt at line 41 ===============")
-        // show(HomeController(activity, this))
-    }
-
-    private fun homeDidLogout() = showLoggedOutScreen()
+    override fun loggedInDidLogout() = showLoggedOutScreen()
 
     fun showAppSpinner() {
         screen.spinnerVisibility(true)

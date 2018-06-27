@@ -14,7 +14,7 @@ class AuthToken(
     }
 
     val isAnonymous: Boolean get() = type == Type.Anonymous
-    val isPresent: Boolean get() = token != null && !token.isEmpty()
+    val isLoggedIn: Boolean get() = token?.isNotEmpty() == true && type == Type.Password
     val tokenWithBearer: String? get() = this.token?.let { "Bearer $it" }
 
     companion object {

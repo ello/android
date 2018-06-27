@@ -20,12 +20,11 @@ class ProfileHeaderButtonsCell(parent: ViewGroup) : StreamCell(LayoutInflater.fr
         val showMentionButton: Boolean
         )
 
-    var config: Config? = null
-        set(value) {
-            editButton.visibility = if (value?.isCurrentUser == true) View.VISIBLE else View.GONE
-            relationshipControl.visibility = if (value?.isCurrentUser == true) View.GONE else View.VISIBLE
-            hireButton.visibility = if (value?.showHireButton == true) View.VISIBLE else View.GONE
-            collaborateButton.visibility = if (value?.showCollabButton == true) View.VISIBLE else View.GONE
-            mentionButton.visibility = if (value?.showMentionButton == true) View.VISIBLE else View.GONE
-        }
+    fun config(value: Config) {
+        editButton.visibility = if (value.isCurrentUser) View.VISIBLE else View.GONE
+        relationshipControl.visibility = if (value.isCurrentUser) View.GONE else View.VISIBLE
+        hireButton.visibility = if (value.showHireButton) View.VISIBLE else View.GONE
+        collaborateButton.visibility = if (value.showCollabButton) View.VISIBLE else View.GONE
+        mentionButton.visibility = if (value.showMentionButton) View.VISIBLE else View.GONE
+    }
 }

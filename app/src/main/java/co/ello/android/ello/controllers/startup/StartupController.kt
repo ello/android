@@ -16,7 +16,14 @@ class StartupController(a: AppActivity, val delegate: StartupProtocols.Delegate)
 
     override fun onAppear() {
         val runnable = Runnable {
-            delegate.startupLoggedOut()
+            val token = AuthToken.shared.token
+            val refreshToken = AuthToken.shared.refreshToken
+            if (AuthToken.shared.isLoggedIn && token != null && refreshToken != null) {
+                delegate.startupLoggedIn(Credentials(accessToken = token, refreshToken = refreshToken, isAnonymous = false))
+            }
+            else {
+                delegate.startupLoggedOut()
+            }
         }
 
         handler.postDelayed(runnable, 1000)

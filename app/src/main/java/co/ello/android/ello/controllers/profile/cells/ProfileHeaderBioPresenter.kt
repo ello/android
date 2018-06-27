@@ -6,8 +6,8 @@ object ProfileHeaderBioPresenter {
         val user = item.model as? User ?: return
         val bio = user.formattedShortBio ?: return
 
-        cell.config = ProfileHeaderBioCell.Config(
+        cell.config(ProfileHeaderBioCell.Config(
             content = bio
-            )
+            ))
     }
 }

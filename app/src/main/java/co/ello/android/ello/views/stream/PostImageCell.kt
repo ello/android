@@ -20,14 +20,13 @@ class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.c
         imageView.viewTreeObserver.addOnGlobalLayoutListener { didResize() }
     }
 
-    var config: Config? = null
-        set(value) {
-            aspectRatio = null
-            streamCellItem?.height?.let { assignHeight(it) }
-            imageView.setImageURL(value?.imageURL, onSuccess = { calculateHeight() }, onError = {
-                println("error: ${value?.imageURL}")
-            })
-        }
+    fun config(value: Config) {
+        aspectRatio = null
+        streamCellItem?.height?.let { assignHeight(it) }
+        imageView.setImageURL(value.imageURL, onSuccess = { calculateHeight() }, onError = {
+            println("error: ${value.imageURL}")
+        })
+    }
 
     private fun assignHeight(height: Int) {
         itemView.layoutParams.height = height

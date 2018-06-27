@@ -11,8 +11,9 @@ class LoginGenerator(val delegate: LoginProtocols.Controller?, val queue: Queue)
             .onSuccess { credentials ->
                 delegate?.success(credentials)
             }
-            .onFailure {
-                delegate?.failure()
+            .onFailure { error ->
+                val reason = (error as? NetworkError)?.reason
+                delegate?.failure(reason)
             }
     }
 }

@@ -128,6 +128,7 @@ class NavigationLayout @JvmOverloads constructor(
     private fun contentAnimatorEnded() {
         completed(true)
         state = State.Resting
+        otherView = null
         requestLayout()
     }
 
