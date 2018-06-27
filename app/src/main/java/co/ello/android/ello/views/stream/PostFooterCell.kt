@@ -25,15 +25,13 @@ class PostFooterCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
         postToolbar.setShareButtonListener { shareButtonTapped() }
     }
 
-    var config: Config? = null
-        set(value) {
-            if (value == null)  return
-            postToolbar.viewsCount = value.views
-            postToolbar.lovesCount = value.loves
-            postToolbar.commentsCount = value.comments
-            postToolbar.repostCount = value.reposts
-            postToolbar.shareVisible = value.shareable
-        }
+    fun config(value: Config) {
+        postToolbar.viewsCount = value.views
+        postToolbar.lovesCount = value.loves
+        postToolbar.commentsCount = value.comments
+        postToolbar.repostCount = value.reposts
+        postToolbar.shareVisible = value.shareable
+    }
 
     fun viewsButtonTapped() {
         val item = streamCellItem ?: return

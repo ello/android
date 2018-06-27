@@ -6,13 +6,9 @@ object ProfileHeaderAvatarPresenter {
         val user = item.model as? User ?: return
 
         val viewsAdultContent: Boolean? = null // currentUser?.viewsAdultContent
-        val config = ProfileHeaderAvatarCell.Config()
-        user.avatarURL(viewsAdultContent = viewsAdultContent, animated = true)?.let { url ->
-            config.avatarURL = url
-        }
-        user.coverImageURL(viewsAdultContent = viewsAdultContent, animated = true)?.let { url ->
-            config.coverImageURL = url
-        }
-        cell.config = config
+        cell.config(ProfileHeaderAvatarCell.Config(
+            avatarURL = user.avatarURL(viewsAdultContent = viewsAdultContent, animated = true),
+            coverImageURL = user.coverImageURL(viewsAdultContent = viewsAdultContent, animated = true)
+            ))
     }
 }

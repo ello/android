@@ -11,13 +11,12 @@ class ProfileHeaderAvatarCell(parent: ViewGroup) : StreamCell(LayoutInflater.fro
     val coverImageView: ImageView = itemView.findViewById(R.id.coverImageView)
 
     data class Config(
-            var avatarURL: URL? = null,
-            var coverImageURL: URL? = null
+            val avatarURL: URL?,
+            val coverImageURL: URL?
         )
 
-    var config: Config? = null
-        set(value) {
-            loadImageURL(value?.avatarURL).transform(CircleTransform()).into(avatarImageView)
-            coverImageView.setImageURL(value?.coverImageURL)
-        }
+    fun config(value: Config) {
+        loadImageURL(value.avatarURL).transform(CircleTransform()).into(avatarImageView)
+        coverImageView.setImageURL(value.coverImageURL)
+    }
 }

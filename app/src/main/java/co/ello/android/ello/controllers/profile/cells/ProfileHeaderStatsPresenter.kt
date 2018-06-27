@@ -18,11 +18,11 @@ object ProfileHeaderStatsPresenter {
             followingCount = user.followingCount?.let { it.numberToHuman() } ?: ""
             lovesCount = user.lovesCount?.let { it.numberToHuman() } ?: ""
         }
-        cell.config = ProfileHeaderStatsCell.Config(
+        cell.config(ProfileHeaderStatsCell.Config(
             postsCount = user.postsCount?.let { it.numberToHuman() } ?: "0",
             followingCount = followersCount,
             followersCount = followingCount,
             lovesCount = lovesCount
-            )
+            ))
     }
 }

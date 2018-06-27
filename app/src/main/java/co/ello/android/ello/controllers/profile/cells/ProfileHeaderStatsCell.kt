@@ -18,11 +18,10 @@ class ProfileHeaderStatsCell(parent: ViewGroup) : StreamCell(LayoutInflater.from
         val lovesCount: String
         )
 
-    var config: Config? = null
-        set(value) {
-            postsCountLabel.text = value?.postsCount
-            followingCountLabel.text = value?.followingCount
-            followersCountLabel.text = value?.followersCount
-            lovesCountLabel.text = value?.lovesCount
-        }
+    fun config(value: Config) {
+        postsCountLabel.text = value.postsCount
+        followingCountLabel.text = value.followingCount
+        followersCountLabel.text = value.followersCount
+        lovesCountLabel.text = value.lovesCount
+    }
 }

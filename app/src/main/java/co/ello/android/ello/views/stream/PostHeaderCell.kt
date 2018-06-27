@@ -27,12 +27,11 @@ class PostHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
         usernameButton.setOnClickListener{ usernameButtonTapped() }
     }
 
-    var config: Config? = null
-        set(value) {
-            usernameButton.text = value?.username ?: ""
-            timestampLabel.text = value?.postedAt?.timeAgo() ?: ""
-            loadImageURL(value?.avatarURL).transform(CircleTransform()).into(imageButton)
-        }
+    fun config(value: Config) {
+        usernameButton.text = value.username ?: ""
+        timestampLabel.text = value.postedAt?.timeAgo() ?: ""
+        loadImageURL(value.avatarURL).transform(CircleTransform()).into(imageButton)
+    }
 
     private fun cellTapped() {
         val item = streamCellItem ?: return
