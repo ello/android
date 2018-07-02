@@ -29,7 +29,7 @@ class PostHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
 
     fun config(value: Config) {
         usernameButton.text = value.username ?: ""
-        timestampLabel.text = value.postedAt?.timeAgo() ?: ""
+        timestampLabel.text = value.postedAt.timeAgo()
         loadImageURL(value.avatarURL).transform(CircleTransform()).into(imageButton)
     }
 
