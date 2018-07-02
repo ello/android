@@ -4,8 +4,11 @@ import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import org.json.JSONException
-import java.util.concurrent.CompletableFuture
 import java.util.UUID
+import kotlin.coroutines.experimental.suspendCoroutine
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 
 
 class ElloRequest<T>(
@@ -43,7 +46,6 @@ class ElloRequest<T>(
     private var manager: AuthenticationManager? = null
     private var retryBlock: Block? = null
     private var cancelBlock: Block? = null
-    private val future = CompletableFuture<T>()
 
     enum class Method {
         GET, POST, PUT, DELETE
@@ -76,24 +78,31 @@ class ElloRequest<T>(
         return setBody(gson.toJson(body))
     }
 
-    fun enqueue(queue: Queue): CompletableFuture<T> {
+    suspend fun enqueue(queue: Queue): Result<T> = suspendCoroutine { continuation ->
+        setRetryPolicy(DefaultRetryPolicy(
+                30_000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+
         retryBlock = {
-            this.enqueue(queue)
+            launch(UI) { this@ElloRequest.enqueue(queue) }
         }
-        cancelBlock = { future.completeExceptionally(CancelledRequest) }
+        cancelBlock = {
+            launch(UI) { continuation.resume(Failure(CancelledRequest)) }
+        }
 
         this.onSuccess { jsonString ->
             try {
                 val json = JSON(jsonString)
                 val result = parserCompletion!!.invoke(json)
-                future.complete(result)
+                continuation.resume(Success(result))
             }
             catch(e: Throwable) {
-                future.completeExceptionally(e)
+                continuation.resume(Failure(e))
             }
         }
         .onFailure { exception ->
-            future.completeExceptionally(exception)
+            continuation.resume(Failure(exception))
         }
 
         val manager = AuthenticationManager(queue)
@@ -109,8 +118,6 @@ class ElloRequest<T>(
                 queue.add(this)
             },
             cancel = cancelBlock!!)
-
-        return future
     }
 
     override fun deliverError(error: VolleyError) {
@@ -118,15 +125,16 @@ class ElloRequest<T>(
             manager!!.attemptAuthentication(uuid!!, RequestAttempt(this, retryBlock!!, cancelBlock!!))
         }
         else {
-            val data = error.networkResponse.data
-            try {
-                val json = JSON(data)
-                val netError = NetworkError(json)
-                failureCompletion?.invoke(netError)
+            var sendError: Throwable = error
+            error.networkResponse?.data?.let { data ->
+                try {
+                    val json = JSON(data)
+                    sendError = NetworkError(json)
+                }
+                catch (e: JSONException) {
+                }
             }
-            catch (e: JSONException) {
-                failureCompletion?.invoke(error)
-            }
+            failureCompletion?.invoke(sendError)
         }
     }
 

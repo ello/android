@@ -1,5 +1,7 @@
 package co.ello.android.ello
 
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import java.util.*
 
 
@@ -87,17 +89,19 @@ class AuthenticationManager(val requestQueue: Queue) {
                 AuthState.Authenticated, AuthState.ShouldTryRefreshToken -> {
                     this.authState = AuthState.RefreshTokenSent
 
-                    val refreshToken= AuthToken.shared.refreshToken
+                    val refreshToken = AuthToken.shared.refreshToken
                     if (refreshToken != null) {
-                        API().reauth(refreshToken, isAnonymous = AuthToken.shared.isAnonymous)
-                            .enqueue(requestQueue)
-                            .onSuccess { credentials ->
-                                AuthToken.update(credentials)
-                                this.advanceAuthState(AuthState.Authenticated)
+                        launch(UI) {
+                            val result = API().reauth(refreshToken, isAnonymous = AuthToken.shared.isAnonymous).enqueue(requestQueue)
+                            when (result) {
+                                is Success -> {
+                                    val credentials = result.value
+                                    AuthToken.update(credentials)
+                                    this@AuthenticationManager.advanceAuthState(AuthState.Authenticated)
+                                }
+                                is Failure -> this@AuthenticationManager.advanceAuthState(AuthState.ShouldTryAnonymousCreds)
                             }
-                            .onFailure {
-                                this.advanceAuthState(AuthState.ShouldTryAnonymousCreds)
-                            }
+                        }
                     }
                     else {
                         this.advanceAuthState(AuthState.ShouldTryAnonymousCreds)
@@ -106,14 +110,17 @@ class AuthenticationManager(val requestQueue: Queue) {
                 AuthState.ShouldTryAnonymousCreds, AuthState.NoToken -> {
                     this.authState = AuthState.AnonymousCredsSent
 
-                    API().anonymousCreds()
-                        .enqueue(requestQueue)
-                        .onSuccess { credentials ->
-                            AuthToken.update(credentials)
-                            this.advanceAuthState(AuthState.Anonymous)
-                        }.onFailure {
-                            this.advanceAuthState(AuthState.NoToken)
+                    launch(UI) {
+                        val result = API().anonymousCreds().enqueue(requestQueue)
+                        when (result) {
+                            is Success -> {
+                                val credentials = result.value
+                                AuthToken.update(credentials)
+                                this@AuthenticationManager.advanceAuthState(AuthState.Anonymous)
+                            }
+                            is Failure -> this@AuthenticationManager.advanceAuthState(AuthState.NoToken)
                         }
+                    }
                 }
                 AuthState.RefreshTokenSent, AuthState.AnonymousCredsSent -> {}
             }

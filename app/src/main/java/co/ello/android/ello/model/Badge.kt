@@ -1,5 +1,7 @@
 package co.ello.android.ello
 
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import java.net.URL
 
 
@@ -38,17 +40,23 @@ data class Badge(
 
 fun loadStaticBadges(queue: Queue) {
     val path = "/api/v2/badges.json"
-    ElloRequest<List<Badge>>(ElloRequest.Method.GET, path, requiresAnyToken = false)
+    val request = ElloRequest<List<Badge>>(ElloRequest.Method.GET, path, requiresAnyToken = false)
         .parser { json ->
             val parser = BadgeParser()
             json["badges"].listValue.map { parser.parse(it) }
         }
-        .enqueue(queue)
-        .onSuccess { badges ->
-            val badgeMap: MutableMap<String, Badge> = mutableMapOf()
-            for (badge in badges) {
-                badgeMap[badge.slug] = badge
+    launch(UI) {
+        val result = request.enqueue(queue)
+        when (result) {
+            is Success -> {
+                val badges = result.value
+                val badgeMap: MutableMap<String, Badge> = mutableMapOf()
+                for (badge in badges) {
+                    badgeMap[badge.slug] = badge
+                }
+                Badge.badges = badgeMap
             }
-            Badge.badges = badgeMap
+            is Failure -> println("load badges error: ${result.error}")
         }
+    }
 }

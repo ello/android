@@ -13,8 +13,8 @@ class EditorialParser : IdParser(table = MappingType.Editorials) {
     ): Editorial {
         val kind = Editorial.Kind.create(json["kind"].stringValue)
 
-        val query = json["stream"]["query"].string?.toURL()
-        val tokens = json["stream"]["tokens"].list?.map { it.stringValue }
+        // val query = json["stream"]["query"].string?.toURL()
+        // val tokens = json["stream"]["tokens"].list?.map { it.stringValue }
         val url = json["url"].string?.toURL()
         val path = json["path"].string?.let { "${Globals.baseURL}$it" }?.toURL()
 

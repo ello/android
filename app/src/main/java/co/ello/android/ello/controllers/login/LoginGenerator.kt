@@ -1,19 +1,23 @@
 package co.ello.android.ello
 
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+
 
 class LoginGenerator(val delegate: LoginProtocols.Controller?, val queue: Queue)
     : LoginProtocols.Generator
 {
 
     override fun login(username: String, password: String) {
-        API().login(username, password)
-            .enqueue(queue)
-            .onSuccess { credentials ->
-                delegate?.success(credentials)
+        launch(UI) {
+            val result = API().login(username, password).enqueue(queue)
+            when (result) {
+                is Success -> delegate?.success(result.value)
+                is Failure -> {
+                    val reason = (result.error as? NetworkError)?.reason
+                    delegate?.failure(reason)
+                }
             }
-            .onFailure { error ->
-                val reason = (error as? NetworkError)?.reason
-                delegate?.failure(reason)
-            }
+        }
     }
 }
