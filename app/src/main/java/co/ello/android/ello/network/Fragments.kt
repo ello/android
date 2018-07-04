@@ -132,13 +132,15 @@ class Fragments {
             }
             """, needs = listOf(postSummary, categoryPostActions, categoryProps, contentProps))
         val commentDetails = Fragments("""
-            id
-            createdAt
-            parentPost { id }
-            content { ...contentProps }
-            summary { ...contentProps }
-            author { ...authorProps }
-            assets { ...assetProps }
+            fragment commentDetails on Comment {
+              id
+              createdAt
+              parentPost { id }
+              content { ...contentProps }
+              summary { ...contentProps }
+              author { ...authorProps }
+              assets { ...assetProps }
+            }
             """, needs = listOf(contentProps, authorProps, assetProps))
 
         val userDetails = Fragments("""

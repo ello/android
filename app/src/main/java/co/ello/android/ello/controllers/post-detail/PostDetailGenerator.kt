@@ -24,7 +24,8 @@ class PostDetailGenerator(val delegate: PostDetailProtocols.Controller?, val que
             when(detailResult) {
                 is Success -> {
                     val items = parsePost(detailResult.value)
-                    delegate?.loadedPostDetail(items)
+                    val spacer = StreamCellItem(type = StreamCellType.Spacer)
+                    delegate?.loadedPostDetail(items + listOf(spacer))
                 }
                 is Failure -> {
                     val error = StreamCellItem(type = StreamCellType.Error("Could not load post"))

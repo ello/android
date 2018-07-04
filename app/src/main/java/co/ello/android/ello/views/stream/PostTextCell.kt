@@ -7,7 +7,11 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 
 
-class PostTextCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.post_text_cell, parent, false)) {
+class PostTextCell(parent: ViewGroup, isComment: Boolean)
+    : StreamCell(LayoutInflater.from(parent.context).inflate(
+        if (isComment) R.layout.comment_text_cell
+        else R.layout.post_text_cell, parent, false))
+{
     val webView: WebView = itemView.findViewById(R.id.webView)
 
     data class Config(
