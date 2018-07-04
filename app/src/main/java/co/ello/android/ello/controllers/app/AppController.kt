@@ -16,6 +16,7 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
     }
 
     override fun onAppear() {
+        super.onAppear()
         showStartup()
     }
 
@@ -24,8 +25,11 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
         show(StartupController(activity, this))
     }
 
-    override fun startupLoggedIn(credentials: Credentials) = loggedOutDidLogin(credentials)
+    override fun startupLoggedIn(credentials: Credentials) = showLoggedInScreen()
     override fun startupLoggedOut() = showLoggedOutScreen()
+
+    override fun loggedOutDidLogin(credentials: Credentials) = showLoggedInScreen()
+    override fun loggedInDidLogout() = showLoggedOutScreen()
 
     private fun showLoggedOutScreen() {
         val navController = NavigationController(activity)
@@ -34,12 +38,10 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
         show(navController)
     }
 
-    override fun loggedOutDidLogin(credentials: Credentials) {
+    private fun showLoggedInScreen() {
         val loggedInController = LoggedInController(activity, this)
         show(loggedInController)
     }
-
-    override fun loggedInDidLogout() = showLoggedOutScreen()
 
     fun showAppSpinner() {
         screen.spinnerVisibility(true)

@@ -102,6 +102,8 @@ class GraphQLRequest<T>(
         .onFailure { exception ->
             println("${this.endpointName} failed: $exception")
             if (exception is VolleyError && exception.networkResponse != null) {
+                val body = String(getBody()).replace("\\n", "\n")
+                println("body:\n$body")
                 println("server error:\n${String(exception.networkResponse.data)}")
             }
 
@@ -170,7 +172,7 @@ class GraphQLRequest<T>(
 
         if (fragments != null && fragments.isNotEmpty()) {
             val fragmentsQuery = fragments.distinctBy { it.string }.map { it.string }.joinToString("\n")
-            query += fragmentsQuery + "\n"
+            query += "$fragmentsQuery\n"
         }
 
         val queryVariables = this.queryVariables()

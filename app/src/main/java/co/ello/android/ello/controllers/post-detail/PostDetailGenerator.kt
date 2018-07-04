@@ -14,10 +14,11 @@ class PostDetailGenerator(val delegate: PostDetailProtocols.Controller?, val que
     }
 
     override fun loadPostDetail(token: Token) {
+        val tmpToken = ID("15914579")
         val currentToken = newUUID()
         launch(UI) exit@ {
-            val detailResult = API().postDetail(token, username = null).enqueue(queue)
-            val commentsResult = API().postComments(token).enqueue(queue)
+            val detailResult = API().postDetail(tmpToken, username = null).enqueue(queue)
+            val commentsResult = API().postComments(tmpToken).enqueue(queue)
             if (currentToken != streamToken)  return@exit
 
             when(detailResult) {

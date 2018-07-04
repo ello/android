@@ -55,7 +55,6 @@ data class User(
         set(value) { _badges = value }
     var profile: Profile? = null
 
-    val isCurrentUser: Boolean get() { return profile != null }
     val atName: String get() = "@${this.username}"
     val displayName: String get() = if (name.isEmpty()) atName else name
     val shareLink: String get() = "${Globals.baseURL}/${username}"
