@@ -32,17 +32,29 @@ class PostDetailController(a: AppActivity) : StreamableController(a), PostDetail
     }
 
     override fun onStart() {
-        val post = this.post
-        if (post == null) {
-            generator.loadPostDetail(token)
+        super.onStart()
+
+        val placeholders = listOf(
+            StreamCellItem(type = StreamCellType.Spinner, placeholderType = StreamCellType.PlaceholderType.Header),
+            StreamCellItem(type = StreamCellType.Placeholder, placeholderType = StreamCellType.PlaceholderType.StreamItems)
+            )
+        streamController.replaceAll(placeholders)
+
+        this.post?.let { post ->
+            loadedPostDetail(generator.parsePost(post))
         }
-        else {
-            loadedPostDetail(post)
+
+        generator.loadPostDetail(token)
+    }
+
+    override fun loadedPostDetail(items: List<StreamCellItem>) {
+        streamController.replacePlaceholder(StreamCellType.PlaceholderType.Header, with = items)
+        if (!streamController.hasPlaceholderItems(StreamCellType.PlaceholderType.StreamItems)) {
+            streamController.replacePlaceholder(StreamCellType.PlaceholderType.StreamItems, with = listOf(StreamCellItem(type = StreamCellType.Spinner, placeholderType = StreamCellType.PlaceholderType.Header)))
         }
     }
 
-    override fun loadedPostDetail(post: Post) {
-        val items = StreamParser().parse(listOf(post))
-        streamController.replaceAll(items)
+    override fun loadedPostComments(items: List<StreamCellItem>) {
+        streamController.replacePlaceholder(StreamCellType.PlaceholderType.StreamItems, with = items)
     }
 }

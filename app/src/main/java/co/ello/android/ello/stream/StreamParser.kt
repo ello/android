@@ -7,6 +7,9 @@ class StreamParser {
             if (model is Post) {
                 postItems(model)
             }
+            else if (model is Comment) {
+                commentItems(model)
+            }
             else if (model is Editorial) {
                 emptyList()
             }
@@ -59,6 +62,13 @@ class StreamParser {
             model.content.flatMap { parseContent(model, it) }
         }
         return listOf(header) + content + listOf(footer)
+    }
+
+    private fun commentItems(model: Comment): List<StreamCellItem> {
+        // val header = StreamCellItem(model = model, type = StreamCellType.CommentHeader)
+        val content = model.content.flatMap { parseContent(model, it) }
+        return content
+        // return listOf(header) + content + listOf(footer)
     }
 
     private fun parseContent(model: Model, region: Regionable): List<StreamCellItem> {

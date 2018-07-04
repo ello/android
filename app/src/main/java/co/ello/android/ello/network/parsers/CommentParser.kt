@@ -5,18 +5,16 @@ class CommentParser : IdParser(table = MappingType.CommentsType) {
     init {
         linkArray(MappingType.AssetsType)
         linkObject(MappingType.UsersType, "author")
-        linkObject(MappingType.CategoriesType)
-        linkObject(MappingType.ArtistInviteSubmissionsType)
+        linkObject(MappingType.PostsType)
     }
 
     override fun parse(json: JSON): Comment {
         val comment = Comment(
             id = json["id"].stringValue,
             createdAt = json["createdAt"].date ?: Globals.now,
-            authorId = json["author_id"].stringValue,
-            postId = json["post_id"].stringValue,
+            authorId = json["author"]["id"].stringValue,
+            postId = json["parentPost"]["id"].stringValue,
             content = RegionParser.graphQLRegions(json["content"]),
-            body = RegionParser.graphQLRegions(json["body"]),
             summary = RegionParser.graphQLRegions(json["summary"])
             )
 

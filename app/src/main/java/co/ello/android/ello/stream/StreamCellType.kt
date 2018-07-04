@@ -8,8 +8,9 @@ sealed class StreamCellType {
     object Placeholder : StreamCellType()
 
     object Spinner : StreamCellType()
-    object StreamSelection : StreamCellType()
+    data class Error(val message: String) : StreamCellType()
 
+    object StreamSelection : StreamCellType()
     object PostHeader : StreamCellType()
     object PostFooter : StreamCellType()
     data class PostText(val content: String) : StreamCellType()
@@ -34,8 +35,9 @@ sealed class StreamCellType {
             is Placeholder -> {}
 
             is Spinner -> SpinnerPresenter.configure(viewHolder as SpinnerCell)
-            is StreamSelection -> StreamSelectionPresenter.configure(viewHolder as StreamSelectionCell, item)
+            is Error -> ErrorPresenter.configure(viewHolder as ErrorCell, item)
 
+            is StreamSelection -> StreamSelectionPresenter.configure(viewHolder as StreamSelectionCell, item)
             is PostHeader -> PostHeaderPresenter.configure(viewHolder as PostHeaderCell, item)
             is PostFooter -> PostFooterPresenter.configure(viewHolder as PostFooterCell, item)
             is PostText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
@@ -60,8 +62,9 @@ sealed class StreamCellType {
                 Placeholder::class -> PlaceholderCell(parent)
 
                 Spinner::class -> SpinnerCell(parent)
-                StreamSelection::class -> StreamSelectionCell(parent)
+                Error::class -> ErrorCell(parent)
 
+                StreamSelection::class -> StreamSelectionCell(parent)
                 PostHeader::class -> PostHeaderCell(parent)
                 PostFooter::class -> PostFooterCell(parent)
                 PostText::class -> PostTextCell(parent)

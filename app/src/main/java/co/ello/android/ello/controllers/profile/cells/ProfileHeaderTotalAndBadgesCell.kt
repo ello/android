@@ -35,7 +35,7 @@ class ProfileHeaderTotalAndBadgesCell(parent: ViewGroup) : StreamCell(LayoutInfl
         }
 
         val badges = value.badges
-        if (badges != null && badges.isNotEmpty()) {
+        if (value.badges.isNotEmpty()) {
             badgesLinearContainer.removeAllViews()
             val limitedBadges: List<Badge>
             if (badges.size > 3) {
