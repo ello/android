@@ -7,12 +7,9 @@ class BackStack(val controller: Controller) {
     }
 
     fun goBack(): StatusCode {
-        if (!controller.canGoBack)  return Failure
+        if (!controller.canGoBack)  return BackStack.StatusCode.Failure
 
         controller.goBack()
-        return Success
+        return BackStack.StatusCode.Success
     }
 }
-
-val Success = BackStack.StatusCode.Success
-val Failure = BackStack.StatusCode.Failure

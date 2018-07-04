@@ -1,6 +1,8 @@
 package co.ello.android.ello
 
-import java.util.*
+import java.util.UUID
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.android.UI
 
 
 class CategoryGenerator(val delegate: CategoryProtocols.Controller?, val queue: Queue)
@@ -27,31 +29,32 @@ class CategoryGenerator(val delegate: CategoryProtocols.Controller?, val queue: 
     }
 
     override fun loadSubscribedCategories() {
-        API().subscribedCategories()
-            .enqueue(queue)
-            .onSuccess { subscribedCategories ->
-                delegate?.loadedSubscribedCategories(subscribedCategories)
+        launch(UI) {
+            val result = API().subscribedCategories().enqueue(queue)
+            when (result) {
+                is Success -> delegate?.loadedSubscribedCategories(result.value)
+                is Failure -> println("subscribedCategories fail: ${result.error}")
             }
-            .onFailure { error ->
-                println("subscribedCategories fail: $error")
-            }
+        }
     }
 
     override fun loadStream(filter: API.StreamFilter, stream: Stream) {
         val currentToken = newUUID()
-
-        API().let { when(stream) {
-            is Stream.All        -> it.globalPostStream(filter)
-            is Stream.Subscribed -> it.subscribedPostStream(filter)
-            is Stream.Category   -> it.categoryPostStream(filter, category = stream.id)
-        } }.enqueue(queue)
-            .onSuccess exit@ { (_, posts) ->
-                if (currentToken != streamToken)  return@exit
-                val items = StreamParser().parse(posts)
-                delegate?.loadedCategoryStream(items)
+        launch(UI) exit@ {
+            var result = API().let { when(stream) {
+                    is Stream.All        -> it.globalPostStream(filter)
+                    is Stream.Subscribed -> it.subscribedPostStream(filter)
+                    is Stream.Category   -> it.categoryPostStream(filter, category = stream.id)
+                } }.enqueue(queue)
+            if (currentToken != streamToken)  return@exit
+            when (result) {
+                is Success -> {
+                    val (_, posts) = result.value
+                    val items = StreamParser().parse(posts)
+                    delegate?.loadedCategoryStream(items)
+                }
+                is Failure -> println("stream fail: ${result.error}")
             }
-            .onFailure { error ->
-                println("stream fail: $error")
-            }
+        }
     }
 }

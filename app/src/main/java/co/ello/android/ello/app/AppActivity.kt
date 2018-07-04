@@ -48,7 +48,7 @@ class AppActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (controller?.history?.goBack() == Success)  return
+        if (controller?.history?.goBack() == BackStack.StatusCode.Success)  return
         super.onBackPressed()
     }
 

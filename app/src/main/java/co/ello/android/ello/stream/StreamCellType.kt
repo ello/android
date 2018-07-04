@@ -6,14 +6,17 @@ import java.net.URL
 
 sealed class StreamCellType {
     object Placeholder : StreamCellType()
+    object Spacer : StreamCellType()
 
     object Spinner : StreamCellType()
     data class Error(val message: String) : StreamCellType()
 
     object StreamSelection : StreamCellType()
     object PostHeader : StreamCellType()
+    object CommentHeader : StreamCellType()
     object PostFooter : StreamCellType()
     data class PostText(val content: String) : StreamCellType()
+    data class CommentText(val content: String) : StreamCellType()
     data class PostImage(val imageURL: URL) : StreamCellType()
 
     object ProfileHeaderButtons : StreamCellType()
@@ -33,14 +36,17 @@ sealed class StreamCellType {
 
         return when(this) {
             is Placeholder -> {}
+            is Spacer -> {}
 
             is Spinner -> SpinnerPresenter.configure(viewHolder as SpinnerCell)
             is Error -> ErrorPresenter.configure(viewHolder as ErrorCell, item)
 
             is StreamSelection -> StreamSelectionPresenter.configure(viewHolder as StreamSelectionCell, item)
             is PostHeader -> PostHeaderPresenter.configure(viewHolder as PostHeaderCell, item)
+            is CommentHeader -> CommentHeaderPresenter.configure(viewHolder as CommentHeaderCell, item)
             is PostFooter -> PostFooterPresenter.configure(viewHolder as PostFooterCell, item)
             is PostText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
+            is CommentText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
             is PostImage -> PostImagePresenter.configure(viewHolder as PostImageCell, item)
 
             is ProfileHeaderButtons -> ProfileHeaderButtonsPresenter.configure(viewHolder as ProfileHeaderButtonsCell, item)
@@ -60,14 +66,17 @@ sealed class StreamCellType {
             val type = StreamCellType::class.nestedClasses.elementAt(viewType)
             return when (type) {
                 Placeholder::class -> PlaceholderCell(parent)
+                Spacer::class -> SpacerCell(parent)
 
                 Spinner::class -> SpinnerCell(parent)
                 Error::class -> ErrorCell(parent)
 
                 StreamSelection::class -> StreamSelectionCell(parent)
                 PostHeader::class -> PostHeaderCell(parent)
+                CommentHeader::class -> CommentHeaderCell(parent)
                 PostFooter::class -> PostFooterCell(parent)
-                PostText::class -> PostTextCell(parent)
+                PostText::class -> PostTextCell(parent, isComment = false)
+                CommentText::class -> PostTextCell(parent, isComment = true)
                 PostImage::class -> PostImageCell(parent)
 
                 ProfileHeaderButtons::class -> ProfileHeaderButtonsCell(parent)

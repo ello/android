@@ -3,8 +3,11 @@ package co.ello.android.ello
 import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
-import java.util.concurrent.CompletableFuture
 import java.util.UUID
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlin.coroutines.experimental.suspendCoroutine
 
 
 class GraphQLRequest<T>(
@@ -13,6 +16,7 @@ class GraphQLRequest<T>(
         override val supportsAnonymousToken: Boolean = true
 ) : Request<JSON>(Request.Method.POST, "${API.domain}/api/v3/graphql", null), AuthenticationEndpoint {
     object CancelledRequest : Throwable()
+    object RequestNull : Throwable()
 
     sealed class Variable {
         abstract val name: String
@@ -44,7 +48,6 @@ class GraphQLRequest<T>(
     private var manager: AuthenticationManager? = null
     private var retryBlock: Block? = null
     private var cancelBlock: Block? = null
-    private val future = CompletableFuture<T>()
 
     init {
         this.addHeader("Accept", "application/json")
@@ -66,14 +69,18 @@ class GraphQLRequest<T>(
         return this
     }
 
-    fun enqueue(queue: Queue): CompletableFuture<T> {
+    suspend fun enqueue(queue: Queue): Result<T> = suspendCoroutine { continuation ->
         setRetryPolicy(DefaultRetryPolicy(
                 30_000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
 
-        retryBlock = { this.enqueue(queue) }
-        cancelBlock = { future.completeExceptionally(CancelledRequest) }
+        retryBlock = {
+            launch(UI) { this@GraphQLRequest.enqueue(queue) }
+        }
+        cancelBlock = {
+            launch(UI) { continuation.resume(Failure(CancelledRequest)) }
+        }
 
         this.onSuccess { json ->
             val resultJson = json["data"][endpointName]
@@ -82,20 +89,25 @@ class GraphQLRequest<T>(
                 result = parserCompletion!!.invoke(resultJson)
             }
             catch(e: Throwable) {
-                future.completeExceptionally(e)
+                continuation.resume(Failure(e))
             }
 
             if (result != null) {
-                future.complete(result)
+                continuation.resume(Success(result))
+            }
+            else {
+                continuation.resume(Failure(RequestNull))
             }
         }
         .onFailure { exception ->
             println("${this.endpointName} failed: $exception")
             if (exception is VolleyError && exception.networkResponse != null) {
+                val body = String(getBody()).replace("\\n", "\n")
+                println("body:\n$body")
                 println("server error:\n${String(exception.networkResponse.data)}")
             }
 
-            future.completeExceptionally(exception)
+            continuation.resume(Failure(exception))
         }
 
         val manager = AuthenticationManager(queue)
@@ -111,8 +123,6 @@ class GraphQLRequest<T>(
                 queue.add(this)
             },
             cancel = cancelBlock!!)
-
-        return future
     }
 
     override fun deliverError(error: VolleyError) {
@@ -162,7 +172,7 @@ class GraphQLRequest<T>(
 
         if (fragments != null && fragments.isNotEmpty()) {
             val fragmentsQuery = fragments.distinctBy { it.string }.map { it.string }.joinToString("\n")
-            query += fragmentsQuery + "\n"
+            query += "$fragmentsQuery\n"
         }
 
         val queryVariables = this.queryVariables()

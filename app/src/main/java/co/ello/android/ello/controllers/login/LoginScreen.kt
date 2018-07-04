@@ -10,7 +10,7 @@ import android.widget.TextView
 
 
 class LoginScreen : LoginProtocols.Screen {
-    private val delegate: LoginProtocols.Controller?
+    val delegate: LoginProtocols.Controller?
 
     override val contentView: View
     override var interactive: Boolean = true

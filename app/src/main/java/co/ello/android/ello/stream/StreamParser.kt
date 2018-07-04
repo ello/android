@@ -65,15 +65,21 @@ class StreamParser {
     }
 
     private fun commentItems(model: Comment): List<StreamCellItem> {
-        // val header = StreamCellItem(model = model, type = StreamCellType.CommentHeader)
+        val header = StreamCellItem(model = model, type = StreamCellType.CommentHeader)
         val content = model.content.flatMap { parseContent(model, it) }
-        return content
-        // return listOf(header) + content + listOf(footer)
+        return listOf(header) + content
     }
 
     private fun parseContent(model: Model, region: Regionable): List<StreamCellItem> {
         if (region is TextRegion) {
-            return listOf(StreamCellItem(model = model, type = StreamCellType.PostText(region.content)))
+            val cellType: StreamCellType
+            if (model is Comment) {
+                cellType = StreamCellType.CommentText(region.content)
+            }
+            else {
+                cellType = StreamCellType.PostText(region.content)
+            }
+            return listOf(StreamCellItem(model = model, type = cellType))
         }
         else if (region is ImageRegion) {
             return region.asset?.oneColumnAttachment?.url?.let {

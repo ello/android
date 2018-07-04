@@ -1,6 +1,8 @@
 package co.ello.android.ello
 
-import java.util.*
+import java.util.UUID
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 
 
 class FollowingGenerator(val delegate: FollowingProtocols.Controller?, val queue: Queue)
@@ -13,16 +15,20 @@ class FollowingGenerator(val delegate: FollowingProtocols.Controller?, val queue
 
     override fun loadFollowing() {
         val currentToken = newUUID()
-
-        API().globalPostStream(API.StreamFilter.Featured)
-            .enqueue(queue)
-            .onSuccess exit@ { (_, posts) ->
-                if (currentToken != streamToken)  return@exit
-                val items = StreamParser().parse(posts)
-                delegate?.loadedFollowingStream(items)
+        launch(UI) exit@ {
+            val result = API().globalPostStream(API.StreamFilter.Featured).enqueue(queue)
+            if (currentToken != streamToken)  return@exit
+            when(result) {
+                is Success -> {
+                    val (_, posts) = result.value
+                    val items = StreamParser().parse(posts)
+                    delegate?.loadedFollowingStream(items)
+                }
+                is Failure -> {
+                    val error = StreamCellItem(type = StreamCellType.Error("Could not load following stream"))
+                    delegate?.loadedFollowingStream(listOf(error))
+                }
             }
-            .onFailure { error ->
-                println("stream fail: $error")
-            }
+        }
     }
 }
