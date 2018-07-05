@@ -14,7 +14,7 @@ class PostDetailGenerator(val delegate: PostDetailProtocols.Controller?, val que
     }
 
     override fun loadPostDetail(token: Token) {
-        val tmpToken = ID("15914579")
+        val tmpToken = ID("14687799")
         val currentToken = newUUID()
         launch(UI) exit@ {
             val detailResult = API().postDetail(tmpToken, username = null).enqueue(queue)
