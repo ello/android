@@ -21,18 +21,4 @@ data class ImageRegion(
 
         return assetURL ?: url
     }
-
-    companion object {
-        fun fromJSON(json: JSON): ImageRegion? {
-            val url = json["data"]["url"].url ?: return null
-            val buyButtonURL = json["linkUrl"].url
-            val imageRegion = ImageRegion(url = url, buyButtonURL = buyButtonURL)
-
-            json["links"]["assets"].string?.let { id ->
-                imageRegion.addLinkObject("assets", id = id, type = MappingType.AssetsType)
-            }
-
-            return imageRegion
-        }
-    }
 }
