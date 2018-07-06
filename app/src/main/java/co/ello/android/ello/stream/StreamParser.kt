@@ -83,7 +83,12 @@ class StreamParser {
         }
         else if (region is ImageRegion) {
             return region.asset?.oneColumnAttachment?.url?.let {
-                listOf(StreamCellItem(model = model, type = StreamCellType.PostImage(it)))
+                val cellType: StreamCellType
+                if (model is Comment)
+                    cellType = StreamCellType.CommentImage(it)
+                else
+                    cellType = StreamCellType.PostImage(it)
+                listOf(StreamCellItem(model = model, type = cellType))
             } ?: emptyList()
         }
         return emptyList()

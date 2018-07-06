@@ -8,7 +8,12 @@ import java.net.URL
 import kotlin.math.roundToInt
 
 
-class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.post_image_cell, parent, false)) {
+class PostImageCell(parent: ViewGroup, isComment: Boolean)
+    : StreamCell(LayoutInflater.from(parent.context).inflate(
+        if (isComment) R.layout.comment_image_cell
+        else R.layout.post_image_cell, parent, false))
+
+{
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
     private var aspectRatio: Float? = null
 
@@ -44,7 +49,7 @@ class PostImageCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.c
 
     private fun didResize() {
         val aspectRatio = this.aspectRatio ?: return
-        val width = imageView.measuredWidth
+        val width = imageView.measuredWidth;
         val height = (width.toFloat() / aspectRatio).roundToInt()
 
         if (width > 0 && streamCellItem?.height != height) {
