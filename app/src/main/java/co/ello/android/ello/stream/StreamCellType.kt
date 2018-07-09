@@ -19,6 +19,8 @@ sealed class StreamCellType {
     data class CommentText(val content: String) : StreamCellType()
     data class PostImage(val image: ImageRegion) : StreamCellType()
     data class CommentImage(val image: ImageRegion): StreamCellType()
+    data class PostEmbed(val region: EmbedRegion) : StreamCellType()
+    data class CommentEmbed(val region: EmbedRegion): StreamCellType()
 
     object ProfileHeaderButtons : StreamCellType()
     object ProfileHeaderAvatar : StreamCellType()
@@ -50,6 +52,8 @@ sealed class StreamCellType {
             is CommentText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
             is PostImage -> PostImagePresenter.configure(viewHolder as PostImageCell, item)
             is CommentImage -> PostImagePresenter.configure(viewHolder as PostImageCell, item)
+            is PostEmbed -> PostEmbedPresenter.configure(viewHolder as PostEmbedCell, item)
+            is CommentEmbed -> PostEmbedPresenter.configure(viewHolder as PostEmbedCell, item)
 
             is ProfileHeaderButtons -> ProfileHeaderButtonsPresenter.configure(viewHolder as ProfileHeaderButtonsCell, item)
             is ProfileHeaderAvatar -> ProfileHeaderAvatarPresenter.configure(viewHolder as ProfileHeaderAvatarCell, item)
@@ -81,6 +85,8 @@ sealed class StreamCellType {
                 CommentText::class -> PostTextCell(parent, isComment = true)
                 PostImage::class -> PostImageCell(parent, isComment = false)
                 CommentImage::class -> PostImageCell(parent, isComment = true)
+                PostEmbed::class -> PostEmbedCell(parent, isComment = false)
+                CommentEmbed::class -> PostEmbedCell(parent, isComment = true)
 
                 ProfileHeaderButtons::class -> ProfileHeaderButtonsCell(parent)
                 ProfileHeaderAvatar::class -> ProfileHeaderAvatarCell(parent)
