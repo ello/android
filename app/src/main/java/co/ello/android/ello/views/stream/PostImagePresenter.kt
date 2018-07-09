@@ -5,14 +5,15 @@ import java.net.URL
 
 object PostImagePresenter {
     fun configure(cell: PostImageCell, item: StreamCellItem) {
-        // val post = item.model as? Post ?: return
-        var data: URL? = null
-        (item.type as? StreamCellType.PostImage)?.let { data = it.imageURL }
-        (item.type as? StreamCellType.CommentImage)?.let { data = it.imageURL }
-        val url = data ?: return
+        var imageRegion =
+            (item.type as? StreamCellType.PostImage)?.image ?:
+            (item.type as? StreamCellType.CommentImage)?.image ?:
+            return
+        val asset = imageRegion.asset ?: return
 
         cell.config(PostImageCell.Config(
-                        imageURL = url
+            imageURL = imageRegion.fullScreenURL,
+            isGif = asset.isGif
             ))
     }
 }

@@ -18,7 +18,8 @@ class PostImageCell(parent: ViewGroup, isComment: Boolean)
     private var aspectRatio: Float? = null
 
     data class Config(
-        val imageURL: URL
+        val imageURL: URL?,
+        val isGif: Boolean
         )
 
     init {
@@ -28,9 +29,15 @@ class PostImageCell(parent: ViewGroup, isComment: Boolean)
     fun config(value: Config) {
         aspectRatio = null
         streamCellItem?.height?.let { assignHeight(it) }
-        imageView.setImageURL(value.imageURL, onSuccess = { calculateHeight() }, onError = {
-            println("error: ${value.imageURL}")
-        })
+
+        if (value.isGif) {
+            imageView.setImageURL(null)
+            imageView.setGifURL(value.imageURL, onSuccess = { calculateHeight() })
+        }
+        else {
+            imageView.setGifURL(null)
+            imageView.setImageURL(value.imageURL, onSuccess = { calculateHeight() })
+        }
     }
 
     private fun assignHeight(height: Int) {
