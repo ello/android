@@ -29,9 +29,10 @@ fun loadImageURL(url: URL?): RequestCreator = Picasso.get().load(url?.toString()
 
 fun ImageView.setGifURL(url: URL?, onSuccess: Block? = null, onError: Block? = null) {
     Glide.with(this)
-        .load(url?.toURI())
-        .listener(object : RequestListener<Drawable> {
+            .load(url?.toString())
+            .listener(object : RequestListener<Drawable> {
             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                setImageDrawable(resource)
                 onSuccess?.invoke()
                 return false
             }

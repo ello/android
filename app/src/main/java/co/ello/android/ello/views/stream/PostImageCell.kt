@@ -56,7 +56,7 @@ class PostImageCell(parent: ViewGroup, isComment: Boolean)
 
     private fun didResize() {
         val aspectRatio = this.aspectRatio ?: return
-        val width = imageView.measuredWidth;
+        val width = imageView.measuredWidth
         val height = (width.toFloat() / aspectRatio).roundToInt()
 
         if (width > 0 && streamCellItem?.height != height) {
