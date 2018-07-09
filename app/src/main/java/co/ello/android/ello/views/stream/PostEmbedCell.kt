@@ -16,22 +16,23 @@ class PostEmbedCell(parent: ViewGroup, isComment: Boolean)
 {
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
     private var aspectRatio: Float? = null
+    private var url: URL? = null
 
     data class Config(
-        val imageURL: URL,
+        val imageURL: URL?,
         val externalURL: URL
         )
 
     init {
         imageView.viewTreeObserver.addOnGlobalLayoutListener { didResize() }
+        imageView.setOnClickListener { playButtonTapped() }
     }
 
     fun config(value: Config) {
         aspectRatio = null
         streamCellItem?.height?.let { assignHeight(it) }
-        imageView.setImageURL(value.imageURL, onSuccess = { calculateHeight() }, onError = {
-            println("error: ${value.imageURL}")
-        })
+        imageView.setImageURL(value.imageURL, onSuccess = { calculateHeight() })
+        url = value.externalURL
     }
 
     private fun assignHeight(height: Int) {
@@ -57,5 +58,13 @@ class PostEmbedCell(parent: ViewGroup, isComment: Boolean)
             streamCellItem?.height = height
             assignHeight(height)
         }
+    }
+
+    private fun playButtonTapped() {
+        val item = streamCellItem ?: return
+        val streamController = streamController ?: return
+        val url = url ?: return
+
+        streamController.streamTappedURL(url)
     }
 }

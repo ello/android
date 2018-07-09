@@ -1,9 +1,11 @@
 package co.ello.android.ello
 
+import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.LinearLayoutManager
+import java.net.URL
 
 
 class StreamController(a: AppActivity)
@@ -111,6 +113,12 @@ class StreamController(a: AppActivity)
 
         val profileController = ProfileController(activity, user = user)
         navigationController?.push(profileController)
+    }
+
+    fun streamTappedURL(url: URL) {
+        val app = App ?: return
+        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+        app.startActivity(intent)
     }
 
     fun toolbarTappedLoves(cell: StreamCell, item: StreamCellItem) {

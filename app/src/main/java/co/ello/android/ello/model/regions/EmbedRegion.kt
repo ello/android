@@ -26,7 +26,8 @@ data class EmbedRegion(
         Youtube("youtube"),
         Vimeo("vimeo"),
         UStream("ustream"),
-        Bandcamp("bandcamp");
+        Bandcamp("bandcamp"),
+        Gif("gif");
 
         companion object {
             fun create(value: String): Service? = when(value) {
@@ -38,6 +39,7 @@ data class EmbedRegion(
                 "vimeo" -> Service.Vimeo
                 "ustream" -> Service.UStream
                 "bandcamp" -> Service.Bandcamp
+                "gif" -> Service.Gif
                 else -> null
             }
         }

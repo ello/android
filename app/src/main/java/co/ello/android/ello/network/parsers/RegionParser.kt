@@ -43,7 +43,7 @@ class RegionParser {
             val id = json["data"]["id"].string ?: return null
             val service = json["data"]["service"].string?.let { EmbedRegion.Service.create(it) } ?: return null
             val url = json["data"]["url"].url ?: return null
-            val thumbnailLargeUrl = json["data"]["thumbnailLargeUrl"].url
+            val thumbnailLargeUrl = json["data"]["thumbnail_large_url"].url ?: json["data"]["thumbnailLargeUrl"].url
 
             return EmbedRegion(
                 id = id,
