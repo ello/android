@@ -91,6 +91,16 @@ class StreamParser {
             }
             return listOf(StreamCellItem(model = model, type = cellType))
         }
+        else if (region is EmbedRegion) {
+            val cellType: StreamCellType
+            if (model is Comment) {
+                cellType = StreamCellType.CommentEmbed(region)
+            }
+            else {
+                cellType = StreamCellType.PostEmbed(region)
+            }
+            return listOf(StreamCellItem(model = model, type = cellType))
+        }
         return emptyList()
     }
 }

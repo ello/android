@@ -24,7 +24,7 @@ class PostHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
     init {
         cellButton.setOnClickListener { cellTapped() }
         imageButton.setOnClickListener { usernameButtonTapped() }
-        usernameButton.setOnClickListener{ usernameButtonTapped() }
+        usernameButton.setOnClickListener { usernameButtonTapped() }
     }
 
     fun config(value: Config) {
