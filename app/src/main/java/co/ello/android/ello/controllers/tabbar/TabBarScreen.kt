@@ -7,10 +7,10 @@ import android.widget.Button
 import android.widget.ImageView
 
 
-class LoggedInScreen(
+class TabBarScreen(
     activity: Activity,
-    private val delegate: LoggedInProtocols.Controller?
-    ) : LoggedInProtocols.Screen {
+    private val delegate: TabBarProtocols.Controller?
+    ) : TabBarProtocols.Screen {
     override val contentView: View = activity.layoutInflater.inflate(R.layout.logged_in_layout, null)
     override val containerView: ViewGroup = contentView.findViewById(R.id.containerView)
 
@@ -29,27 +29,27 @@ class LoggedInScreen(
         homeButton.setOnClickListener {
             unselectAll()
             homeImage.setImageDrawable(contentView.context.getDrawable(R.drawable.tabbar_home_black))
-            delegate?.didSelectTab(LoggedInTab.Home)
+            delegate?.didSelectTab(TabBarTab.Home)
         }
         discoverButton.setOnClickListener {
             unselectAll()
             discoverImage.setImageDrawable(contentView.context.getDrawable(R.drawable.tabbar_discover_black))
-            delegate?.didSelectTab(LoggedInTab.Discover)
+            delegate?.didSelectTab(TabBarTab.Discover)
         }
         omnibarButton.setOnClickListener {
             unselectAll()
             omnibarImage.setImageDrawable(contentView.context.getDrawable(R.drawable.tabbar_omni_black))
-            delegate?.didSelectTab(LoggedInTab.Omnibar)
+            delegate?.didSelectTab(TabBarTab.Omnibar)
         }
         notificationsButton.setOnClickListener {
             unselectAll()
             notificationsImage.setImageDrawable(contentView.context.getDrawable(R.drawable.tabbar_bolt_black))
-            delegate?.didSelectTab(LoggedInTab.Notifications)
+            delegate?.didSelectTab(TabBarTab.Notifications)
         }
         profileButton.setOnClickListener {
             unselectAll()
             profileImage.setImageDrawable(contentView.context.getDrawable(R.drawable.tabbar_person_black))
-            delegate?.didSelectTab(LoggedInTab.Profile)
+            delegate?.didSelectTab(TabBarTab.Profile)
         }
 
         homeImage.setImageDrawable(contentView.context.getDrawable(R.drawable.tabbar_home_black))

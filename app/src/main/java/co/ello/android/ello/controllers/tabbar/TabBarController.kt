@@ -3,12 +3,12 @@ package co.ello.android.ello
 import android.view.View
 
 
-class LoggedInController(
+class TabBarController(
     a: AppActivity,
-    val delegate: LoggedInProtocols.Delegate
-    ) : BaseController(a), LoggedInProtocols.Controller
+    val delegate: TabBarProtocols.Delegate
+    ) : BaseController(a), TabBarProtocols.Controller
 {
-    private lateinit var screen: LoggedInProtocols.Screen
+    private lateinit var screen: TabBarProtocols.Screen
 
     private var selectedIndex = 0
     private val selectedController: BaseController get() { return childTabControllers[selectedIndex] }
@@ -39,19 +39,19 @@ class LoggedInController(
     }
 
     override fun createView(): View {
-        val screen = LoggedInScreen(activity, delegate = this)
+        val screen = TabBarScreen(activity, delegate = this)
         screen.containerView.addView(selectedNavigationController.view)
         this.screen = screen
         return screen.contentView
     }
 
-    override fun didSelectTab(tab: LoggedInTab) {
+    override fun didSelectTab(tab: TabBarTab) {
         val newSelectedIndex = when (tab) {
-            LoggedInTab.Home -> 0
-            LoggedInTab.Discover -> 1
-            LoggedInTab.Omnibar -> 2
-            LoggedInTab.Notifications -> 3
-            LoggedInTab.Profile -> 4
+            TabBarTab.Home -> 0
+            TabBarTab.Discover -> 1
+            TabBarTab.Omnibar -> 2
+            TabBarTab.Notifications -> 3
+            TabBarTab.Profile -> 4
         }
         if (newSelectedIndex == selectedIndex)  return
 

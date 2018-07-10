@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 
 
-class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate, LoggedInProtocols.Delegate {
+class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delegate, LoggedOutProtocols.Delegate, TabBarProtocols.Delegate {
     private lateinit var screen: AppProtocols.Screen
 
     override val containerView: ViewGroup? get() = screen.containerView
@@ -39,7 +39,7 @@ class AppController(a: AppActivity) : RootController(a), StartupProtocols.Delega
     }
 
     private fun showLoggedInScreen() {
-        val loggedInController = LoggedInController(activity, this)
+        val loggedInController = TabBarController(activity, this)
         show(loggedInController)
     }
 
