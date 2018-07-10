@@ -20,8 +20,7 @@ class EditorialsController(a: AppActivity) : StreamableController(a), Editorials
         generator.loadEditorialsStream()
     }
 
-    override fun loadedEditorialsStream(editorials: List<Editorial>) {
-        val items = StreamParser().parse(editorials)
+    override fun loadedEditorialsStream(items: List<StreamCellItem>) {
         streamController.replaceAll(items)
     }
 }
