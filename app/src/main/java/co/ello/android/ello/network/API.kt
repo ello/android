@@ -30,6 +30,16 @@ class API {
             }
         }
     }
+    
+    fun followingPostStream(filter: StreamFilter = StreamFilter.Recent,before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
+        return GraphQLRequest<Pair<PageConfig, List<Post>>>("followingPostStream")
+                .parser { PageParser<Post>("posts", PostParser()).parse(it) }
+                .setVariables(
+                        GraphQLRequest.Variable.enum("kind", filter.value, "StreamKind"),
+                        GraphQLRequest.Variable.optionalString("before", before)
+                )
+                .setBody(Fragments.postStreamBody)
+    }
 
     fun globalPostStream(filter: StreamFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("globalPostStream")

@@ -16,7 +16,7 @@ class FollowingGenerator(val delegate: FollowingProtocols.Controller?, val queue
     override fun loadFollowing() {
         val currentToken = newUUID()
         launch(UI) exit@ {
-            val result = API().globalPostStream(API.StreamFilter.Featured).enqueue(queue)
+            val result = API().followingPostStream().enqueue(queue)
             if (currentToken != streamToken)  return@exit
             when(result) {
                 is Success -> {
