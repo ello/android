@@ -1,6 +1,6 @@
 package co.ello.android.ello
 
 
-enum class LoggedInTab {
+enum class TabBarTab {
     Home, Discover, Omnibar, Notifications, Profile;
 }
