@@ -22,7 +22,8 @@ class EditorialsGenerator(val delegate: EditorialsProtocols.Controller?, val que
             when (result) {
                 is Success -> {
                     val (_, editorials) = result.value
-                    delegate?.loadedEditorialsStream(editorials)
+                    val items = StreamParser().parse(editorials)
+                    delegate?.loadedEditorialsStream(items)
                 }
                 is Failure -> println("editorials fail: ${result.error}")
             }

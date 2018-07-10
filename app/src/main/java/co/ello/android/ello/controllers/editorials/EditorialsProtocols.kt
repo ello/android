@@ -11,7 +11,7 @@ class EditorialsProtocols {
     }
 
     interface Controller {
-        fun loadedEditorialsStream(editorials: List<Editorial>)
+        fun loadedEditorialsStream(items: List<StreamCellItem>)
     }
 
     interface Generator {
