@@ -17,8 +17,8 @@ sealed class StreamCellType {
     object PostFooter : StreamCellType()
     data class PostText(val content: String) : StreamCellType()
     data class CommentText(val content: String) : StreamCellType()
-    data class PostImage(val imageURL: URL) : StreamCellType()
-    data class CommentImage(val imageURL: URL): StreamCellType()
+    data class PostImage(val image: ImageRegion) : StreamCellType()
+    data class CommentImage(val image: ImageRegion): StreamCellType()
 
     object ProfileHeaderButtons : StreamCellType()
     object ProfileHeaderAvatar : StreamCellType()
