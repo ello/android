@@ -42,8 +42,8 @@ class StyledButton @JvmOverloads constructor(
         Green(color = R.color.white, highlightedColor = R.color.black, backgroundColor = R.color.green, corners = Corner.Rounded),
         White(color = R.color.black, backgroundColor = R.color.white),
 
-        BlackPill(color = R.color.white, backgroundColor = R.color.black, corners = Corner.Pill, textAlign = Alignment.Center),
-        GreenPill(color = R.color.white, backgroundColor = R.color.green, corners = Corner.Pill, textAlign = Alignment.Center),
+        BlackPill(color = R.color.white, highlightedColor = R.color.gray, backgroundColor = R.color.black, corners = Corner.Pill, textAlign = Alignment.Center),
+        GreenPill(color = R.color.white, highlightedColor = R.color.black, backgroundColor = R.color.green, corners = Corner.Pill, textAlign = Alignment.Center),
 
         ClearWhite(color = R.color.white),
         ClearGray(color = R.color.gray, highlightedColor = R.color.black),
