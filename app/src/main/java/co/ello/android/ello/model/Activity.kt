@@ -7,8 +7,8 @@ import java.util.Date
 data class Activity(
     val id: String,
     val createdAt: Date,
-    val kind: Activity.Kind,
-    val subjectType: Activity.SubjectType
+    val kind: Activity.Kind?,
+    val subjectType: Activity.SubjectType?
     ) : Model() {
 
     val subject: Model? get() = getLinkObject("subject")

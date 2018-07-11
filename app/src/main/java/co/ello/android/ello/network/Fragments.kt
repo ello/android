@@ -188,6 +188,26 @@ class Fragments {
             }
             """, needs = listOf(imageProps, postSummary))
 
+        val notificationsContent = Fragments("""
+            fragment notificationImageVersions on ResponsiveImageVersions {
+                xhdpi { ...imageProps }
+                original { ...imageProps }
+            }
+
+            fragment notification on Notification {
+                id
+                kind
+                title
+                subtitle
+                url
+                path
+                oneByOneImage { ...notificationImageVersions }
+                twoByTwoImage { ...notificationImageVersions }
+                stream { query tokens }
+                post { ...postSummary }
+            }
+            """, needs = listOf(imageProps, postSummary))
+
         val categoriesBody = Fragments("""
             id
             name
@@ -221,6 +241,12 @@ class Fragments {
                 ...editorial
             }
             """, needs = listOf(editorialsContent))
+        val notificationsBody = Fragments("""
+            next isLastPage
+            notifications {
+                ...notification
+            }
+            """, needs = listOf(notificationsContent))
         val postBody = Fragments("""
             ...postDetails
             """, needs = listOf(postDetails))

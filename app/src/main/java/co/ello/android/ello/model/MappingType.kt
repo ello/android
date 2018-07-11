@@ -1,5 +1,7 @@
 package co.ello.android.ello
 
+import co.ello.android.ello.network.parsers.NotificationParser
+
 
 sealed class MappingType {
     val name: String
@@ -28,6 +30,7 @@ sealed class MappingType {
     object CommentsType : MappingType(name = "comments", singularKey = "comment", parser = { CommentParser() })
     object DynamicSettingsType : MappingType(name = "settings", singularKey = "setting")
     object Editorials : MappingType(name = "editorials", singularKey = "editorial", parser = { EditorialParser() })
+    object Notifications : MappingType(name = "notifications", singularKey = "notification", parser = { NotificationParser() })
     object ErrorsType : MappingType(name = "errors", singularKey = "error")
     object ErrorType : MappingType(name = "error", singularKey = "error", pluralKey = "errors")
     object LovesType : MappingType(name = "loves", singularKey = "love")
@@ -55,6 +58,7 @@ sealed class MappingType {
             "comments"                  -> MappingType.CommentsType
             "settings"                  -> MappingType.DynamicSettingsType
             "editorials"                -> MappingType.Editorials
+            "notifications"             -> MappingType.Notifications
             "errors"                    -> MappingType.ErrorsType
             "error"                     -> MappingType.ErrorType
             "loves"                     -> MappingType.LovesType

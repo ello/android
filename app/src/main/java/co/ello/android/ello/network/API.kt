@@ -94,6 +94,17 @@ class API {
             .setBody(Fragments.editorialsBody)
     }
 
+    fun notificationsStream(before: String? = null): GraphQLRequest<Pair<PageConfig, List<Notification>>> {
+        return GraphQLRequest<Pair<PageConfig, List<Notification>>>("notificationStream")
+                .parser { PageParser<Notification>("notifications", EditorialParser()).parse(it) }
+                .setVariables(
+                        GraphQLRequest.Variable.optionalString("before", before),
+                        GraphQLRequest.Variable.optionalBoolean("preview", false),
+                        GraphQLRequest.Variable.optionalInt("perPage", null)
+                )
+                .setBody(Fragments.notificationsBody)
+    }
+
     fun postDetail(token: Token, username: String?): GraphQLRequest<Post> {
         return GraphQLRequest<Post>("post")
             .parser { OneParser<Post>(PostParser()).parse(it) }
