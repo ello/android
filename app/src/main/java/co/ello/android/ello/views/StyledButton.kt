@@ -39,18 +39,20 @@ class StyledButton @JvmOverloads constructor(
     ) {
         Default(color = R.color.black),
 
-        Green(color = R.color.white, highlightedColor = R.color.black, backgroundColor = R.color.green, corners = Corner.Rounded),
+        Green(color = R.color.white, highlightedColor = R.color.greyA, backgroundColor = R.color.green, corners = Corner.Rounded),
         White(color = R.color.black, backgroundColor = R.color.white),
 
-        BlackPill(color = R.color.white, highlightedColor = R.color.gray, backgroundColor = R.color.black, corners = Corner.Pill, textAlign = Alignment.Center),
-        GreenPill(color = R.color.white, highlightedColor = R.color.black, backgroundColor = R.color.green, corners = Corner.Pill, textAlign = Alignment.Center),
+        BlackPill(color = R.color.white, highlightedColor = R.color.greyA, backgroundColor = R.color.black, corners = Corner.Pill, textAlign = Alignment.Center),
+        GrayPill(color = R.color.white, highlightedColor = R.color.black, backgroundColor = R.color.greyA, corners = Corner.Pill, textAlign = Alignment.Center),
+        GreenPill(color = R.color.white, highlightedColor = R.color.greyA, backgroundColor = R.color.green, corners = Corner.Pill, textAlign = Alignment.Center),
+        RedPill(color = R.color.white, highlightedColor = R.color.greyA, backgroundColor = R.color.red, corners = Corner.Pill, textAlign = Alignment.Center),
 
         ClearWhite(color = R.color.white),
-        ClearGray(color = R.color.gray, highlightedColor = R.color.black),
+        ClearGray(color = R.color.greyA, highlightedColor = R.color.black),
         ClearBlack(color = R.color.black),
 
-        ForgotPassword(size = 11f, color = R.color.gray, highlightedColor = R.color.white),
-        Postbar(color = R.color.gray, highlightedColor = R.color.black, textAlign = Alignment.Center, customization = { button ->
+        ForgotPassword(size = 11f, color = R.color.greyA, highlightedColor = R.color.white),
+        Postbar(color = R.color.greyA, highlightedColor = R.color.black, textAlign = Alignment.Center, customization = { button ->
             button.setCompoundDrawablePadding(5.dp)
         }),
 
@@ -83,7 +85,9 @@ class StyledButton @JvmOverloads constructor(
             "clear gray"           -> Style.ClearGray
             "clear black"          -> Style.ClearBlack
             "black pill"           -> Style.BlackPill
+            "gray pill"            -> Style.GrayPill
             "green pill"           -> Style.GreenPill
+            "red pill"             -> Style.RedPill
             "green"                -> Style.Green
             "forgot password"      -> Style.ForgotPassword
             "white"                -> Style.White

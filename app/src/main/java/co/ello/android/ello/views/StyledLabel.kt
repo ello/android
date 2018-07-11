@@ -20,8 +20,8 @@ class StyledLabel @JvmOverloads constructor(
     ) {
         Default(color = R.color.black),
         White(color = R.color.white),
-        Gray(color = R.color.gray),
-        SmallGray(size = 12f, color = R.color.gray),
+        Gray(color = R.color.greyA),
+        SmallGray(size = 12f, color = R.color.greyA),
         BoldWhite(font = "Bold", color = R.color.white),
         BoldWhiteUnderline(font = "Bold", color = R.color.white, underline = true),
 
