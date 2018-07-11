@@ -33,8 +33,8 @@ class CommentHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(pare
     }
 
     private fun usernameButtonTapped() {
-        val item = streamCellItem ?: return
         val streamController = streamController ?: return
+        val item = streamCellItem ?: return
         val comment = item.model as? Comment ?: return
         val user = comment.author ?: return
 

@@ -5,7 +5,6 @@ import java.util.Date
 
 data class Relationship(
     val id: String,
-    val createdAt: Date,
     val ownerId: String,
     val subjectId: String
     ) : Model() {

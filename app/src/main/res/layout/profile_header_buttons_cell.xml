@@ -62,7 +62,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:text="@string/Profile.follow"
+            android:text="@string/Profile.relationship.follow"
             app:styleName="green pill" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

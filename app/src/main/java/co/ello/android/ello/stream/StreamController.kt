@@ -16,7 +16,7 @@ class StreamController(a: AppActivity)
 
     var streamSelectionDelegate: StreamSelectionDelegate? = null
 
-    class Adapter(val items: List<StreamCellItem>, val streamController: StreamController) : RecyclerView.Adapter<StreamCell>() {
+    class Adapter(var items: List<StreamCellItem>, val streamController: StreamController) : RecyclerView.Adapter<StreamCell>() {
         init {
             setHasStableIds(true)
         }
@@ -95,8 +95,8 @@ class StreamController(a: AppActivity)
     }
 
     fun replaceAll(items: List<StreamCellItem>) {
-        adapter = Adapter(items, streamController = this)
-        if (isViewLoaded)  screen.adapter = adapter
+        adapter.items = items
+        adapter.notifyDataSetChanged()
     }
 
     fun streamTappedPost(post: Post) {
