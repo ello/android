@@ -9,7 +9,8 @@ object ProfileHeaderButtonsPresenter {
             isCurrentUser = false,
             showHireButton = user.isHireable,
             showCollabButton = user.isCollaborateable,
-            showMentionButton = !(user.isHireable || user.isCollaborateable)
+            showMentionButton = !(user.isHireable || user.isCollaborateable),
+            relationship = user.relationshipPriority
             ))
     }
 }

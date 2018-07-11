@@ -133,6 +133,20 @@ class API {
             .setBody(Fragments.postStreamBody)
     }
 
+    fun updateRelationship(userId: String, relationship: RelationshipPriority): ElloRequest<Relationship> {
+        val path = "/api/v2/users/$userId/add/${relationship.value}"
+        val elloRequest = ElloRequest<Relationship>(ElloRequest.Method.POST, path)
+                .parser { json ->
+                    Relationship(
+                        id = json["id"].stringValue,
+                        ownerId = json["links"]["owner"]["id"].stringValue,
+                        subjectId = json["links"]["subject"]["id"].stringValue
+                        )
+                }
+
+        return elloRequest
+    }
+
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
         val path = "/api/v2/join"
         val elloRequest = ElloRequest<Credentials>(ElloRequest.Method.POST, path)
