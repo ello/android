@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.orhanobut.hawk.Hawk
+import co.ello.android.ello.debug.ShakeController
+import co.ello.android.ello.debug.ShakeController.OnShakeListener
+import android.util.Log
+import co.ello.android.ello.debug.DebugDialogFragment
 
 
 var App: AppActivity? = null
@@ -19,9 +23,23 @@ class AppActivity : AppCompatActivity() {
         API.init()
         AuthToken.init()
 
+        val shakeController = ShakeController()
+        shakeController.setOnShakeListener(object : OnShakeListener {
+            override fun onShake() {
+                Log.d("AppActivity", "SHAKE DETECTED!")
+                showDebugDialog()
+            }
+        })
+
         supportActionBar?.hide()
         showAppScreen()
     }
+
+    private fun showDebugDialog(){
+        val dialog = DebugDialogFragment()
+        dialog.show(supportFragmentManager, "DebugDialogFragment")
+    }
+
 
     private fun showAppScreen() {
         var controller = getLastCustomNonConfigurationInstance() as? AppController
