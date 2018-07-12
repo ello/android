@@ -54,7 +54,7 @@ val String.toRequestMethod: ElloRequest.Method? get() = when(this.toUpperCase())
 fun randomUUID(): UUID = UUID.randomUUID()
 fun UUIDString(): String = UUID.randomUUID().toString()
 
-fun T(res: Int): String = App!!.resources.getString(res)
+fun T(res: Int): String = App.resources.getString(res)
 
 fun String.toURL(): URL? =
     try {

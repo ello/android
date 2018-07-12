@@ -120,9 +120,8 @@ class StreamController(a: AppActivity)
     }
 
     fun streamTappedURL(url: URL) {
-        val app = App ?: return
         val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-        app.startActivity(intent)
+        App.startActivity(intent)
     }
 
     fun toolbarTappedLoves(cell: StreamCell, item: StreamCellItem) {

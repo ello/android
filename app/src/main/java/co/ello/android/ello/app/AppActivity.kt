@@ -6,7 +6,7 @@ import android.view.View
 import com.orhanobut.hawk.Hawk
 
 
-var App: AppActivity? = null
+lateinit var App: AppActivity
 
 class AppActivity : AppCompatActivity() {
     private var controller: RootController? = null
