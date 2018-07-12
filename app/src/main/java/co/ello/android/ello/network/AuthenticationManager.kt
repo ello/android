@@ -21,7 +21,9 @@ class AuthenticationManager(val requestQueue: Queue) {
 
     private var authState: AuthState
         get() { return AuthToken.state }
-        set(value) { AuthToken.state = value }
+        set(value) {
+            println("moving to state $value")
+            AuthToken.state = value }
 
     // set queue to null in specs, and reauth requests are sent synchronously.
     var queue: DispatchQueue? = DispatchQueue()
