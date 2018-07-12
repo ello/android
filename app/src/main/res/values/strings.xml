@@ -36,6 +36,7 @@
     <string name="Profile.relationship.follow">+ Follow</string>
     <string name="Profile.relationship.following">✓ Following</string>
     <string name="Profile.relationship.muted">Muted</string>
+    <string name="Profile.relationship.blocked">Blocked</string>
     <string name="Profile.views">Views</string>
     <string name="Profile.posts">Posts</string>
     <string name="Profile.following">Following</string>

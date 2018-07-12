@@ -35,23 +35,30 @@ class ProfileHeaderButtonsCell(parent: ViewGroup) : StreamCell(LayoutInflater.fr
         collaborateButton.visibility = if (value.showCollabButton) View.VISIBLE else View.GONE
         mentionButton.visibility = if (value.showMentionButton) View.VISIBLE else View.GONE
 
-        if (relationshipControl.visibility == View.VISIBLE) {
-            when(value.relationship) {
-                RelationshipPriority.Following -> {
-                    relationshipControl.style = StyledButton.Style.GrayPill
-                    relationshipControl.text = T(R.string.Profile_relationship_following)
-                    nextRelationship = RelationshipPriority.None
-                }
-                RelationshipPriority.Mute -> {
-                    relationshipControl.style = StyledButton.Style.RedPill
-                    relationshipControl.text = T(R.string.Profile_relationship_muted)
-                    nextRelationship = RelationshipPriority.None
-                }
-                else -> {
-                    relationshipControl.style = StyledButton.Style.GreenPill
-                    relationshipControl.text = T(R.string.Profile_relationship_follow)
-                    nextRelationship = RelationshipPriority.Following
-                }
+        updateRelationship(value.relationship)
+    }
+
+    private fun updateRelationship(relationship: RelationshipPriority) {
+        when(relationship) {
+            RelationshipPriority.Following -> {
+                relationshipControl.style = StyledButton.Style.GrayPill
+                relationshipControl.text = T(R.string.Profile_relationship_following)
+                nextRelationship = RelationshipPriority.Inactive
+            }
+            RelationshipPriority.Mute -> {
+                relationshipControl.style = StyledButton.Style.RedPill
+                relationshipControl.text = T(R.string.Profile_relationship_muted)
+                nextRelationship = RelationshipPriority.Inactive
+            }
+            RelationshipPriority.Block -> {
+                relationshipControl.style = StyledButton.Style.RedPill
+                relationshipControl.text = T(R.string.Profile_relationship_blocked)
+                nextRelationship = RelationshipPriority.Inactive
+            }
+            else -> {
+                relationshipControl.style = StyledButton.Style.GreenPill
+                relationshipControl.text = T(R.string.Profile_relationship_follow)
+                nextRelationship = RelationshipPriority.Following
             }
         }
     }
@@ -63,11 +70,9 @@ class ProfileHeaderButtonsCell(parent: ViewGroup) : StreamCell(LayoutInflater.fr
         val user = item.model as? User ?: return
 
         launch(UI) {
-            val result = streamController.relationshipController.updateRelationship(
-                user.id, next = nextRelationship
-                )
+            val result = streamController.relationshipController.updateRelationship(user.id, next = nextRelationship)
             when (result) {
-                is Success -> print("success")
+                is Success -> updateRelationship(result.value)
                 is Failure -> print("error ${result.error}")
             }
         }
