@@ -94,6 +94,10 @@ class StreamController(a: AppActivity)
         replaceAll(newItems)
     }
 
+    fun resizedCell() {
+        adapter.notifyDataSetChanged()
+    }
+
     fun replaceAll(items: List<StreamCellItem>) {
         adapter.items = items
         adapter.notifyDataSetChanged()
