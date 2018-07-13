@@ -45,7 +45,7 @@ class ShakeController: SensorEventListener {
             val gZ = z / SensorManager.GRAVITY_EARTH
 
             // gForce close to 1 when there is no movement.
-            val gForce = Math.sqrt((gX * gX + gY * gY + gZ * gZ) as Double)
+            val gForce = Math.sqrt((gX * gX + gY * gY + gZ * gZ).toDouble())
 
             if (gForce > SHAKE_THRESHOLD_GRAVITY) {
                 val now = System.currentTimeMillis()

@@ -2,16 +2,38 @@ package co.ello.android.ello
 
 
 class API {
-    companion object {
-        fun init() {
-            key = BuildConfig.RAINBOW_CLIENT_KEY
-            secret = BuildConfig.RAINBOW_CLIENT_SECRET
-            domain = BuildConfig.RAINBOW_DOMAIN
-        }
 
+    companion object {
         var key: String = ""
         var secret: String = ""
         var domain: String = ""
+        fun init(environment: String?): BuildConfig? {
+            key = when (environment) {
+                "Production" -> BuildConfig.PROD_CLIENT_KEY
+                "Ninja" -> BuildConfig.NINJA_CLIENT_KEY
+                "Stage 1" ->  BuildConfig.STAGE1_CLIENT_KEY
+                "Stage 2" -> BuildConfig.STAGE2_CLIENT_KEY
+                "Rainbow" ->  BuildConfig.RAINBOW_CLIENT_KEY
+                else -> ""
+            }
+            secret = when (environment) {
+                "Production" -> BuildConfig.PROD_CLIENT_SECRET
+                "Ninja" -> BuildConfig.NINJA_CLIENT_SECRET
+                "Stage 1" ->  BuildConfig.STAGE1_CLIENT_SECRET
+                "Stage 2" -> BuildConfig.STAGE2_CLIENT_SECRET
+                "Rainbow" ->  BuildConfig.RAINBOW_CLIENT_SECRET
+                else -> ""
+            }
+            domain = when (environment) {
+                "Production" -> BuildConfig.PROD_DOMAIN
+                "Ninja" -> BuildConfig.NINJA_DOMAIN
+                "Stage 1" ->  BuildConfig.STAGE1_DOMAIN
+                "Stage 2" -> BuildConfig.STAGE2_DOMAIN
+                "Rainbow" ->  BuildConfig.RAINBOW_DOMAIN
+                else -> ""
+            }
+            return null
+        }
     }
 
     enum class StreamFilter(val value: String) {

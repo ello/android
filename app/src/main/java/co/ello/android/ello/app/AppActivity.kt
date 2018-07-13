@@ -1,45 +1,55 @@
 package co.ello.android.ello
 
+import android.content.Context
+import android.hardware.Sensor
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.orhanobut.hawk.Hawk
 import co.ello.android.ello.debug.ShakeController
-import co.ello.android.ello.debug.ShakeController.OnShakeListener
-import android.util.Log
 import co.ello.android.ello.debug.DebugDialogFragment
-
+import android.hardware.SensorManager
+import co.ello.android.ello.debug.ShakeController.OnShakeListener
+import android.os.Vibrator
 
 var App: AppActivity? = null
 
 class AppActivity : AppCompatActivity() {
     private var controller: RootController? = null
+    private var sensorManager: SensorManager? = null
+    private var accelerometer: Sensor? = null
+    private var shakeController: ShakeController =  ShakeController()
+
+    companion object {
+        val ENVIRONMENT_KEY = "ENV_KEY"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App = this
 
         Hawk.init(this).build()
-        API.init()
+        API.init(Hawk.get(ENVIRONMENT_KEY, "Rainbow"))
         AuthToken.init()
-
-        val shakeController = ShakeController()
-        shakeController.setOnShakeListener(object : OnShakeListener {
-            override fun onShake() {
-                Log.d("AppActivity", "SHAKE DETECTED!")
-                showDebugDialog()
-            }
-        })
 
         supportActionBar?.hide()
         showAppScreen()
+
+        if (!Hawk.contains(ENVIRONMENT_KEY)) {
+            showDebugDialog()
+        }
+        initShakeGesture()
     }
 
-    private fun showDebugDialog(){
-        val dialog = DebugDialogFragment()
-        dialog.show(supportFragmentManager, "DebugDialogFragment")
+    override fun onResume() {
+        super.onResume()
+        sensorManager?.registerListener(shakeController, accelerometer,	SensorManager.SENSOR_DELAY_UI);
     }
 
+    override fun onPause() {
+        sensorManager?.unregisterListener(shakeController);
+        super.onPause()
+    }
 
     private fun showAppScreen() {
         var controller = getLastCustomNonConfigurationInstance() as? AppController
@@ -55,6 +65,28 @@ class AppActivity : AppCompatActivity() {
         }
 
         this.controller = controller
+    }
+
+    private fun vibrateDevice(milliseconds: Long){
+        val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        v.vibrate(milliseconds)
+    }
+
+    private fun showDebugDialog(){
+        val dialog = DebugDialogFragment()
+        dialog.show(supportFragmentManager, "DebugDialogFragment")
+    }
+
+    private fun initShakeGesture() {
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val fixedSensorManager = sensorManager as SensorManager
+        accelerometer = fixedSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        shakeController.setOnShakeListener(object : OnShakeListener {
+            override fun onShake() {
+                vibrateDevice(250)
+                showDebugDialog()
+            }
+        })
     }
 
     override fun onDestroy() {
