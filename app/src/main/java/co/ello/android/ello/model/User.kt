@@ -7,7 +7,7 @@ data class User(
     val id: String,
     val username: String,
     val name: String,
-    val relationshipPriority: RelationshipPriority,
+    var relationshipPriority: RelationshipPriority,
     val postsAdultContent: Boolean,
     val viewsAdultContent: Boolean,
     val hasCommentingEnabled: Boolean,

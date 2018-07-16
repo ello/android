@@ -1,10 +1,11 @@
 package co.ello.android.ello
 
 import android.content.Intent
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.LinearLayoutManager
+import com.squareup.otto.Subscribe
 import java.net.URL
 
 
@@ -12,7 +13,7 @@ class StreamController(a: AppActivity)
     : BaseController(a)
 {
     private lateinit var screen: RecyclerView
-    private var adapter: Adapter = Adapter(emptyList(), streamController = this)
+    private val adapter: Adapter = Adapter(emptyList(), streamController = this)
 
     var streamSelectionDelegate: StreamSelectionDelegate? = null
 
@@ -69,6 +70,30 @@ class StreamController(a: AppActivity)
         super.onAppear()
         if (screen.adapter == null) {
             screen.adapter = adapter
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        App.eventBus.register(this)
+    }
+
+    override fun onFinish() {
+        super.onFinish()
+        for (i in 0.until(adapter.itemCount)) {
+            val cell = screen.findViewHolderForAdapterPosition(i) as? StreamCell ?: continue
+            cell.onFinish()
+        }
+        App.eventBus.unregister(this)
+    }
+
+    @Subscribe
+    fun relationshipChanged(event: RelationshipPriorityChanged) {
+        for ((index, item) in adapter.items.withIndex()) {
+            val user = item.model as? User ?: continue
+            if (user.id != event.userId || user.relationshipPriority == event.priority)  continue
+            user.relationshipPriority = event.priority
+            adapter.notifyItemChanged(index)
         }
     }
 

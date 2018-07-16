@@ -6,6 +6,7 @@ import com.squareup.otto.Bus
 interface EventBus {
     fun post(event: Any)
     fun register(listener: Any)
+    fun unregister(listener: Any)
 }
 
 class OttoBus : EventBus {
@@ -15,11 +16,11 @@ class OttoBus : EventBus {
         bus.post(event)
     }
 
-    override fun unregister(listener: Any) {
+    override fun register(listener: Any) {
         bus.register(listener)
     }
 
-    override fun register(listener: Any) {
-        bus.register(listener)
+    override fun unregister(listener: Any) {
+        bus.unregister(listener)
     }
 }

@@ -30,7 +30,7 @@ class API {
             }
         }
     }
-    
+
     fun followingPostStream(filter: StreamFilter = StreamFilter.Recent,before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("followingPostStream")
                 .parser { PageParser<Post>("posts", PostParser()).parse(it) }
