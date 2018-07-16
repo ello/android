@@ -37,6 +37,9 @@ class StreamController(a: AppActivity)
             holder.streamController = streamController
             item.type.bindViewHolder(holder, item = item)
         }
+
+        override fun onViewRecycled(holder: StreamCell) {
+        }
     }
 
     override fun onRotate() {

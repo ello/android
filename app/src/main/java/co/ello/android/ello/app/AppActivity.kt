@@ -10,6 +10,7 @@ lateinit var App: AppActivity
 
 class AppActivity : AppCompatActivity() {
     private var controller: RootController? = null
+    var eventBus: EventBus = OttoBus()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

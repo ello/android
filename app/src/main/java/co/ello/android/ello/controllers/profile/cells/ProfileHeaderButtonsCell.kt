@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import com.squareup.otto.Subscribe
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.android.UI
 
@@ -14,7 +15,9 @@ class ProfileHeaderButtonsCell(parent: ViewGroup) : StreamCell(LayoutInflater.fr
     private val hireButton: Button = itemView.findViewById(R.id.hireButton)
     private val collaborateButton: Button = itemView.findViewById(R.id.collaborateButton)
     private val mentionButton: Button = itemView.findViewById(R.id.mentionButton)
+
     private var nextRelationship: RelationshipPriority? = null
+    private val myUserId: String? get() = (streamCellItem?.model as? User)?.id
 
     data class Config(
         val isCurrentUser: Boolean,
@@ -26,6 +29,19 @@ class ProfileHeaderButtonsCell(parent: ViewGroup) : StreamCell(LayoutInflater.fr
 
     init {
         relationshipControl.setOnClickListener { relationshipControlTapped() }
+
+        App.eventBus.register(this)
+    }
+
+    override fun fun onViewRecycled() {
+        super.onViewRecycled()
+        App.eventBus.unregister(this)
+    }
+
+    @Subscribe
+    fun relationshipChanged(event: RelationshipPriorityChanged) {
+        if (myUserId != event.userId)  return
+        updateRelationship(event.priority)
     }
 
     fun config(value: Config) {
@@ -65,14 +81,16 @@ class ProfileHeaderButtonsCell(parent: ViewGroup) : StreamCell(LayoutInflater.fr
 
     private fun relationshipControlTapped() {
         val streamController = streamController ?: return
-        val item = streamCellItem ?: return
         val nextRelationship = nextRelationship ?: return
-        val user = item.model as? User ?: return
+        val userId = myUserId ?: return
 
         launch(UI) {
-            val result = streamController.relationshipController.updateRelationship(user.id, next = nextRelationship)
+            val result = streamController.relationshipController.updateRelationship(userId, next = nextRelationship)
             when (result) {
-                is Success -> updateRelationship(result.value)
+                is Success -> {
+                    App.eventBus.post(RelationshipPriorityChanged(userId = userId, priority = nextRelationship))
+                    updateRelationship(result.value)
+                }
                 is Failure -> print("error ${result.error}")
             }
         }
