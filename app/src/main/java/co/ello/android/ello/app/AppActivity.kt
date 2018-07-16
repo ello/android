@@ -18,10 +18,12 @@ class AppActivity : AppCompatActivity() {
     private var controller: RootController? = null
     private var sensorManager: SensorManager? = null
     private var accelerometer: Sensor? = null
-    private var shakeController: ShakeController =  ShakeController()
+    private var shakeController: ShakeController = ShakeController()
 
     companion object {
         val ENVIRONMENT_KEY = "ENV_KEY"
+        val DEFAULT_ENVIRONMENT_KEY = "Rainbow"
+        val DEBUG_DIALOG_TAG = "DebugDialogFragment"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +31,7 @@ class AppActivity : AppCompatActivity() {
         App = this
 
         Hawk.init(this).build()
-        API.init(Hawk.get(ENVIRONMENT_KEY, "Rainbow"))
+        API.init(Hawk.get(ENVIRONMENT_KEY, DEFAULT_ENVIRONMENT_KEY))
         AuthToken.init()
 
         supportActionBar?.hide()
@@ -43,11 +45,11 @@ class AppActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        sensorManager?.registerListener(shakeController, accelerometer,	SensorManager.SENSOR_DELAY_UI);
+        sensorManager?.registerListener(shakeController, accelerometer, SensorManager.SENSOR_DELAY_UI)
     }
 
     override fun onPause() {
-        sensorManager?.unregisterListener(shakeController);
+        sensorManager?.unregisterListener(shakeController)
         super.onPause()
     }
 
@@ -67,20 +69,20 @@ class AppActivity : AppCompatActivity() {
         this.controller = controller
     }
 
-    private fun vibrateDevice(milliseconds: Long){
+    private fun vibrateDevice(milliseconds: Long) {
         val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         v.vibrate(milliseconds)
     }
 
-    private fun showDebugDialog(){
+    private fun showDebugDialog() {
         val dialog = DebugDialogFragment()
-        dialog.show(supportFragmentManager, "DebugDialogFragment")
+        dialog.show(supportFragmentManager, DEBUG_DIALOG_TAG)
     }
 
     private fun initShakeGesture() {
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val fixedSensorManager = sensorManager as SensorManager
-        accelerometer = fixedSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        this.sensorManager = sensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         shakeController.setOnShakeListener(object : OnShakeListener {
             override fun onShake() {
                 vibrateDevice(250)

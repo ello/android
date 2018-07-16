@@ -1,38 +1,24 @@
 package co.ello.android.ello
 
-
 class API {
-
     companion object {
+        val ENVIRONMENTS = arrayOf("Production", "Ninja", "Stage 1", "Stage 2", "Rainbow")
         var key: String = ""
         var secret: String = ""
         var domain: String = ""
-        fun init(environment: String?): BuildConfig? {
-            key = when (environment) {
-                "Production" -> BuildConfig.PROD_CLIENT_KEY
-                "Ninja" -> BuildConfig.NINJA_CLIENT_KEY
-                "Stage 1" ->  BuildConfig.STAGE1_CLIENT_KEY
-                "Stage 2" -> BuildConfig.STAGE2_CLIENT_KEY
-                "Rainbow" ->  BuildConfig.RAINBOW_CLIENT_KEY
-                else -> ""
+
+        fun init(environment: String?) {
+            val (key, secret, domain) = when (environment) {
+                "Production" -> Triple(BuildConfig.PROD_CLIENT_KEY, BuildConfig.PROD_CLIENT_SECRET, BuildConfig.PROD_DOMAIN)
+                "Ninja" -> Triple(BuildConfig.NINJA_CLIENT_KEY, BuildConfig.NINJA_CLIENT_SECRET, BuildConfig.NINJA_DOMAIN)
+                "Stage 1" -> Triple(BuildConfig.STAGE1_CLIENT_KEY, BuildConfig.STAGE1_CLIENT_SECRET, BuildConfig.STAGE1_DOMAIN)
+                "Stage 2" -> Triple(BuildConfig.STAGE2_CLIENT_KEY, BuildConfig.STAGE2_CLIENT_SECRET, BuildConfig.STAGE2_DOMAIN)
+                "Rainbow" -> Triple(BuildConfig.RAINBOW_CLIENT_KEY, BuildConfig.RAINBOW_CLIENT_SECRET, BuildConfig.RAINBOW_DOMAIN)
+                else -> return
             }
-            secret = when (environment) {
-                "Production" -> BuildConfig.PROD_CLIENT_SECRET
-                "Ninja" -> BuildConfig.NINJA_CLIENT_SECRET
-                "Stage 1" ->  BuildConfig.STAGE1_CLIENT_SECRET
-                "Stage 2" -> BuildConfig.STAGE2_CLIENT_SECRET
-                "Rainbow" ->  BuildConfig.RAINBOW_CLIENT_SECRET
-                else -> ""
-            }
-            domain = when (environment) {
-                "Production" -> BuildConfig.PROD_DOMAIN
-                "Ninja" -> BuildConfig.NINJA_DOMAIN
-                "Stage 1" ->  BuildConfig.STAGE1_DOMAIN
-                "Stage 2" -> BuildConfig.STAGE2_DOMAIN
-                "Rainbow" ->  BuildConfig.RAINBOW_DOMAIN
-                else -> ""
-            }
-            return null
+            this.key = key
+            this.secret = secret
+            this.domain = domain
         }
     }
 
