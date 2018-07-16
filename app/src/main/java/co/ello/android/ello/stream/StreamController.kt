@@ -38,7 +38,16 @@ class StreamController(a: AppActivity)
             item.type.bindViewHolder(holder, item = item)
         }
 
+        override fun onViewAttachedToWindow(holder: StreamCell) {
+            holder.onStart()
+        }
+
+        override fun onViewDetachedFromWindow(holder: StreamCell) {
+            holder.onFinish()
+        }
+
         override fun onViewRecycled(holder: StreamCell) {
+            holder.onViewRecycled()
         }
     }
 
