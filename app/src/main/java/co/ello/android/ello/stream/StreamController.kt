@@ -66,6 +66,7 @@ class StreamController(a: AppActivity)
     }
 
     override fun onAppear() {
+        super.onAppear()
         if (screen.adapter == null) {
             screen.adapter = adapter
         }
