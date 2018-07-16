@@ -1,12 +1,13 @@
 package co.ello.android.ello.debug
 
-import android.content.DialogInterface
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import co.ello.android.ello.API
 import co.ello.android.ello.AppActivity
+import co.ello.android.ello.AuthToken
 import com.orhanobut.hawk.Hawk
 
 class DebugDialogFragment : DialogFragment() {
@@ -18,6 +19,11 @@ class DebugDialogFragment : DialogFragment() {
                    setEnvironment(API.ENVIRONMENTS[which])
                    activity?.finishAndRemoveTask()
                }
+                .setPositiveButton("Cancel", null)
+                .setNegativeButton("Logout") { _, _ ->
+                    AuthToken.logout()
+                    activity?.finishAndRemoveTask()
+                }
         return builder.create()
     }
 

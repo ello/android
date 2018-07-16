@@ -34,6 +34,8 @@ class AppActivity : AppCompatActivity() {
         API.init(Hawk.get(ENVIRONMENT_KEY, DEFAULT_ENVIRONMENT_KEY))
         AuthToken.init()
 
+        showDebugDialog()
+
         supportActionBar?.hide()
         showAppScreen()
 
