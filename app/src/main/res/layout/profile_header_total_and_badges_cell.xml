@@ -74,14 +74,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/imageView2"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_margin="2.5dp"
                 app:srcCompat="@drawable/image_badge_community" />
 
             <ImageView
-                android:id="@+id/imageView3"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_margin="2.5dp"
