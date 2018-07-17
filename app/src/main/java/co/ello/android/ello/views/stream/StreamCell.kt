@@ -7,4 +7,8 @@ import android.view.View
 open class StreamCell(view: View) : RecyclerView.ViewHolder(view) {
     var streamController: StreamController? = null
     var streamCellItem: StreamCellItem? = null
+
+    open fun onStart() {}
+    open fun onFinish() {}
+    open fun onViewRecycled() {}
 }

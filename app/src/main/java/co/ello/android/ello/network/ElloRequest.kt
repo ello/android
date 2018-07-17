@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import org.json.JSONException
 import java.util.UUID
 import kotlin.coroutines.experimental.suspendCoroutine
-import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 

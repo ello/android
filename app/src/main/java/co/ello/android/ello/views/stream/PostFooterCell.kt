@@ -34,37 +34,37 @@ class PostFooterCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.
     }
 
     fun viewsButtonTapped() {
-        val item = streamCellItem ?: return
         val streamController = streamController ?: return
+        val item = streamCellItem ?: return
         val post = item.model as? Post ?: return
 
         streamController.streamTappedPost(post)
     }
 
     fun lovesButtonTapped() {
-        val item = streamCellItem ?: return
         val streamController = streamController ?: return
+        val item = streamCellItem ?: return
 
         streamController.toolbarTappedLoves(cell = this, item = item)
     }
 
     fun commentsButtonTapped() {
-        val item = streamCellItem ?: return
         val streamController = streamController ?: return
+        val item = streamCellItem ?: return
 
         streamController.toolbarTappedComments(cell = this, item = item)
     }
 
     fun repostButtonTapped() {
-        val item = streamCellItem ?: return
         val streamController = streamController ?: return
+        val item = streamCellItem ?: return
 
         streamController.toolbarTappedRepost(cell = this, item = item)
     }
 
     fun shareButtonTapped() {
-        val item = streamCellItem ?: return
         val streamController = streamController ?: return
+        val item = streamCellItem ?: return
 
         streamController.toolbarTappedShare(cell = this, item = item)
     }

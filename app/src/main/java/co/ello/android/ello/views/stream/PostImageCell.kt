@@ -62,6 +62,7 @@ class PostImageCell(parent: ViewGroup, isComment: Boolean)
         if (width > 0 && streamCellItem?.height != height) {
             streamCellItem?.height = height
             assignHeight(height)
+            streamController?.resizedCell()
         }
     }
 }

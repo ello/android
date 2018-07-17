@@ -30,7 +30,7 @@ class API {
             }
         }
     }
-    
+
     fun followingPostStream(filter: StreamFilter = StreamFilter.Recent,before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("followingPostStream")
                 .parser { PageParser<Post>("posts", PostParser()).parse(it) }
@@ -131,6 +131,20 @@ class API {
                 GraphQLRequest.Variable.optionalString("before", before)
             )
             .setBody(Fragments.postStreamBody)
+    }
+
+    fun updateRelationship(userId: String, relationship: RelationshipPriority): ElloRequest<Relationship> {
+        val path = "/api/v2/users/$userId/add/${relationship.value}"
+        val elloRequest = ElloRequest<Relationship>(ElloRequest.Method.POST, path)
+                .parser { json ->
+                    Relationship(
+                        id = json["id"].stringValue,
+                        ownerId = json["links"]["owner"]["id"].stringValue,
+                        subjectId = json["links"]["subject"]["id"].stringValue
+                        )
+                }
+
+        return elloRequest
     }
 
     fun join(email: String, username: String, password: String): ElloRequest<Credentials> {
