@@ -17,11 +17,11 @@ class DebugDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): MaterialDialog {
         val builder = MaterialDialog.Builder(context as Context)
-        builder.title("Debugging Options")
+        builder.title("Debugging Actions")
                 .theme(Theme.LIGHT)
                 .customView(R.layout.debug_dialog_layout, true)
                 .positiveText("Cancel")
-                .positiveColor(Color.parseColor("#2980b9"))
+                .positiveColor(Color.DKGRAY)
 
         val dialog = builder.build()
         initLayout(dialog)
@@ -32,7 +32,7 @@ class DebugDialogFragment : DialogFragment() {
         val customView = dialog.customView as View
 
         val environmentLabel = customView.findViewById<TextView>(R.id.environmentLabel)
-        environmentLabel?.setText("Environment (current: " + getEnvironment() +")")
+        environmentLabel?.setText("Environment (using " + getEnvironment() +")")
 
         val environments = arrayOf<TextView>(customView.findViewById(R.id.env1), customView.findViewById(R.id.env2), customView.findViewById(R.id.env3), customView.findViewById(R.id.env4), customView.findViewById(R.id.env5))
         for (e in environments) {

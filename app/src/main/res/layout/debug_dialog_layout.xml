@@ -14,60 +14,72 @@
             android:layout_height="wrap_content"
             android:text="Environment Options"
             android:textSize="18dp"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/env1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/black_rounded_corners"
                 android:textSize="18dp"
                 android:text="Production"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/env2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/black_rounded_corners"
                 android:textSize="18dp"
                 android:text="Ninja"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/env3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/black_rounded_corners"
                 android:textSize="18dp"
                 android:text="Stage 1"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/env4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/black_rounded_corners"
                 android:textSize="18dp"
                 android:text="Stage 2"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/env5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/black_rounded_corners"
                 android:textSize="18dp"
                 android:text="Rainbow"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"/>
         </LinearLayout>
 
@@ -78,22 +90,22 @@
             android:textSize="18dp"
             android:text="Account Settings"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/black_rounded_corners"
                 android:textSize="18dp"
                 android:text="Logout"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"/>
         </LinearLayout>
 
