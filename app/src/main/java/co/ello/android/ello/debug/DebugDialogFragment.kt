@@ -1,28 +1,17 @@
 package co.ello.android.ello.debug
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.TextView
-import co.ello.android.ello.API
 import co.ello.android.ello.AppActivity
 import co.ello.android.ello.AuthToken
 import co.ello.android.ello.R
 import com.orhanobut.hawk.Hawk
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter
-
-
-
 
 class DebugDialogFragment : DialogFragment() {
 
@@ -41,6 +30,7 @@ class DebugDialogFragment : DialogFragment() {
 
     private fun initLayout(dialog: MaterialDialog) {
         val customView = dialog.customView as View
+
         val environmentLabel = customView.findViewById<TextView>(R.id.environmentLabel)
         environmentLabel?.setText("Environment (current: " + getEnvironment() +")")
 
