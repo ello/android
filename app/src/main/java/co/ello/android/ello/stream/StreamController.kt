@@ -3,8 +3,11 @@ package co.ello.android.ello
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import co.ello.android.ello.stream.ScrollListener
 import com.squareup.otto.Subscribe
 import java.net.URL
 
@@ -14,12 +17,18 @@ class StreamController(a: AppActivity)
 {
     private lateinit var screen: RecyclerView
     private val adapter: Adapter = Adapter(emptyList(), streamController = this)
-
     var streamSelectionDelegate: StreamSelectionDelegate? = null
 
     class Adapter(var items: List<StreamCellItem>, val streamController: StreamController) : RecyclerView.Adapter<StreamCell>() {
+
+        private var scrollListener: ScrollListener? = null
+
         init {
             setHasStableIds(true)
+        }
+
+        fun setScrollListener(scrollListener: ScrollListener) {
+            this.scrollListener = scrollListener
         }
 
         override fun getItemCount(): Int = items.size
@@ -35,6 +44,9 @@ class StreamController(a: AppActivity)
 
         override fun onBindViewHolder(holder: StreamCell, position: Int) {
             val item = items[position]
+            if (scrollListener?.isScrollPointReached(0.75, itemCount, position) ?: false){
+                scrollListener?.onScrollPointReached();
+            }
             holder.streamController = streamController
             item.type.bindViewHolder(holder, item = item)
         }
@@ -70,6 +82,11 @@ class StreamController(a: AppActivity)
         super.onAppear()
         if (screen.adapter == null) {
             screen.adapter = adapter
+            adapter.setScrollListener(object : ScrollListener {
+                override fun onScrollPointReached() {
+                    // send request for more items
+                }
+            })
         }
     }
 
@@ -133,7 +150,7 @@ class StreamController(a: AppActivity)
     }
 
     fun resizedCell() {
-        adapter.notifyDataSetChanged()
+        //adapter.notifyDataSetChanged()
     }
 
     fun replaceAll(items: List<StreamCellItem>) {
