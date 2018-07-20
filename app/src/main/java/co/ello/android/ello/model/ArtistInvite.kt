@@ -17,6 +17,9 @@ data class ArtistInvite(
     val closedAt: Date?
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.ArtistInvitesType)
+    override fun update(property: Property, value: Any) {}
+
     var headerImage: Asset? = null
     var logoImage: Asset? = null
     var guide: List<Guide> = emptyList()

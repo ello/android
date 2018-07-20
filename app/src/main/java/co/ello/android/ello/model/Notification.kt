@@ -7,6 +7,9 @@ data class Notification(
     val activity: Activity
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = activity.id, table = MappingType.NotificationsType)
+    override fun update(property: Property, value: Any) {}
+
     var author: User? = null
     var postId: String? = null
 

@@ -16,22 +16,24 @@ sealed class MappingType {
     }
 
     object ActivitiesType : MappingType(name = "activities", singularKey = "activity")
-    object AmazonCredentialsType : MappingType(name = "credentials", singularKey = "credentials")
     object AnnouncementsType : MappingType(name = "announcements", singularKey = "announcement")
     object ArtistInvitesType : MappingType(name = "artist_invites", singularKey = "artistInvite")
     object ArtistInviteSubmissionsType : MappingType(name = "artist_invite_submissions", singularKey = "artistInviteSubmission")
     object AssetsType : MappingType(name = "assets", singularKey = "asset", parser = { AssetParser() })
+    object AttachmentsType : MappingType(name = "attachments", singularKey = "attachment")
     object AutoCompleteResultType : MappingType(name = "autocomplete_results", singularKey = "autocompleteResult")
     object AvailabilityType : MappingType(name = "availability", singularKey = "availability", pluralKey = "availabilities")
     object CategoriesType : MappingType(name = "categories", singularKey = "category", parser = { CategoryParser() })
     object CategoryPostsType : MappingType(name = "category_posts", singularKey = "categoryPost", parser = { CategoryPostParser() })
+    object CredentialsType : MappingType(name = "credentials", singularKey = "credential", parser = { CredentialsParser(isAnonymous = false) })
     object CommentsType : MappingType(name = "comments", singularKey = "comment", parser = { CommentParser() })
     object DynamicSettingsType : MappingType(name = "settings", singularKey = "setting")
-    object Editorials : MappingType(name = "editorials", singularKey = "editorial", parser = { EditorialParser() })
+    object EditorialsType : MappingType(name = "editorials", singularKey = "editorial", parser = { EditorialParser() })
     object ErrorsType : MappingType(name = "errors", singularKey = "error")
     object ErrorType : MappingType(name = "error", singularKey = "error", pluralKey = "errors")
     object LovesType : MappingType(name = "loves", singularKey = "love")
     object NoContentType : MappingType(name = "204", singularKey = "204")
+    object NotificationsType : MappingType(name = "notifications", singularKey = "notification")
     object PageHeadersType : MappingType(name = "page_headers", singularKey = "pageHeader", parser = { PageHeaderParser() })
     object PostsType : MappingType(name = "posts", singularKey = "post", parser = { PostParser() })
     object ProfilesType : MappingType(name = "profiles", singularKey = "profile", parser = { ProfileParser() })
@@ -43,7 +45,7 @@ sealed class MappingType {
     companion object {
         fun create(value: String): MappingType? = when (value) {
             "activities"                -> MappingType.ActivitiesType
-            "credentials"               -> MappingType.AmazonCredentialsType
+            "credentials"               -> MappingType.CredentialsType
             "announcements"             -> MappingType.AnnouncementsType
             "artist_invites"            -> MappingType.ArtistInvitesType
             "artist_invite_submissions" -> MappingType.ArtistInviteSubmissionsType
@@ -54,7 +56,7 @@ sealed class MappingType {
             "category_posts"            -> MappingType.CategoryPostsType
             "comments"                  -> MappingType.CommentsType
             "settings"                  -> MappingType.DynamicSettingsType
-            "editorials"                -> MappingType.Editorials
+            "editorials"                -> MappingType.EditorialsType
             "errors"                    -> MappingType.ErrorsType
             "error"                     -> MappingType.ErrorType
             "loves"                     -> MappingType.LovesType

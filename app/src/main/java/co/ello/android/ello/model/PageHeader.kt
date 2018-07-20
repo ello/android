@@ -16,6 +16,9 @@ data class PageHeader(
     val kind: Kind
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.PageHeadersType)
+    override fun update(property: Property, value: Any) {}
+
     val user: User? get() = getLinkObject("user")
 
     enum class Kind(val value: String) {

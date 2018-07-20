@@ -8,6 +8,9 @@ data class ImageRegion(
     val buyButtonURL: URL?
     ) : Model(), Regionable {
 
+    override val identifier = null
+    override fun update(property: Property, value: Any) {}
+
     override var isRepost: Boolean = false
     override val kind: RegionKind get() = RegionKind.Image
 

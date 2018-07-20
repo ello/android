@@ -15,6 +15,9 @@ data class Asset(val id: String) : Model() {
         Regular
     }
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.AssetsType)
+    override fun update(property: Property, value: Any) {}
+
     var optimized: Attachment? = null
     var mdpi: Attachment? = null
     var hdpi: Attachment? = null

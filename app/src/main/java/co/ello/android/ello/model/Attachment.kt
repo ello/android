@@ -8,6 +8,9 @@ data class Attachment(
     val url: URL
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = url.toString(), table = MappingType.AttachmentsType)
+    override fun update(property: Property, value: Any) {}
+
     var size: Int? = null
     var width: Int? = null
     var height: Int? = null

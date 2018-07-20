@@ -5,4 +5,7 @@ data class Credentials(
     val accessToken: String,
     val refreshToken: String?,
     val isAnonymous: Boolean
-) : Model()
+) : Model() {
+    override val identifier = null
+    override fun update(property: Property, value: Any) {}
+}

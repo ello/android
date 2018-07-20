@@ -12,6 +12,9 @@ data class Comment(
     val summary: List<Regionable>
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.CommentsType)
+    override fun update(property: Property, value: Any) {}
+
     val assets: List<Asset> get() = getLinkArray("assets")
     val author: User? get() = getLinkObject("author")
     val parentPost: Post? get() = getLinkObject("parent_post")

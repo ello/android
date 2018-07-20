@@ -9,4 +9,7 @@ data class AmazonCredentials(
     val policy: String,
     val prefix: String,
     val signature: String
-    ) : Model()
+    ) : Model() {
+    override val identifier = null
+    override fun update(property: Property, value: Any) {}
+}

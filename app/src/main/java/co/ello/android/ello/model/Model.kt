@@ -1,7 +1,7 @@
 package co.ello.android.ello
 
 
-open class Model {
+abstract class Model {
     sealed class Link {
         data class One(val id: String, val type: MappingType) : Link()
         data class Many(val ids: List<String>, val type: MappingType) : Link()
@@ -10,6 +10,18 @@ open class Model {
     }
 
     var links: MutableMap<String, Model.Link> = mutableMapOf()
+
+    abstract val identifier: Parser.Identifier?
+
+    enum class Property {
+        relationshipPriority;
+
+        fun matches(model: Model, value: Any): Boolean = when (this) {
+            relationshipPriority -> (model as? User)?.relationshipPriority == value as RelationshipPriority
+        }
+    }
+
+    abstract fun update(property: Property, value: Any)
 
     inline fun <reified T: Model> getLinkObject(key: String): T? {
         val link = links[key] ?: return null
