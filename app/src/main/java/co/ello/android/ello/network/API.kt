@@ -1,12 +1,14 @@
 package co.ello.android.ello
 
+import co.ello.android.ello.network.parsers.NotificationParser
+
 
 class API {
     companion object {
         fun init() {
-            key = BuildConfig.RAINBOW_CLIENT_KEY
-            secret = BuildConfig.RAINBOW_CLIENT_SECRET
-            domain = BuildConfig.RAINBOW_DOMAIN
+            key = BuildConfig.STAGE2_CLIENT_KEY
+            secret = BuildConfig.STAGE2_CLIENT_SECRET
+            domain = BuildConfig.STAGE2_DOMAIN
         }
 
         var key: String = ""
@@ -26,6 +28,27 @@ class API {
                 "TRENDING" -> StreamFilter.Trending
                 "RECENT" -> StreamFilter.Recent
                 "SHOP" -> StreamFilter.Shop
+                else -> null
+            }
+        }
+    }
+
+    enum class NotificationFilter(val value: String) {
+        All("ALL"),
+        Comments("COMMENTS"),
+        Loves("LOVES"),
+        Mentions("MENTIONS"),
+        Relationships("RELATIONSHIPS"),
+        Reposts("REPOSTS");
+
+        companion object {
+            fun create(value: String): NotificationFilter? = when (value) {
+                "ALL" -> NotificationFilter.All
+                "COMMENTS" -> NotificationFilter.Comments
+                "LOVES" -> NotificationFilter.Loves
+                "MENTIONS" -> NotificationFilter.Mentions
+                "RELATIONSHIPS" -> NotificationFilter.Relationships
+                "REPOSTS" -> NotificationFilter.Reposts
                 else -> null
             }
         }
@@ -94,12 +117,12 @@ class API {
             .setBody(Fragments.editorialsBody)
     }
 
-    fun notificationsStream(before: String? = null): GraphQLRequest<Pair<PageConfig, List<Notification>>> {
+    fun notificationsStream(category: NotificationFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Notification>>> {
         return GraphQLRequest<Pair<PageConfig, List<Notification>>>("notificationStream")
-                .parser { PageParser<Notification>("notifications", EditorialParser()).parse(it) }
+                .parser { PageParser<Notification>("notifications", NotificationParser()).parse(it) }
                 .setVariables(
                         GraphQLRequest.Variable.optionalString("before", before),
-                        GraphQLRequest.Variable.optionalBoolean("preview", false),
+                        GraphQLRequest.Variable.enum("category", category.value, "NotificationCategory"),
                         GraphQLRequest.Variable.optionalInt("perPage", null)
                 )
                 .setBody(Fragments.notificationsBody)
