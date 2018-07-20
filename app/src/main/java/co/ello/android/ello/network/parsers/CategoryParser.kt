@@ -13,7 +13,7 @@ class CategoryParser : IdParser(table = MappingType.CategoriesType) {
             allowInOnboarding = json["allowInOnboarding"].boolean ?: true,
             isCreatorType = json["isCreatorType"].boolean ?: true,
             level = level,
-            tileImage = Attachment.fromJSON(json["tileImage"]["large"])
+            tileImage = AttachmentParser().parse(json["tileImage"]["large"])
             )
 
         category.mergeLinks(json["links"])

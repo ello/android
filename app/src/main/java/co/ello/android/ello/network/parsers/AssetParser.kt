@@ -19,7 +19,7 @@ class AssetParser : IdParser(table = MappingType.AssetsType) {
         )
         for ((attachmentJSON, type) in attachments) {
             if (attachmentJSON["url"].string == null) continue
-            asset.replace(type = type, withAttachment = Attachment.fromJSON(attachmentJSON))
+            asset.replace(type = type, withAttachment = AttachmentParser().parse(attachmentJSON))
         }
 
         return asset

@@ -5,7 +5,6 @@ import java.net.URL
 
 
 data class Asset(val id: String) : Model() {
-
     enum class AttachmentType {
         Optimized,
         Mdpi,
