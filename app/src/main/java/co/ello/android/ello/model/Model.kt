@@ -15,10 +15,6 @@ abstract class Model {
 
     enum class Property {
         relationshipPriority;
-
-        fun matches(model: Model, value: Any): Boolean = when (this) {
-            relationshipPriority -> (model as? User)?.relationshipPriority == value as RelationshipPriority
-        }
     }
 
     abstract fun update(property: Property, value: Any)

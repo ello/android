@@ -93,9 +93,8 @@ class StreamController(a: AppActivity)
             val model = item.model ?: continue
             val identifier = model.identifier ?: continue
             if (event.type != identifier.table || event.id != identifier.id)  continue
-            if (event.property.matches(model, event.value))  continue
-            model.update(event.property, event.value)
             adapter.notifyItemChanged(index)
+            model.update(event.property, event.value)
         }
     }
 
