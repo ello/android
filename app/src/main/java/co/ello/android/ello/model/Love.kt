@@ -12,6 +12,9 @@ data class Love(
     val userId: String
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.LovesType)
+    override fun update(property: Property, value: Any) {}
+
     val post: Post? get() = getLinkObject("post")
     val user: User? get() = getLinkObject("user")
 

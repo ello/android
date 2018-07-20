@@ -13,6 +13,9 @@ data class Announcement(
     val image: Asset?
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.AnnouncementsType)
+    override fun update(property: Property, value: Any) {}
+
     val preferredAttachment: Attachment? get() = image?.hdpi
     val imageURL: URL? get() = preferredAttachment?.url
 

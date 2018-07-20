@@ -133,6 +133,16 @@ class API {
             .setBody(Fragments.postStreamBody)
     }
 
+    fun userLoves(username: String, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Love>>> {
+        return GraphQLRequest<Pair<PageConfig, List<Love>>>("userLoveStream")
+            .parser { PageParser<Love>("loves", LoveParser()).parse(it) }
+            .setVariables(
+                GraphQLRequest.Variable.string("username", username),
+                GraphQLRequest.Variable.optionalString("before", before)
+            )
+            .setBody(Fragments.loveStreamBody)
+    }
+
     fun updateRelationship(userId: String, relationship: RelationshipPriority): ElloRequest<Relationship> {
         val path = "/api/v2/users/$userId/add/${relationship.value}"
         val elloRequest = ElloRequest<Relationship>(ElloRequest.Method.POST, path)

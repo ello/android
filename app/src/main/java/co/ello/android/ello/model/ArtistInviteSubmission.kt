@@ -8,6 +8,9 @@ data class ArtistInviteSubmission(
     val status: Status
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.ArtistInviteSubmissionsType)
+    override fun update(property: Property, value: Any) {}
+
     enum class Status(val value: String) {
         Approved("approved"),
         Selected("selected"),

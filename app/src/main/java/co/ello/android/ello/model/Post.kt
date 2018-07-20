@@ -21,6 +21,9 @@ data class Post(
     val repostContent: List<Regionable>
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.PostsType)
+    override fun update(property: Property, value: Any) {}
+
     var artistInviteId: String? = null
     var viewsCount: Int? = null
     var commentsCount: Int? = null

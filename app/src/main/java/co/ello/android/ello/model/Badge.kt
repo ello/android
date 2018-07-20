@@ -13,6 +13,9 @@ data class Badge(
     val imageURL: URL?
     ) : Model() {
 
+    override val identifier = null
+    override fun update(property: Property, value: Any) {}
+
     val isFeatured: Boolean get() = slug == "featured"
     var categories: List<Category>? = null
 

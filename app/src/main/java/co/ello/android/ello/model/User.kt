@@ -18,6 +18,12 @@ data class User(
     val isHireable: Boolean
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.UsersType)
+    override fun update(property: Property, value: Any) = when (property) {
+        Model.Property.relationshipPriority -> relationshipPriority = value as RelationshipPriority
+        else -> {}
+    }
+
     var avatar: Asset? = null
     var coverImage: Asset? = null
 

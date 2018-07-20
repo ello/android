@@ -12,6 +12,8 @@ data class Activity(
     ) : Model() {
 
     val subject: Model? get() = getLinkObject("subject")
+    override val identifier = Parser.Identifier(id = id, table = MappingType.ActivitiesType)
+    override fun update(property: Property, value: Any) {}
 
     enum class Kind(val value: String) {
         NewFollowerPost("new_follower_post"), // someone started following you

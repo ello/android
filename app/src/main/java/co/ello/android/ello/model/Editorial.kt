@@ -14,6 +14,9 @@ data class Editorial(
     val path: URL?
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.EditorialsType)
+    override fun update(property: Property, value: Any) {}
+
     data class JoinInfo(
         val email: String?,
         val username: String?,

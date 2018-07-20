@@ -14,6 +14,9 @@ data class Category(
     val tileImage: Attachment?
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.CategoriesType)
+    override fun update(property: Property, value: Any) {}
+
     val isMeta: Boolean get() = level == CategoryLevel.Meta
     val tileURL: URL? get() = tileImage?.url
     val visibleOnSeeMore: Boolean get() = level == CategoryLevel.Primary || level == CategoryLevel.Secondary

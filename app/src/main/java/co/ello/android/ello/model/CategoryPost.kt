@@ -13,6 +13,9 @@ data class CategoryPost(
     val removedAt: Date
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.CategoryPostsType)
+    override fun update(property: Property, value: Any) {}
+
     val category: Category? get() { return getLinkObject("category") }
     val submittedBy: User? get() { return getLinkObject("submittedBy") }
     val featuredBy: User? get() { return getLinkObject("featuredBy") }
