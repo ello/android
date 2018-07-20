@@ -88,11 +88,13 @@ class StreamController(a: AppActivity)
     }
 
     @Subscribe
-    fun relationshipChanged(event: RelationshipPriorityChanged) {
+    fun modelChanged(event: ModelChanged) {
         for ((index, item) in adapter.items.withIndex()) {
-            val user = item.model as? User ?: continue
-            if (user.id != event.userId || user.relationshipPriority == event.priority)  continue
-            user.relationshipPriority = event.priority
+            val model = item.model ?: continue
+            val identifier = model.identifier ?: continue
+            if (event.type != identifier.table || event.id != identifier.id)  continue
+            if (event.property.matches(model, event.value))  continue
+            model.update(event.property, event.value)
             adapter.notifyItemChanged(index)
         }
     }
