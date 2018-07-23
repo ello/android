@@ -4,9 +4,6 @@ import android.view.View
 import android.view.ViewGroup
 import co.ello.android.ello.*
 
-/**
- * Created by sahitpenmatcha on 7/11/18.
- */
 class NotificationsController(a: AppActivity) : StreamableController(a), NotificationsProtocols.Controller  {
 
     private lateinit var screen: NotificationsProtocols.Screen

@@ -1,6 +1,7 @@
 package co.ello.android.ello
 
 import android.view.View
+import co.ello.android.ello.controllers.notifications.NotificationsController
 
 
 class TabBarController(
@@ -27,7 +28,7 @@ class TabBarController(
             followingController,
             CategoryController(activity),
             CategoryController(activity),
-            CategoryController(activity),
+            NotificationsController(activity),
             CategoryController(activity)
             )
         childNavControllers = childTabControllers.map { controller ->

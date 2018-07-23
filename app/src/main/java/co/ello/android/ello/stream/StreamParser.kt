@@ -12,6 +12,8 @@ class StreamParser {
             }
             else if (model is Editorial) {
                 emptyList()
+            } else if (model is Notification) {
+                parseContent(model, model.textRegion as Regionable)
             }
             else emptyList()
         }
@@ -70,11 +72,15 @@ class StreamParser {
         return listOf(header) + content
     }
 
+
     private fun parseContent(model: Model, region: Regionable): List<StreamCellItem> {
         if (region is TextRegion) {
             val cellType: StreamCellType
             if (model is Comment) {
                 cellType = StreamCellType.CommentText(region.content)
+            }
+            else if (model is Notification) {
+                cellType = StreamCellType.NotificationText(region.content)
             }
             else {
                 cellType = StreamCellType.PostText(region.content)

@@ -125,7 +125,7 @@ class API {
                         GraphQLRequest.Variable.enum("category", category.value, "NotificationCategory"),
                         GraphQLRequest.Variable.optionalInt("perPage", null)
                 )
-                .setBody(Fragments.notificationsBody)
+                .setBody(Fragments.notificationStreamBody)
     }
 
     fun postDetail(token: Token, username: String?): GraphQLRequest<Post> {

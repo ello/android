@@ -5,9 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import co.ello.android.ello.R
 
-/**
- * Created by sahitpenmatcha on 7/11/18.
- */
 class NotificationsScreen : NotificationsProtocols.Screen {
 
     private val delegate: NotificationsProtocols.Controller?

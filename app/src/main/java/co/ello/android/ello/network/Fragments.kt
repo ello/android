@@ -143,6 +143,18 @@ class Fragments {
             }
             """, needs = listOf(contentProps, authorProps, assetProps))
 
+        val notificationDetails = Fragments("""
+            fragment notificationDetails on Notification {
+              createdAt
+              id
+              kind
+              originatingUser { id }
+              subject
+              subjectId
+              subjectType
+            }
+            """, needs = listOf())
+
         val userDetails = Fragments("""
             fragment userDetails on User {
               id
@@ -188,26 +200,6 @@ class Fragments {
             }
             """, needs = listOf(imageProps, postSummary))
 
-        val notificationsContent = Fragments("""
-            fragment notificationImageVersions on ResponsiveImageVersions {
-                xhdpi { ...imageProps }
-                original { ...imageProps }
-            }
-
-            fragment notification on Notification {
-                id
-                kind
-                title
-                subtitle
-                url
-                path
-                oneByOneImage { ...notificationImageVersions }
-                twoByTwoImage { ...notificationImageVersions }
-                stream { query tokens }
-                post { ...postSummary }
-            }
-            """, needs = listOf(imageProps, postSummary))
-
         val categoriesBody = Fragments("""
             id
             name
@@ -241,12 +233,6 @@ class Fragments {
                 ...editorial
             }
             """, needs = listOf(editorialsContent))
-        val notificationsBody = Fragments("""
-            next isLastPage
-            notifications {
-                ...notification
-            }
-            """, needs = listOf(notificationsContent))
         val postBody = Fragments("""
             ...postDetails
             """, needs = listOf(postDetails))
@@ -256,6 +242,12 @@ class Fragments {
                 ...commentDetails
             }
             """, needs = listOf(commentDetails))
+        val notificationStreamBody = Fragments("""
+            next isLastPage
+            notifications {
+                ...notificationDetails
+            }
+            """, needs = listOf(notificationDetails))
         val userBody = Fragments("""
             ...userDetails
             """, needs = listOf(userDetails))
