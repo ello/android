@@ -148,7 +148,7 @@ class Fragments {
                 post { ...postDetails }
                 user { id }
             }
-            """, needs: listOf(postDetails))
+            """, needs = listOf(postDetails))
 
         val userDetails = Fragments("""
             fragment userDetails on User {
@@ -245,7 +245,7 @@ class Fragments {
             loves {
                 ...loveDetails
             }
-            """, needs: listOf(loveDetails))
+            """, needs = listOf(loveDetails))
     }
 
     val dependencies: List<Fragments> get() {

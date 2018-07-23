@@ -31,8 +31,8 @@ class GraphQLRequest<T>(
         data class optionalFloat(override val name: String  , override val value: Float?)   : Variable("Float")
         data class boolean(override val name: String        , override val value: Boolean)  : Variable("Bool!")
         data class optionalBoolean(override val name: String, override val value: Boolean?) : Variable("Bool")
-        data class enum(override val name: String           , override val value: String, typeName: String) : Variable("$typeName!")
-        data class optionalEnum(override val name: String   , override val value: String?, typeName: String) : Variable(typeName)
+        data class enum(override val name: String           , override val value: String, val typeName: String) : Variable("$typeName!")
+        data class optionalEnum(override val name: String   , override val value: String?, val typeName: String) : Variable(typeName)
     }
 
     private val headers = HashMap<String, String>()
