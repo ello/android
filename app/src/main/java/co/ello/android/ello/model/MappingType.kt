@@ -1,7 +1,5 @@
 package co.ello.android.ello
 
-import co.ello.android.ello.network.parsers.NotificationParser
-
 
 sealed class MappingType {
     val name: String

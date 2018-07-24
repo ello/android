@@ -1,8 +1,5 @@
 package co.ello.android.ello
 
-import co.ello.android.ello.network.parsers.NotificationParser
-
-
 class API {
     companion object {
         fun init() {

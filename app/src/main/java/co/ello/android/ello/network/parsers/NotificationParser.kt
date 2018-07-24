@@ -1,6 +1,5 @@
-package co.ello.android.ello.network.parsers
+package co.ello.android.ello
 
-import co.ello.android.ello.*
 import java.util.*
 
 class NotificationParser : IdParser(table = MappingType.NotificationsType) {
