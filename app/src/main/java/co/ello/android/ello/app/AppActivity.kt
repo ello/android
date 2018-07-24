@@ -12,10 +12,11 @@ import android.hardware.SensorManager
 import co.ello.android.ello.debug.ShakeController.OnShakeListener
 import android.os.Vibrator
 
-var App: AppActivity? = null
+lateinit var App: AppActivity
 
 class AppActivity : AppCompatActivity() {
     private var controller: RootController? = null
+    var eventBus: EventBus = OttoBus()
     private var sensorManager: SensorManager? = null
     private var accelerometer: Sensor? = null
     private var shakeController: ShakeController = ShakeController()

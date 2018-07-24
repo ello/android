@@ -142,6 +142,13 @@ class Fragments {
               assets { ...assetProps }
             }
             """, needs = listOf(contentProps, authorProps, assetProps))
+        val loveDetails = Fragments("""
+            fragment loveDetails on Love {
+                id
+                post { ...postDetails }
+                user { id }
+            }
+            """, needs = listOf(postDetails))
 
         val userDetails = Fragments("""
             fragment userDetails on User {
@@ -233,6 +240,12 @@ class Fragments {
         val userBody = Fragments("""
             ...userDetails
             """, needs = listOf(userDetails))
+        val loveStreamBody = Fragments("""
+            next isLastPage
+            loves {
+                ...loveDetails
+            }
+            """, needs = listOf(loveDetails))
     }
 
     val dependencies: List<Fragments> get() {

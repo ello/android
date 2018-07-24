@@ -4,7 +4,6 @@ import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import java.util.UUID
-import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -18,23 +17,22 @@ class GraphQLRequest<T>(
     object CancelledRequest : Throwable()
     object RequestNull : Throwable()
 
-    sealed class Variable {
+    sealed class Variable(val type: String) {
         abstract val name: String
-        abstract val type: String
         abstract val value: Any?
 
-        data class string(override val name: String         , override val value: String)   : Variable() { override val type: String get() { return "String!"}}
-        data class optionalString(override val name: String , override val value: String?)  : Variable() { override val type: String get() { return "String" }}
-        data class id(override val name: String             , override val value: String)   : Variable() { override val type: String get() { return "ID!"}}
-        data class optionalID(override val name: String     , override val value: String?)  : Variable() { override val type: String get() { return "ID" }}
-        data class int(override val name: String            , override val value: Int)      : Variable() { override val type: String get() { return "Int!"   }}
-        data class optionalInt(override val name: String    , override val value: Int?)     : Variable() { override val type: String get() { return "Int"    }}
-        data class float(override val name: String          , override val value: Float)    : Variable() { override val type: String get() { return "Float!" }}
-        data class optionalFloat(override val name: String  , override val value: Float?)   : Variable() { override val type: String get() { return "Float"  }}
-        data class boolean(override val name: String        , override val value: Boolean)  : Variable() { override val type: String get() { return "Bool!"  }}
-        data class optionalBoolean(override val name: String, override val value: Boolean?) : Variable() { override val type: String get() { return "Bool"   }}
-        data class enum(override val name: String           , override val value: String, val typeName: String) : Variable() { override val type: String get() { return "$typeName!" }}
-        data class optionalEnum(override val name: String   , override val value: String?, val typeName: String) : Variable() { override val type: String get() { return typeName }}
+        data class string(override val name: String         , override val value: String)   : Variable("String!")
+        data class optionalString(override val name: String , override val value: String?)  : Variable("String")
+        data class id(override val name: String             , override val value: String)   : Variable("ID!")
+        data class optionalID(override val name: String     , override val value: String?)  : Variable("ID")
+        data class int(override val name: String            , override val value: Int)      : Variable("Int!")
+        data class optionalInt(override val name: String    , override val value: Int?)     : Variable("Int")
+        data class float(override val name: String          , override val value: Float)    : Variable("Float!")
+        data class optionalFloat(override val name: String  , override val value: Float?)   : Variable("Float")
+        data class boolean(override val name: String        , override val value: Boolean)  : Variable("Bool!")
+        data class optionalBoolean(override val name: String, override val value: Boolean?) : Variable("Bool")
+        data class enum(override val name: String           , override val value: String, val typeName: String) : Variable("$typeName!")
+        data class optionalEnum(override val name: String   , override val value: String?, val typeName: String) : Variable(typeName)
     }
 
     private val headers = HashMap<String, String>()

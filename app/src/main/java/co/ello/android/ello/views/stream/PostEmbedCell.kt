@@ -61,7 +61,6 @@ class PostEmbedCell(parent: ViewGroup, isComment: Boolean)
     }
 
     private fun playButtonTapped() {
-        val item = streamCellItem ?: return
         val streamController = streamController ?: return
         val url = url ?: return
 

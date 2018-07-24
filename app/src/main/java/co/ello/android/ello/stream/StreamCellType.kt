@@ -70,7 +70,7 @@ sealed class StreamCellType {
     companion object {
         fun createViewHolder(parent: ViewGroup, viewType: Int): StreamCell {
             val type = StreamCellType::class.nestedClasses.elementAt(viewType)
-            return when (type) {
+            val cell = when (type) {
                 Placeholder::class -> PlaceholderCell(parent)
                 Spacer::class -> SpacerCell(parent)
 
@@ -100,6 +100,10 @@ sealed class StreamCellType {
 
                 else -> throw IllegalArgumentException("Unhandled type $type")
             }
+            if (!cell.isRecyclable) {
+                cell.setIsRecyclable(true)
+            }
+            return cell
         }
     }
 

@@ -13,6 +13,7 @@ abstract class BaseController(activity: AppActivity) : Controller(activity) {
         }
     val isLoggedIn: Boolean get() = currentUser != null
     val appController: AppController? get() { return findParent<AppController>() }
+    val relationshipController = RelationshipController(queue = requestQueue)
 
     fun didSetCurrentUser() {}
 

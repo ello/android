@@ -1,9 +1,7 @@
 package co.ello.android.ello
 
-import java.net.URL
 
-
-class EditorialParser : IdParser(table = MappingType.Editorials) {
+class EditorialParser : IdParser(table = MappingType.EditorialsType) {
     init {
         linkObject(MappingType.PostsType)
     }

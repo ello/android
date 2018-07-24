@@ -1,10 +1,11 @@
 package co.ello.android.ello
 
 import android.content.Intent
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.LinearLayoutManager
+import com.squareup.otto.Subscribe
 import java.net.URL
 
 
@@ -12,11 +13,11 @@ class StreamController(a: AppActivity)
     : BaseController(a)
 {
     private lateinit var screen: RecyclerView
-    private var adapter: Adapter = Adapter(emptyList(), streamController = this)
+    private val adapter: Adapter = Adapter(emptyList(), streamController = this)
 
     var streamSelectionDelegate: StreamSelectionDelegate? = null
 
-    class Adapter(val items: List<StreamCellItem>, val streamController: StreamController) : RecyclerView.Adapter<StreamCell>() {
+    class Adapter(var items: List<StreamCellItem>, val streamController: StreamController) : RecyclerView.Adapter<StreamCell>() {
         init {
             setHasStableIds(true)
         }
@@ -37,6 +38,18 @@ class StreamController(a: AppActivity)
             holder.streamController = streamController
             item.type.bindViewHolder(holder, item = item)
         }
+
+        override fun onViewAttachedToWindow(holder: StreamCell) {
+            holder.onStart()
+        }
+
+        override fun onViewDetachedFromWindow(holder: StreamCell) {
+            holder.onFinish()
+        }
+
+        override fun onViewRecycled(holder: StreamCell) {
+            holder.onViewRecycled()
+        }
     }
 
     override fun onRotate() {
@@ -54,8 +67,34 @@ class StreamController(a: AppActivity)
     }
 
     override fun onAppear() {
+        super.onAppear()
         if (screen.adapter == null) {
             screen.adapter = adapter
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        App.eventBus.register(this)
+    }
+
+    override fun onFinish() {
+        super.onFinish()
+        for (i in 0.until(adapter.itemCount)) {
+            val cell = screen.findViewHolderForAdapterPosition(i) as? StreamCell ?: continue
+            cell.onFinish()
+        }
+        App.eventBus.unregister(this)
+    }
+
+    @Subscribe
+    fun modelChanged(event: ModelChanged) {
+        for ((index, item) in adapter.items.withIndex()) {
+            val model = item.model ?: continue
+            val identifier = model.identifier ?: continue
+            if (event.type != identifier.table || event.id != identifier.id)  continue
+            adapter.notifyItemChanged(index)
+            model.update(event.property, event.value)
         }
     }
 
@@ -94,9 +133,13 @@ class StreamController(a: AppActivity)
         replaceAll(newItems)
     }
 
+    fun resizedCell() {
+        adapter.notifyDataSetChanged()
+    }
+
     fun replaceAll(items: List<StreamCellItem>) {
-        adapter = Adapter(items, streamController = this)
-        if (isViewLoaded)  screen.adapter = adapter
+        adapter.items = items
+        adapter.notifyDataSetChanged()
     }
 
     fun streamTappedPost(post: Post) {
@@ -116,9 +159,8 @@ class StreamController(a: AppActivity)
     }
 
     fun streamTappedURL(url: URL) {
-        val app = App ?: return
         val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-        app.startActivity(intent)
+        App.startActivity(intent)
     }
 
     fun toolbarTappedLoves(cell: StreamCell, item: StreamCellItem) {

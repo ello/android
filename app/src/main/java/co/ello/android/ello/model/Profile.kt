@@ -50,6 +50,9 @@ data class Profile(
     val gaUniqueId: String?
     ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.ProfilesType)
+    override fun update(property: Model.Property, value: Any) {}
+
     sealed class CreatorType {
         object None : CreatorType()
         object Fan : CreatorType()

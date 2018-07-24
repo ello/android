@@ -2,6 +2,7 @@ package co.ello.android.ello
 
 import android.support.constraint.ConstraintLayout
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import java.net.URL
@@ -14,6 +15,7 @@ class PostImageCell(parent: ViewGroup, isComment: Boolean)
         else R.layout.post_image_cell, parent, false))
 
 {
+    private val loadingView: View = itemView.findViewById(R.id.loadingView)
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
     private var aspectRatio: Float? = null
 
@@ -29,6 +31,8 @@ class PostImageCell(parent: ViewGroup, isComment: Boolean)
     fun config(value: Config) {
         aspectRatio = null
         streamCellItem?.height?.let { assignHeight(it) }
+
+        loadingView.visibility = View.VISIBLE
 
         if (value.isGif) {
             imageView.setImageURL(null)
@@ -46,6 +50,7 @@ class PostImageCell(parent: ViewGroup, isComment: Boolean)
     }
 
     private fun calculateHeight() {
+        loadingView.visibility = View.INVISIBLE
         val imageWidth = imageView.drawable.intrinsicWidth
         val imageHeight = imageView.drawable.intrinsicHeight
         if (imageWidth > 0 && imageHeight > 0) {
@@ -62,6 +67,7 @@ class PostImageCell(parent: ViewGroup, isComment: Boolean)
         if (width > 0 && streamCellItem?.height != height) {
             streamCellItem?.height = height
             assignHeight(height)
+            streamController?.resizedCell()
         }
     }
 }

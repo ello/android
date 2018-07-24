@@ -7,7 +7,7 @@ data class User(
     val id: String,
     val username: String,
     val name: String,
-    val relationshipPriority: RelationshipPriority,
+    var relationshipPriority: RelationshipPriority,
     val postsAdultContent: Boolean,
     val viewsAdultContent: Boolean,
     val hasCommentingEnabled: Boolean,
@@ -17,6 +17,12 @@ data class User(
     val isCollaborateable: Boolean,
     val isHireable: Boolean
     ) : Model() {
+
+    override val identifier = Parser.Identifier(id = id, table = MappingType.UsersType)
+    override fun update(property: Property, value: Any) = when (property) {
+        Model.Property.relationshipPriority -> relationshipPriority = value as RelationshipPriority
+        else -> {}
+    }
 
     var avatar: Asset? = null
     var coverImage: Asset? = null
