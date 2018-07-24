@@ -52,5 +52,12 @@ class AuthToken(
         fun reset() {
             AuthToken.shared = AuthToken()
         }
+
+        fun logout() {
+            Hawk.delete("Token.accessToken")
+            Hawk.delete("Token.isAnonymous")
+            Hawk.delete("Token.refreshToken")
+            reset()
+        }
     }
 }
