@@ -3,6 +3,7 @@ package co.ello.android.ello.controllers.notifications
 import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import co.ello.android.ello.*
 
@@ -12,7 +13,7 @@ class NotificationsScreen : NotificationsProtocols.Screen {
 
     override val contentView: View
     override val streamContainer: ViewGroup
-    override val tabs: List<(ImageButton)>
+    override val tabs: List<(View)>
 
     constructor(activity: Activity, delegate: NotificationsProtocols.Controller?) {
         this.delegate = delegate
@@ -21,9 +22,9 @@ class NotificationsScreen : NotificationsProtocols.Screen {
         streamContainer = contentView.findViewById(R.id.streamContainer)
 
         tabs = listOf(
-                contentView.findViewById<ImageButton>(R.id.all),
+                contentView.findViewById<Button>(R.id.all),
                 contentView.findViewById<ImageButton>(R.id.comments),
-                contentView.findViewById<ImageButton>(R.id.mentions),
+                contentView.findViewById<Button>(R.id.mentions),
                 contentView.findViewById<ImageButton>(R.id.loves),
                 contentView.findViewById<ImageButton>(R.id.reposts),
                 contentView.findViewById<ImageButton>(R.id.relationships))

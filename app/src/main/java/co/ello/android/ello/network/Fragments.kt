@@ -25,6 +25,13 @@ class Fragments {
             }
             """)
 
+        val imageVersionProps = Fragments("""
+            fragment imageVersionProps on Image {
+              url
+              metadata { height width type size }
+            }
+            """)
+
         val tshirtProps = Fragments("""
             fragment tshirtProps on TshirtImageVersions {
               regular { ...imageProps }
@@ -42,14 +49,26 @@ class Fragments {
             }
             """, needs = listOf(imageProps))
 
+        val responsiveImageVersions = Fragments("""
+            fragment responsiveImageVersions on ResponsiveImageVersions {
+              xhdpi { ...imageVersionProps }
+              hdpi { ...imageVersionProps }
+              mdpi { ...imageVersionProps }
+              ldpi { ...imageVersionProps }
+              optimized { ...imageVersionProps }
+              original { ...imageVersionProps }
+              video { ...imageVersionProps }
+            }
+            """, needs = listOf(imageVersionProps))
+
         val avatarImageVersion = Fragments("""
             fragment avatarImageVersion on TshirtImageVersions {
-              small { ...imageProps }
-              regular { ...imageProps }
-              large { ...imageProps }
-              original { ...imageProps }
+              small { ...imageVersionProps }
+              regular { ...imageVersionProps }
+              large { ...imageVersionProps }
+              original { ...imageVersionProps }
             }
-            """, needs = listOf(imageProps))
+            """, needs = listOf(imageVersionProps))
 
         val authorProps = Fragments("""
             fragment authorProps on User {
@@ -136,6 +155,20 @@ class Fragments {
               currentUserState { watching loved reposted }
             }
             """, needs = listOf(assetProps, authorProps, contentProps))
+
+        val post2Summary = Fragments("""
+            fragment postSummary on Post {
+              id
+              token
+              createdAt
+              summary { ...contentProps }
+              author { ...authorSummary }
+              assets { id attachment { ...responsiveImageVersions } }
+              postStats { lovesCount commentsCount viewsCount repostsCount }
+              currentUserState { watching loved reposted }
+            }
+            """, needs = listOf(contentProps, authorSummary, responsiveImageVersions))
+
         val postDetails = Fragments("""
             fragment postDetails on Post {
                 ...postSummary
@@ -162,7 +195,7 @@ class Fragments {
               content { ...contentProps }
               assets { id attachment { ...responsiveImageVersions } }
             }
-            """)
+            """, needs = listOf(authorSummary, contentProps, responsiveImageVersions))
 
         val categorySummary = Fragments("""
             fragment categorySummary on Category {
@@ -178,7 +211,7 @@ class Fragments {
               post { ...postSummary repostedSource { ...postSummary } }
               featuredBy { ...authorSummary }
             }
-            """, needs = listOf(categorySummary, postSummary, authorSummary))
+            """, needs = listOf(categorySummary, post2Summary, authorSummary))
 
         val categoryUserSummary = Fragments("""
             fragment categoryUserSummary on CategoryUser {
@@ -196,7 +229,7 @@ class Fragments {
               post { ...postSummary repostedSource { ...postSummary } }
               artistInvite { id title slug }
             }
-            """, needs = listOf(postSummary))
+            """, needs = listOf(post2Summary))
 
         val loveSummary = Fragments("""
             fragment loveSummary on Love {
@@ -204,14 +237,14 @@ class Fragments {
               post { ...postSummary repostedSource { ...postSummary } }
               user { ...authorSummary }
             }
-            """, needs = listOf(postSummary, authorSummary))
+            """, needs = listOf(post2Summary, authorSummary))
 
         val watchSummary = Fragments("""
             fragment watchSummary on Watch {
               id
               post { ...postSummary repostedSource { ...postSummary } }
             }
-            """, needs = listOf(postSummary))
+            """, needs = listOf(post2Summary))
 
         val commentDetails = Fragments("""
             fragment commentDetails on Comment {
@@ -243,7 +276,7 @@ class Fragments {
                 ... on Watch { ...watchSummary }
               }
             }
-            """, needs = listOf(postSummary, commentSummary, authorSummary, categoryUserSummary, categoryPostSummary, loveSummary, artistInviteSubmissionSummary, watchSummary))
+            """, needs = listOf(post2Summary, commentSummary, authorSummary, categoryUserSummary, categoryPostSummary, loveSummary, artistInviteSubmissionSummary, watchSummary))
 
 
         val userDetails = Fragments("""

@@ -9,22 +9,6 @@ import java.util.*
 class NotificationsGenerator(val delegate: NotificationsProtocols.Controller?, val queue: Queue)
     : NotificationsProtocols.Generator
 {
-
-    sealed class Stream {
-        object All : Stream()
-        object Subscribed : Stream()
-        data class Category(val id: Token) : Stream()
-
-        override fun equals(other: Any?): Boolean {
-            if (other == null)  return false
-            if (other !is Stream)  return false
-            if (other is All && this is All)  return true
-            if (other is Subscribed && this is Subscribed)  return true
-            if (other is Category && this is Category)  return other.id == this.id
-            return false
-        }
-    }
-
     var streamToken: UUID? = null
     private fun newUUID(): UUID {
         return randomUUID().apply { streamToken = this }
@@ -41,10 +25,8 @@ class NotificationsGenerator(val delegate: NotificationsProtocols.Controller?, v
                     val items = StreamParser().parse(notifications)
                     delegate?.loadedNotifications(items)
                 }
-                is Failure -> {delegate?.loadedNotifications(listOf())
-                println(result.error)}
+                is Failure -> println(result.error)
             }
         }
     }
-
 }
