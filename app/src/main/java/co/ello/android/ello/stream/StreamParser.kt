@@ -12,7 +12,8 @@ class StreamParser {
             }
             else if (model is Editorial) {
                 emptyList()
-            } else if (model is Notification) {
+            }
+            else if (model is Notification) {
                 parseContent(model, model.textRegion as Regionable)
             }
             else emptyList()

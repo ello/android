@@ -1,11 +1,12 @@
 package co.ello.android.ello
 
-import java.util.Date
+import java.text.DateFormat
+import java.time.LocalDate
 
 
 data class Notification(
         val id: String,
-        val createdAt: Date,
+        val createdAt: String,
         val kind: Kind?,
         val subjectType: SubjectType?
     ) : Model() {
@@ -65,6 +66,8 @@ data class Notification(
             assignRegionsFromContent(actionablePost.summary)
         }
 
+
+        textRegion = TextRegion(id)
     }
 
     private fun assignRegionsFromContent(content: List<Regionable>, parentSummary: List<Regionable>? = null) {

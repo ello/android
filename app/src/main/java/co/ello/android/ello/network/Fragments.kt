@@ -1,7 +1,7 @@
 package co.ello.android.ello
 
 
-class Fragments {
+open class Fragments {
     val string: String
     val needs: List<Fragments>
 
@@ -25,13 +25,6 @@ class Fragments {
             }
             """)
 
-        val imageVersionProps = Fragments("""
-            fragment imageVersionProps on Image {
-              url
-              metadata { height width type size }
-            }
-            """)
-
         val tshirtProps = Fragments("""
             fragment tshirtProps on TshirtImageVersions {
               regular { ...imageProps }
@@ -48,27 +41,6 @@ class Fragments {
               optimized { ...imageProps }
             }
             """, needs = listOf(imageProps))
-
-        val responsiveImageVersions = Fragments("""
-            fragment responsiveImageVersions on ResponsiveImageVersions {
-              xhdpi { ...imageVersionProps }
-              hdpi { ...imageVersionProps }
-              mdpi { ...imageVersionProps }
-              ldpi { ...imageVersionProps }
-              optimized { ...imageVersionProps }
-              original { ...imageVersionProps }
-              video { ...imageVersionProps }
-            }
-            """, needs = listOf(imageVersionProps))
-
-        val avatarImageVersion = Fragments("""
-            fragment avatarImageVersion on TshirtImageVersions {
-              small { ...imageVersionProps }
-              regular { ...imageVersionProps }
-              large { ...imageVersionProps }
-              original { ...imageVersionProps }
-            }
-            """, needs = listOf(imageVersionProps))
 
         val authorProps = Fragments("""
             fragment authorProps on User {
@@ -88,18 +60,6 @@ class Fragments {
               }
             }
             """, needs = listOf(tshirtProps, responsiveProps))
-
-        val authorSummary = Fragments("""
-            fragment authorSummary on User {
-              id
-              username
-              name
-              currentUserState { relationshipPriority }
-              avatar {
-                ...avatarImageVersion
-              }
-            }
-            """, needs = listOf(avatarImageVersion))
 
         val pageHeaderUserProps = Fragments("""
             fragment pageHeaderUserProps on User {
@@ -142,7 +102,6 @@ class Fragments {
             fragment postContent on Post {
               content { ...contentProps }
             }
-
             fragment postSummary on Post {
               id
               token
@@ -155,20 +114,6 @@ class Fragments {
               currentUserState { watching loved reposted }
             }
             """, needs = listOf(assetProps, authorProps, contentProps))
-
-        val post2Summary = Fragments("""
-            fragment postSummary on Post {
-              id
-              token
-              createdAt
-              summary { ...contentProps }
-              author { ...authorSummary }
-              assets { id attachment { ...responsiveImageVersions } }
-              postStats { lovesCount commentsCount viewsCount repostsCount }
-              currentUserState { watching loved reposted }
-            }
-            """, needs = listOf(contentProps, authorSummary, responsiveImageVersions))
-
         val postDetails = Fragments("""
             fragment postDetails on Post {
                 ...postSummary
@@ -185,67 +130,6 @@ class Fragments {
                 }
             }
             """, needs = listOf(postSummary, categoryPostActions, categoryProps, contentProps))
-
-        val commentSummary = Fragments("""
-            fragment commentSummary on Comment {
-              id
-              createdAt
-              author { ...authorSummary }
-              summary { ...contentProps }
-              content { ...contentProps }
-              assets { id attachment { ...responsiveImageVersions } }
-            }
-            """, needs = listOf(authorSummary, contentProps, responsiveImageVersions))
-
-        val categorySummary = Fragments("""
-            fragment categorySummary on Category {
-              id slug name
-            }
-            """)
-
-        val categoryPostSummary = Fragments("""
-            fragment categoryPostSummary on CategoryPost {
-              id
-              status
-              category { ...categorySummary }
-              post { ...postSummary repostedSource { ...postSummary } }
-              featuredBy { ...authorSummary }
-            }
-            """, needs = listOf(categorySummary, post2Summary, authorSummary))
-
-        val categoryUserSummary = Fragments("""
-            fragment categoryUserSummary on CategoryUser {
-              id
-              role
-              category { ...categorySummary }
-              user { ...authorSummary }
-            }
-            """, needs = listOf(categorySummary, authorSummary))
-
-        val artistInviteSubmissionSummary = Fragments("""
-            fragment artistInviteSubmissionSummary on ArtistInviteSubmission {
-              id
-              status
-              post { ...postSummary repostedSource { ...postSummary } }
-              artistInvite { id title slug }
-            }
-            """, needs = listOf(post2Summary))
-
-        val loveSummary = Fragments("""
-            fragment loveSummary on Love {
-              id
-              post { ...postSummary repostedSource { ...postSummary } }
-              user { ...authorSummary }
-            }
-            """, needs = listOf(post2Summary, authorSummary))
-
-        val watchSummary = Fragments("""
-            fragment watchSummary on Watch {
-              id
-              post { ...postSummary repostedSource { ...postSummary } }
-            }
-            """, needs = listOf(post2Summary))
-
         val commentDetails = Fragments("""
             fragment commentDetails on Comment {
               id
@@ -257,27 +141,13 @@ class Fragments {
               assets { ...assetProps }
             }
             """, needs = listOf(contentProps, authorProps, assetProps))
-
-        val notificationDetails = Fragments("""
-            fragment notificationDetails on Notification {
-              id
-              kind
-              subjectType
-              createdAt
-              subject {
-              __typename
-                ... on Post { ...postSummary repostedSource { ...postSummary } }
-                ... on Comment { ...commentSummary parentPost { ...postSummary repostedSource { ...postSummary } } }
-                ... on User { ...authorSummary }
-                ... on CategoryUser { ...categoryUserSummary }
-                ... on CategoryPost { ...categoryPostSummary }
-                ... on Love { ...loveSummary }
-                ... on ArtistInviteSubmission { ...artistInviteSubmissionSummary }
-                ... on Watch { ...watchSummary }
-              }
+        val loveDetails = Fragments("""
+            fragment loveDetails on Love {
+                id
+                post { ...postDetails }
+                user { id }
             }
-            """, needs = listOf(post2Summary, commentSummary, authorSummary, categoryUserSummary, categoryPostSummary, loveSummary, artistInviteSubmissionSummary, watchSummary))
-
+            """, needs = listOf(postDetails))
 
         val userDetails = Fragments("""
             fragment userDetails on User {
@@ -309,7 +179,6 @@ class Fragments {
                 xhdpi { ...imageProps }
                 original { ...imageProps }
             }
-
             fragment editorial on Editorial {
                 id
                 kind
@@ -366,16 +235,15 @@ class Fragments {
                 ...commentDetails
             }
             """, needs = listOf(commentDetails))
-        val notificationStreamBody = Fragments("""
-            next
-            isLastPage
-            notifications {
-                ...notificationDetails
-            }
-            """, needs = listOf(notificationDetails))
         val userBody = Fragments("""
             ...userDetails
             """, needs = listOf(userDetails))
+        val loveStreamBody = Fragments("""
+            next isLastPage
+            loves {
+                ...loveDetails
+            }
+            """, needs = listOf(loveDetails))
     }
 
     val dependencies: List<Fragments> get() {

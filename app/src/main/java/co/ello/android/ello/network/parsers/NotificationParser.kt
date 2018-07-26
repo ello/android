@@ -1,7 +1,5 @@
 package co.ello.android.ello
 
-import java.util.*
-
 class NotificationParser : IdParser(table = MappingType.NotificationsType) {
     init {
 
@@ -51,10 +49,15 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
             json: JSON
     ): Notification {
 
-        val createdAt = Date(json["createdAt"].stringValue)
+        val createdAt = json["createdAt"].stringValue
         val id = json["id"].idValue
         val kind = Notification.Kind.create(json["kind"].stringValue)
         val subjectType = Notification.SubjectType.create(json["subjectType"].stringValue)
+
+        println("createdAt" +createdAt.toString())
+        println("id" +id)
+        println("kind" +json["kind"].stringValue)
+        println("subjectType" +json["subjectType"].stringValue)
 
         val notification = Notification(
             id = id,
