@@ -1,23 +1,27 @@
 package co.ello.android.ello
 
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+
 class NotificationParser : IdParser(table = MappingType.NotificationsType) {
+
     init {
 
     }
 
-    override fun flatten(json: JSON, identifier: Identifier, db: Database) {
+    override fun flatten(json: JSON, identifier: Identifier, db: Database){
         when(Notification.SubjectType.create(json["subjectType"].stringValue)) {
-            Notification.SubjectType.Post -> flattenPostSubject(json["subject"], db)
+            Notification.SubjectType.Post ->  flattenPostSubject(json["subject"], db)
             Notification.SubjectType.User -> flattenUserSubject(json["subject"], db)
             Notification.SubjectType.Comment -> flattenCommentSubject(json["subject"], db)
             else -> null
         }?.let { identifier ->
-            json["links"]["subject"] = JSON(mapOf<String, String>(
+            json["links"]["subject"] = JSON(mapOf<String, Any>(
                     "id" to identifier.id,
                     "type" to identifier.table.name
             ))
         }
-
         super.flatten(json, identifier, db)
     }
 
@@ -49,19 +53,23 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
             json: JSON
     ): Notification {
 
-        val createdAt = json["createdAt"].stringValue
         val id = json["id"].idValue
         val kind = Notification.Kind.create(json["kind"].stringValue)
         val subjectType = Notification.SubjectType.create(json["subjectType"].stringValue)
 
-        println("createdAt" +createdAt.toString())
-        println("id" +id)
-        println("kind" +json["kind"].stringValue)
-        println("subjectType" +json["subjectType"].stringValue)
+        val createdAt = json["createdAt"].stringValue
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000000000+0000'")
+        var createdAtDate : Date? = null
+
+        try {
+            createdAtDate = format.parse(createdAt)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
 
         val notification = Notification(
             id = id,
-            createdAt = createdAt,
+            createdAt = createdAtDate as Date,
             kind = kind,
             subjectType = subjectType
         )

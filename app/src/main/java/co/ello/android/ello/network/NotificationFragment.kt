@@ -144,7 +144,6 @@ class NotificationFragment(string: String, needs: List<Fragments>) : Fragments(s
                 subjectType
                 createdAt
                 subject {
-                __typename
                 ... on Post { ...postSummary repostedSource { ...postSummary } }
                 ... on Comment { ...commentSummary parentPost { ...postSummary repostedSource { ...postSummary } } }
                 ... on User { ...authorSummary }

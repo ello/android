@@ -1,12 +1,10 @@
 package co.ello.android.ello
 
-import java.text.DateFormat
-import java.time.LocalDate
-
+import java.util.*
 
 data class Notification(
         val id: String,
-        val createdAt: String,
+        val createdAt: Date,
         val kind: Kind?,
         val subjectType: SubjectType?
     ) : Model() {
@@ -28,6 +26,17 @@ data class Notification(
     }
 
     init {
+
+        val formattedId = id.substring(id.length - 3)
+        val mappingType = when (subjectType) {
+            SubjectType.User -> MappingType.UsersType
+            SubjectType.Comment -> MappingType.CommentsType
+            SubjectType.Post -> MappingType.PostsType
+            else -> null
+        }
+
+        addLinkObject("subject", formattedId, mappingType as MappingType)
+
         val post = subject as? Post
         val comment = subject as? Comment
         val user = subject as? User
@@ -44,6 +53,7 @@ data class Notification(
         }
         else if (user != null) {
             this.author = user
+            assignRegionsFromContent(listOf(TextRegion("You started following @" +author?.username), TextRegion(createdAt.timeAgo())))
         }
         else if (actionable != null) {
             this.postId = actionable.postId
@@ -52,7 +62,6 @@ data class Notification(
                 this.author = actionableUser
             }
         }
-
         if (post != null) {
             assignRegionsFromContent(post.summary)
         }
@@ -66,8 +75,6 @@ data class Notification(
             assignRegionsFromContent(actionablePost.summary)
         }
 
-
-        textRegion = TextRegion(id)
     }
 
     private fun assignRegionsFromContent(content: List<Regionable>, parentSummary: List<Regionable>? = null) {

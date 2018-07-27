@@ -83,20 +83,16 @@ class GraphQLRequest<T>(
         }
 
         this.onSuccess { json ->
-            println("JSON SUCCESS")
             val resultJson = json["data"][endpointName]
             try {
                 val result = parserCompletion!!.invoke(resultJson)
                 continuation.resume(Success(result))
-                println("TRY SUCCESS")
             }
             catch(e: Throwable) {
-                println("CAUGHT THROWABLE")
                 continuation.resume(Failure(e))
             }
         }
         .onFailure { exception ->
-            println("JSON FAIL")
             println("${this.endpointName} failed: $exception")
             if (exception is VolleyError && exception.networkResponse != null) {
                 val body = String(getBody()).replace("\\n", "\n")
