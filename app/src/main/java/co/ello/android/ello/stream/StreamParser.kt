@@ -1,6 +1,5 @@
 package co.ello.android.ello
 
-
 class StreamParser {
     fun parse(models: List<Model>): List<StreamCellItem> {
         val items = models.flatMap { model ->
@@ -14,7 +13,7 @@ class StreamParser {
                 emptyList()
             }
             else if (model is Notification) {
-                parseContent(model, model.textRegion as Regionable)
+                notificationItems(model)
             }
             else emptyList()
         }
@@ -73,6 +72,10 @@ class StreamParser {
         return listOf(header) + content
     }
 
+    private fun notificationItems(model: Notification) :List<StreamCellItem> {
+        return listOf(StreamCellItem(model = model, type = StreamCellType.NotificationText))
+    }
+
 
     private fun parseContent(model: Model, region: Regionable): List<StreamCellItem> {
         if (region is TextRegion) {
@@ -81,7 +84,7 @@ class StreamParser {
                 cellType = StreamCellType.CommentText(region.content)
             }
             else if (model is Notification) {
-                cellType = StreamCellType.NotificationText(region.content)
+                cellType = StreamCellType.NotificationText
             }
             else {
                 cellType = StreamCellType.PostText(region.content)

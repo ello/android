@@ -53,7 +53,6 @@ data class Notification(
         }
         else if (user != null) {
             this.author = user
-            assignRegionsFromContent(listOf(TextRegion("You started following @" +author?.username), TextRegion(createdAt.timeAgo())))
         }
         else if (actionable != null) {
             this.postId = actionable.postId
