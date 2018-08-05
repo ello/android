@@ -6,19 +6,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
 import java.net.URL
-import java.util.*
 
-class NotificationCell (parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.notification_cell, parent, false)) {
+class NotificationHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.notification_header_cell, parent, false)) {
     private val imageButton: ImageView = itemView.findViewById(R.id.imageView)
     private val textButton: Button = itemView.findViewById(R.id.textButton)
-    private val timestampLabel: TextView = itemView.findViewById(R.id.timestampLabel)
 
     data class Config(
             val username: String?,
-            val avatarURL: URL?,
-            val postedAt: Date
+            val avatarURL: URL?
     )
 
     init {
@@ -28,7 +24,6 @@ class NotificationCell (parent: ViewGroup) : StreamCell(LayoutInflater.from(pare
 
     fun config(value: Config) {
         textButton.text = generateText(value)
-        timestampLabel.text = value.postedAt.timeAgo()
         loadImageURL(value.avatarURL).transform(CircleTransform()).into(imageButton)
     }
 
@@ -47,6 +42,8 @@ class NotificationCell (parent: ViewGroup) : StreamCell(LayoutInflater.from(pare
         val text = when (notification.kind) {
             Notification.Kind.NewFollowedUserPost -> Html.fromHtml("You started following " +"<u>"+ value.username +"</u>.")
             Notification.Kind.NewFollowerPost -> Html.fromHtml("<u>"+ value.username +"</u> started following you.")
+            Notification.Kind.LoveNotification -> Html.fromHtml(value.username + "loved your <u>post</u>.")
+            Notification.Kind.RepostNotification -> Html.fromHtml(value.username + " reposted your <u>post</u>.")
             else -> null
         }
 

@@ -15,8 +15,13 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
             Notification.SubjectType.Post ->  flattenPostSubject(json["subject"], db)
             Notification.SubjectType.User -> flattenUserSubject(json["subject"], db)
             Notification.SubjectType.Comment -> flattenCommentSubject(json["subject"], db)
+            Notification.SubjectType.Watch -> flattenPostSubject(json["subject"]["post"], db)
+            Notification.SubjectType.CategoryPost -> flattenCategoryPostSubject(json["subject"], db)
+            Notification.SubjectType.Love -> flattenPostSubject(json["subject"]["post"], db)
             else -> null
         }?.let { identifier ->
+            println(identifier.id)
+            println(identifier.table.name)
             json["links"]["subject"] = JSON(mapOf<String, Any>(
                     "id" to identifier.id,
                     "type" to identifier.table.name
@@ -34,9 +39,9 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
     }
 
     private fun flattenPostSubject(json: JSON, db: Database): Identifier? {
-        val postSubject = PostParser()
-        return postSubject.identifier(json)?.let { postIdentifier ->
-            postSubject.flatten(json, identifier = postIdentifier, db = db)
+        val postParser = PostParser()
+        return postParser.identifier(json)?.let { postIdentifier ->
+            postParser.flatten(json, identifier = postIdentifier, db = db)
             postIdentifier
         }
     }
@@ -49,16 +54,27 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
         }
     }
 
+    private fun flattenCategoryPostSubject(json: JSON, db: Database): Parser.Identifier? {
+        val categoryPostParser = CategoryPostParser()
+        return categoryPostParser.identifier(json)?.let { categoryPostIdentifier ->
+            categoryPostParser.flatten(json, identifier = categoryPostIdentifier, db = db)
+            categoryPostIdentifier
+        }
+    }
+
     override fun parse(
             json: JSON
     ): Notification {
 
+        println(json["subjectType"].stringValue)
+        println(json["subject"])
+
         val id = json["id"].idValue
+        println(id)
         val kind = Notification.Kind.create(json["kind"].stringValue)
         val subjectType = Notification.SubjectType.create(json["subjectType"].stringValue)
-
         val createdAt = json["createdAt"].stringValue
-        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000000000+0000'")
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000000Z'")
         var createdAtDate : Date? = null
 
         try {

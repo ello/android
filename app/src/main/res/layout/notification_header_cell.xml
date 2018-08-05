@@ -9,9 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/border"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:paddingTop="10dp">
 
         <ImageView
             android:id="@+id/imageView"
@@ -37,15 +35,6 @@
                 android:gravity="center_vertical"
                 app:styleName="clear gray"
                 tools:text="username" />
-
-            <co.ello.android.ello.StyledLabel
-                android:id="@+id/timestampLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight="1"
-                app:styleName="gray"
-                tools:text="15m" />
         </LinearLayout>
     </LinearLayout>
 

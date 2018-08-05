@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:orientation="horizontal">
+
+        <co.ello.android.ello.StyledLabel
+            android:id="@+id/styledLabel2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="6" />
+
+        <co.ello.android.ello.StyledLabel
+            android:id="@+id/timestampLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            app:styleName="gray"
+            tools:layout_editor_absoluteX="15dp"
+            tools:text="15m" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

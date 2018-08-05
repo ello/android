@@ -73,18 +73,21 @@ class StreamParser {
     }
 
     private fun notificationItems(model: Notification) :List<StreamCellItem> {
-        return listOf(StreamCellItem(model = model, type = StreamCellType.NotificationText))
+        val header = StreamCellItem(model = model, type = StreamCellType.NotificationHeader)
+        val footer = StreamCellItem(model = model, type = StreamCellType.NotificationFooter)
+        val content = parseContent(model, model.textRegion as? Regionable)
+        return listOf(header) + content + listOf(footer)
     }
 
-
-    private fun parseContent(model: Model, region: Regionable): List<StreamCellItem> {
+    private fun parseContent(model: Model, region: Regionable?): List<StreamCellItem> {
+        if (region !is Regionable) return emptyList()
         if (region is TextRegion) {
             val cellType: StreamCellType
             if (model is Comment) {
                 cellType = StreamCellType.CommentText(region.content)
             }
             else if (model is Notification) {
-                cellType = StreamCellType.NotificationText
+                cellType = StreamCellType.NotificationText(region.content)
             }
             else {
                 cellType = StreamCellType.PostText(region.content)

@@ -27,13 +27,22 @@ data class Notification(
 
     init {
 
-        val formattedId = id.substring(id.length - 3)
+        val sub = id.substring(id.indexOf(":")+1)
+        println("SUB"+sub)
+        val formattedId = sub.substring(0, sub.indexOf(":"))
+        println(formattedId)
+
         val mappingType = when (subjectType) {
             SubjectType.User -> MappingType.UsersType
             SubjectType.Comment -> MappingType.CommentsType
             SubjectType.Post -> MappingType.PostsType
+            SubjectType.Watch -> MappingType.PostsType
+            SubjectType.CategoryPost -> MappingType.PostsType
+            SubjectType.Love -> MappingType.PostsType
             else -> null
         }
+
+        //the formatted id is incorrect so need to fix that, it doesn't match
 
         addLinkObject("subject", formattedId, mappingType as MappingType)
 
@@ -46,15 +55,22 @@ data class Notification(
         if (post != null) {
             this.author = post.author
             this.postId = post.id
+            println("POST NOT NULL")
         }
         else if (comment != null) {
             this.author = comment.author
             this.postId = comment.postId
+            println("COMMENT NOT NULL")
+
         }
         else if (user != null) {
             this.author = user
+            println("USER NOT NULL")
+
         }
         else if (actionable != null) {
+            println("ACTIONABNLE NOT NULL")
+
             this.postId = actionable.postId
             val actionableUser = actionable.user
             if (actionableUser  != null) {
@@ -168,13 +184,19 @@ data class Notification(
     enum class SubjectType(val value: String) {
         User("User"),
         Post("Post"),
-        Comment("Comment");
+        Comment("Comment"),
+        Watch("Watch"),
+        CategoryPost("CategoryPost"),
+        Love("Love");
 
         companion object {
             fun create(value: String): SubjectType? = when(value) {
                 "User" -> User
                 "Post" -> Post
                 "Comment" -> Comment
+                "Watch" -> Watch
+                "CategoryPost" -> CategoryPost
+                "Love" -> Love
                 else -> null
             }
         }

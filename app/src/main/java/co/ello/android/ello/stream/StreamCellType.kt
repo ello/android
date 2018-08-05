@@ -1,8 +1,6 @@
 package co.ello.android.ello
 
 import android.view.ViewGroup
-import java.net.URL
-
 
 sealed class StreamCellType {
     object Placeholder : StreamCellType()
@@ -15,10 +13,12 @@ sealed class StreamCellType {
     object PostHeader : StreamCellType()
     object CommentHeader : StreamCellType()
     object PostFooter : StreamCellType()
-    object NotificationText : StreamCellType()
+    object NotificationHeader : StreamCellType()
+    object NotificationFooter : StreamCellType()
 
     data class PostText(val content: String) : StreamCellType()
     data class CommentText(val content: String) : StreamCellType()
+    data class NotificationText(val content: String) : StreamCellType()
     data class PostImage(val image: ImageRegion) : StreamCellType()
     data class CommentImage(val image: ImageRegion): StreamCellType()
     data class PostEmbed(val region: EmbedRegion) : StreamCellType()
@@ -52,7 +52,9 @@ sealed class StreamCellType {
             is PostFooter -> PostFooterPresenter.configure(viewHolder as PostFooterCell, item)
             is PostText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
             is CommentText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
-            is NotificationText -> NotificationPresenter.configure(viewHolder as NotificationCell, item)
+            is NotificationText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
+            is NotificationHeader -> NotificationHeaderPresenter.configure(viewHolder as NotificationHeaderCell, item)
+            is NotificationFooter -> NotificationFooterPresenter.configure(viewHolder as NotificationFooterCell, item)
             is PostImage -> PostImagePresenter.configure(viewHolder as PostImageCell, item)
             is CommentImage -> PostImagePresenter.configure(viewHolder as PostImageCell, item)
             is PostEmbed -> PostEmbedPresenter.configure(viewHolder as PostEmbedCell, item)
@@ -86,7 +88,9 @@ sealed class StreamCellType {
                 PostFooter::class -> PostFooterCell(parent)
                 PostText::class -> PostTextCell(parent, isComment = false, isNotification = false)
                 CommentText::class -> PostTextCell(parent, isComment = true, isNotification = false)
-                NotificationText::class -> NotificationCell(parent)
+                NotificationText::class -> PostTextCell(parent, isComment = false, isNotification = true)
+                NotificationHeader::class -> NotificationHeaderCell(parent)
+                NotificationFooter::class -> NotificationFooterCell(parent)
                 PostImage::class -> PostImageCell(parent, isComment = false)
                 CommentImage::class -> PostImageCell(parent, isComment = true)
                 PostEmbed::class -> PostEmbedCell(parent, isComment = false)
