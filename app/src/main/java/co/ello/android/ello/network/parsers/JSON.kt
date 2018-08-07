@@ -81,7 +81,7 @@ class JSON {
         jsonArray = parent.jsonArray?.optJSONArray(index)
     }
 
-    constructor(value: List<JSON>) {
+    constructor(value: List<Any>) {
         jsonArray = JSONArray(value)
     }
 
@@ -106,8 +106,32 @@ class JSON {
         }
     }
 
-    operator fun set(name: String, value: JSON) {
+    operator fun set(name: String, value: Boolean) {
         jsonObject?.put(name, value)
+    }
+
+    operator fun set(name: String, value: String) {
+        jsonObject?.put(name, value)
+    }
+
+    operator fun set(name: String, value: Int) {
+        jsonObject?.put(name, value)
+    }
+
+    operator fun set(name: String, value: Long) {
+        jsonObject?.put(name, value)
+    }
+
+    operator fun set(name: String, value: Double) {
+        jsonObject?.put(name, value)
+    }
+
+    operator fun set(name: String, value: Map<String, Any>) {
+        jsonObject?.put(name, JSONObject(value))
+    }
+
+    operator fun set(name: String, value: List<Any>) {
+        jsonObject?.put(name, JSONArray(value))
     }
 
     operator fun get(name: String): JSON {

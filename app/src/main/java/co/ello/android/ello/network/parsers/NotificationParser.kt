@@ -22,10 +22,8 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
                             "type" to identifier.table.name
                     )
             )
-            json["links"] = JSON(subject)
+            json["links"] = subject
         }
-        println("Notification parser")
-        println(json["links"]["subject"])
         super.flatten(json, identifier, db)
     }
 

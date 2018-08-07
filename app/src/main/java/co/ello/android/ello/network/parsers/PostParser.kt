@@ -16,12 +16,12 @@ class PostParser : IdParser(table = MappingType.PostsType) {
         val repostedSource = json["repostedSource"]
         identifier(json = repostedSource)?.let { repostIdentifier ->
             flatten(json = repostedSource, identifier = repostIdentifier, db = db)
-            json["links"] = JSON(mapOf<String, Any>(
+            json["links"] = mapOf<String, Any>(
                 "reposted_source" to mapOf<String, String>(
                     "id" to repostIdentifier.id,
                     "type" to MappingType.PostsType.name
                 )
-            ))
+            )
         }
 
         super.flatten(json, identifier, db)
