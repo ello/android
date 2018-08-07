@@ -6,22 +6,17 @@ import java.util.*
 
 class NotificationParser : IdParser(table = MappingType.NotificationsType) {
 
-    init {
-
-    }
-
     override fun flatten(json: JSON, identifier: Identifier, db: Database){
         when(Notification.SubjectType.create(json["subjectType"].stringValue)) {
             Notification.SubjectType.Post ->  flattenPostSubject(json["subject"], db)
             Notification.SubjectType.User -> flattenUserSubject(json["subject"], db)
             Notification.SubjectType.Comment -> flattenCommentSubject(json["subject"], db)
+            //I think these (below) are wrong
             Notification.SubjectType.Watch -> flattenPostSubject(json["subject"]["post"], db)
             Notification.SubjectType.CategoryPost -> flattenCategoryPostSubject(json["subject"], db)
             Notification.SubjectType.Love -> flattenPostSubject(json["subject"]["post"], db)
             else -> null
         }?.let { identifier ->
-            println(identifier.id)
-            println(identifier.table.name)
             json["links"]["subject"] = JSON(mapOf<String, Any>(
                     "id" to identifier.id,
                     "type" to identifier.table.name

@@ -27,10 +27,8 @@ data class Notification(
 
     init {
 
-        val sub = id.substring(id.indexOf(":")+1)
-        println("SUB"+sub)
-        val formattedId = sub.substring(0, sub.indexOf(":"))
-        println(formattedId)
+        val idStart = id.substring(id.indexOf(":")+1)
+        val idComplete = idStart.substring(0, idStart.indexOf(":"))
 
         val mappingType = when (subjectType) {
             SubjectType.User -> MappingType.UsersType
@@ -42,9 +40,8 @@ data class Notification(
             else -> null
         }
 
-        //the formatted id is incorrect so need to fix that, it doesn't match
-
-        addLinkObject("subject", formattedId, mappingType as MappingType)
+        //problem here with the ID
+        addLinkObject("subject", idComplete, mappingType as MappingType)
 
         val post = subject as? Post
         val comment = subject as? Comment
@@ -55,22 +52,15 @@ data class Notification(
         if (post != null) {
             this.author = post.author
             this.postId = post.id
-            println("POST NOT NULL")
         }
         else if (comment != null) {
             this.author = comment.author
             this.postId = comment.postId
-            println("COMMENT NOT NULL")
-
         }
         else if (user != null) {
             this.author = user
-            println("USER NOT NULL")
-
         }
         else if (actionable != null) {
-            println("ACTIONABNLE NOT NULL")
-
             this.postId = actionable.postId
             val actionableUser = actionable.user
             if (actionableUser  != null) {

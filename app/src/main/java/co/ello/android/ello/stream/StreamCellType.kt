@@ -53,7 +53,7 @@ sealed class StreamCellType {
             is PostText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
             is CommentText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
             is NotificationText -> PostTextPresenter.configure(viewHolder as PostTextCell, item)
-            is NotificationHeader -> NotificationHeaderPresenter.configure(viewHolder as NotificationHeaderCell, item)
+            is NotificationHeader -> NotificationHeaderPresenter.configure(viewHolder as NotificationHeaderCell)
             is NotificationFooter -> NotificationFooterPresenter.configure(viewHolder as NotificationFooterCell, item)
             is PostImage -> PostImagePresenter.configure(viewHolder as PostImageCell, item)
             is CommentImage -> PostImagePresenter.configure(viewHolder as PostImageCell, item)

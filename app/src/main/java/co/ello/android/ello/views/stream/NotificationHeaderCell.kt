@@ -1,30 +1,23 @@
 package co.ello.android.ello
 
-import android.text.Html
-import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import java.net.URL
 
 class NotificationHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from(parent.context).inflate(R.layout.notification_header_cell, parent, false)) {
     private val imageButton: ImageView = itemView.findViewById(R.id.imageView)
     private val textButton: Button = itemView.findViewById(R.id.textButton)
-
-    data class Config(
-            val username: String?,
-            val avatarURL: URL?
-    )
 
     init {
         imageButton.setOnClickListener { usernameButtonTapped() }
         textButton.setOnClickListener{ usernameButtonTapped() }
     }
 
-    fun config(value: Config) {
-        textButton.text = generateText(value)
-        loadImageURL(value.avatarURL).transform(CircleTransform()).into(imageButton)
+    fun config() {
+        val notification = streamCellItem?.model as Notification
+        textButton.text = NotificationAttributedTitle.from(notification = notification)
+        loadImageURL(notification.author?.avatarURL()).transform(CircleTransform()).into(imageButton)
     }
 
     private fun usernameButtonTapped() {
@@ -34,19 +27,5 @@ class NotificationHeaderCell(parent: ViewGroup) : StreamCell(LayoutInflater.from
         val user = notification.author ?: return
 
         streamController.streamTappedUser(user)
-    }
-
-    private fun generateText(value: Config) : Spanned? {
-        val notification = streamCellItem?.model as? Notification ?: return null
-
-        val text = when (notification.kind) {
-            Notification.Kind.NewFollowedUserPost -> Html.fromHtml("You started following " +"<u>"+ value.username +"</u>.")
-            Notification.Kind.NewFollowerPost -> Html.fromHtml("<u>"+ value.username +"</u> started following you.")
-            Notification.Kind.LoveNotification -> Html.fromHtml(value.username + "loved your <u>post</u>.")
-            Notification.Kind.RepostNotification -> Html.fromHtml(value.username + " reposted your <u>post</u>.")
-            else -> null
-        }
-
-        return text
     }
 }
