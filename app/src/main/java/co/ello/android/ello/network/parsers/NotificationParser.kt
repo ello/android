@@ -11,17 +11,21 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
             Notification.SubjectType.Post ->  flattenPostSubject(json["subject"], db)
             Notification.SubjectType.User -> flattenUserSubject(json["subject"], db)
             Notification.SubjectType.Comment -> flattenCommentSubject(json["subject"], db)
-            //I think these (below) are wrong
             Notification.SubjectType.Watch -> flattenPostSubject(json["subject"]["post"], db)
             Notification.SubjectType.CategoryPost -> flattenCategoryPostSubject(json["subject"], db)
             Notification.SubjectType.Love -> flattenPostSubject(json["subject"]["post"], db)
             else -> null
         }?.let { identifier ->
-            json["links"]["subject"] = JSON(mapOf<String, Any>(
-                    "id" to identifier.id,
-                    "type" to identifier.table.name
-            ))
+            val subject = mapOf<String, Any>(
+                    "subject" to mapOf<String, Any>(
+                            "id" to identifier.id,
+                            "type" to identifier.table.name
+                    )
+            )
+            json["links"] = JSON(subject)
         }
+        println("Notification parser")
+        println(json["links"]["subject"])
         super.flatten(json, identifier, db)
     }
 
@@ -60,12 +64,7 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
     override fun parse(
             json: JSON
     ): Notification {
-
-        println(json["subjectType"].stringValue)
-        println(json["subject"])
-
         val id = json["id"].idValue
-        println(id)
         val kind = Notification.Kind.create(json["kind"].stringValue)
         val subjectType = Notification.SubjectType.create(json["subjectType"].stringValue)
         val createdAt = json["createdAt"].stringValue

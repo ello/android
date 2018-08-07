@@ -12,8 +12,8 @@ sealed class StreamCellType {
     object StreamSelection : StreamCellType()
     object PostHeader : StreamCellType()
     object CommentHeader : StreamCellType()
-    object PostFooter : StreamCellType()
     object NotificationHeader : StreamCellType()
+    object PostFooter : StreamCellType()
     object NotificationFooter : StreamCellType()
 
     data class PostText(val content: String) : StreamCellType()
