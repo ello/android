@@ -32,12 +32,15 @@ data class Notification(
             SubjectType.User -> MappingType.UsersType
             SubjectType.Comment -> MappingType.CommentsType
             SubjectType.Post -> MappingType.PostsType
-            SubjectType.Watch -> MappingType.PostsType
-            SubjectType.CategoryPost -> MappingType.PostsType
-            SubjectType.Love -> MappingType.PostsType
+            SubjectType.Watch -> MappingType.UsersType
+            SubjectType.CategoryPost -> MappingType.CategoryPostsType
+            SubjectType.Love -> MappingType.UsersType
             else -> null
         }
         addLinkObject("subject", subjectId, mappingType as MappingType)
+
+        if (subject == null)
+            println("NULL NIG")
 
         val post = subject as? Post
         val comment = subject as? Comment

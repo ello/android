@@ -19,6 +19,7 @@ class NotificationsController(a: AppActivity) : StreamableController(a), Notific
     }
 
     override fun onStart() {
+        streamController.replaceAll(listOf(StreamCellItem(type = StreamCellType.Spinner, placeholderType = StreamCellType.PlaceholderType.Spinner)))
         generator.loadNotifications(API.NotificationFilter.All)
     }
 

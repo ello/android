@@ -11,9 +11,9 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
             Notification.SubjectType.Post ->  flattenPostSubject(json["subject"], db)
             Notification.SubjectType.User -> flattenUserSubject(json["subject"], db)
             Notification.SubjectType.Comment -> flattenCommentSubject(json["subject"], db)
-            Notification.SubjectType.Watch -> flattenPostSubject(json["subject"]["post"], db)
+            Notification.SubjectType.Watch -> flattenUserSubject(json["subject"]["user"], db)
             Notification.SubjectType.CategoryPost -> flattenCategoryPostSubject(json["subject"], db)
-            Notification.SubjectType.Love -> flattenPostSubject(json["subject"]["post"], db)
+            Notification.SubjectType.Love -> flattenUserSubject(json["subject"]["user"], db)
             else -> null
         }?.let { identifier ->
             val subject = mapOf<String, Any>(
