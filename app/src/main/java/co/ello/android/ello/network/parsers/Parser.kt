@@ -17,7 +17,6 @@ open class Parser {
             val table = db[identifier.table] ?: return null
             val json = table[identifier.id] ?: return null
             val model = parser.parse(json) ?: return null
-
             Store.write { transaction ->
                 transaction.setObject(model, key = identifier.id, collection = identifier.table)
             }

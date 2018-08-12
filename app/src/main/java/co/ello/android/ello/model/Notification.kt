@@ -4,6 +4,7 @@ import java.util.*
 
 data class Notification(
         val id: String,
+        val subjectId: String,
         val createdAt: Date,
         val kind: Kind?,
         val subjectType: SubjectType?
@@ -27,9 +28,6 @@ data class Notification(
 
     init {
 
-        val idStart = id.substring(id.indexOf(":")+1)
-        val idComplete = idStart.substring(0, idStart.indexOf(":"))
-
         val mappingType = when (subjectType) {
             SubjectType.User -> MappingType.UsersType
             SubjectType.Comment -> MappingType.CommentsType
@@ -39,9 +37,7 @@ data class Notification(
             SubjectType.Love -> MappingType.PostsType
             else -> null
         }
-
-        //problem here with the ID
-        addLinkObject("subject", idComplete, mappingType as MappingType)
+        addLinkObject("subject", subjectId, mappingType as MappingType)
 
         val post = subject as? Post
         val comment = subject as? Comment

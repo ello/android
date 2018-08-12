@@ -1,5 +1,7 @@
 package co.ello.android.ello
 
+import android.graphics.Region
+
 class StreamParser {
     fun parse(models: List<Model>): List<StreamCellItem> {
         val items = models.flatMap { model ->
@@ -87,7 +89,14 @@ class StreamParser {
                 cellType = StreamCellType.CommentText(region.content)
             }
             else if (model is Notification) {
-                cellType = StreamCellType.NotificationText(region.content)
+                val textContent = (model.textRegion as TextRegion).content
+                if (model.hasImage) {
+                    val imageContent = (model.imageRegion as ImageRegion)
+                    cellType = StreamCellType.NotificationImageText(textContent, imageContent)
+                }
+                else {
+                    cellType = StreamCellType.NotificationText(textContent)
+                }
             }
             else {
                 cellType = StreamCellType.PostText(region.content)

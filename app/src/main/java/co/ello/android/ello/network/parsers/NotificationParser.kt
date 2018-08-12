@@ -63,6 +63,7 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
             json: JSON
     ): Notification {
         val id = json["id"].idValue
+        val subjectId = json["links"]["subject"]["id"].stringValue
         val kind = Notification.Kind.create(json["kind"].stringValue)
         val subjectType = Notification.SubjectType.create(json["subjectType"].stringValue)
         val createdAt = json["createdAt"].stringValue
@@ -77,12 +78,11 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
 
         val notification = Notification(
             id = id,
+            subjectId = subjectId,
             createdAt = createdAtDate as Date,
             kind = kind,
             subjectType = subjectType
         )
-
-        notification.mergeLinks(json["links"])
 
         return notification
     }
