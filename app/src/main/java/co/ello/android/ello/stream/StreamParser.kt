@@ -1,7 +1,5 @@
 package co.ello.android.ello
 
-import android.graphics.Region
-
 class StreamParser {
     fun parse(models: List<Model>): List<StreamCellItem> {
         val items = models.flatMap { model ->
@@ -74,29 +72,15 @@ class StreamParser {
         return listOf(header) + content
     }
 
-    private fun notificationItems(model: Notification) :List<StreamCellItem> {
-        val header = StreamCellItem(model = model, type = StreamCellType.NotificationHeader)
-        val footer = StreamCellItem(model = model, type = StreamCellType.NotificationFooter)
-        val content = parseContent(model, model.textRegion as? Regionable)
-        return listOf(header) + content + listOf(footer)
+    private fun notificationItems(model: Notification) : List<StreamCellItem> {
+        return listOf(StreamCellItem(model = model, type = StreamCellType.NotificationImageText))
     }
 
     private fun parseContent(model: Model, region: Regionable?): List<StreamCellItem> {
-        if (region !is Regionable) return emptyList()
         if (region is TextRegion) {
             val cellType: StreamCellType
             if (model is Comment) {
                 cellType = StreamCellType.CommentText(region.content)
-            }
-            else if (model is Notification) {
-                val textContent = (model.textRegion as TextRegion).content
-                if (model.hasImage) {
-                    val imageContent = (model.imageRegion as ImageRegion)
-                    cellType = StreamCellType.NotificationImageText(textContent, imageContent)
-                }
-                else {
-                    cellType = StreamCellType.NotificationText(textContent)
-                }
             }
             else {
                 cellType = StreamCellType.PostText(region.content)

@@ -39,9 +39,6 @@ data class Notification(
         }
         addLinkObject("subject", subjectId, mappingType as MappingType)
 
-        if (subject == null)
-            println("NULL NIG")
-
         val post = subject as? Post
         val comment = subject as? Comment
         val user = subject as? User
