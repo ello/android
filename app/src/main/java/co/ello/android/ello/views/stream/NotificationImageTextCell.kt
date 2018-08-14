@@ -20,10 +20,12 @@ class NotificationImageTextCell(parent: ViewGroup) : StreamCell(LayoutInflater.f
     private val timestampLabel: TextView = itemView.findViewById(R.id.timestampLabel)
     private val actionableLayout : LinearLayout = itemView.findViewById(R.id.actionableLayout)
     private val contentLayout : LinearLayout = itemView.findViewById(R.id.contentLayout)
+    private val replyButton: Button = itemView.findViewById(R.id.replyButton)
 
     init {
         userImageView.setOnClickListener { usernameButtonTapped() }
         usernameButton.setOnClickListener{ usernameButtonTapped() }
+        replyButton.setOnClickListener{ replyButtonTapped() }
     }
 
     private fun usernameButtonTapped() {
@@ -33,6 +35,22 @@ class NotificationImageTextCell(parent: ViewGroup) : StreamCell(LayoutInflater.f
         val user = notification.author ?: return
         streamController.streamTappedUser(user)
     }
+
+    private fun replyButtonTapped() {
+        val item = streamCellItem ?: return
+        val streamController = streamController ?: return
+        val notification = item.model as? Notification ?: return
+        val subject = notification.subject
+        val comment = subject as? Comment
+        val post = subject as? Post
+        if (comment != null) {
+            streamController.streamTappedPost(comment.parentPost as Post)
+        }
+        if (post != null) {
+            streamController.streamTappedPost(post)
+        }
+    }
+
 
     data class Config(
             val notificationTitle: Spanned?,
@@ -52,16 +70,16 @@ class NotificationImageTextCell(parent: ViewGroup) : StreamCell(LayoutInflater.f
             webView.webViewClient = PostTextCell.PostTextWebViewClient(webView)
             webView.loadUrl("about:blank")
             webView.loadData(value.contentText, "text/html; charset=utf-8", "UTF-8")
-        } else {
+        }
+        else {
             contentLayout.visibility = View.GONE
         }
         if (value.hasImage) {
             loadImageURL(value.contentImageURL).into(contentImageView)
-        } else {
-
+        }
+        else {
             contentImageView.visibility = View.GONE
         }
-
         if (!value.postActionable) {
             actionableLayout.visibility = View.GONE
         }

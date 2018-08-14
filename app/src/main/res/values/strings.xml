@@ -28,7 +28,7 @@
 
     <string name="Notification.all">All</string>
     <string name="Notification.mention">\@</string>
-    <string name="Notification.reply">↶Reply</string>
+    <string name="Notification.reply"> ↶ Reply</string>
 
     <string name="Editorials.title">Editorials</string>
     <string name="ArtistInvites.title">Artist Invites</string>
