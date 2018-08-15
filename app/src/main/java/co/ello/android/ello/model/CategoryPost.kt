@@ -10,8 +10,7 @@ data class CategoryPost(
     val submittedAt: Date,
     val featuredAt: Date,
     val unfeaturedAt: Date,
-    val removedAt: Date,
-    val post: Post
+    val removedAt: Date
     ) : Model() {
 
     val category: Category? get() { return getLinkObject("category") }
@@ -19,6 +18,7 @@ data class CategoryPost(
     val featuredBy: User? get() { return getLinkObject("featuredBy") }
     val unfeaturedBy: User? get() { return getLinkObject("unfeaturedBy") }
     val removedBy: User? get() { return getLinkObject("removedBy") }
+    val post: Post? get() { return getLinkObject("post") }
 
     enum class Status(val value: String) {
         Featured("featured"),

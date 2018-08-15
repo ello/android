@@ -191,13 +191,14 @@ class NotificationAttributedTitle {
                         val featuredBy = submission.featuredBy
                         val categoryText = submission.category?.name
                         val repost = submission.post
-                        val source = repost.repostSource
+                        val source = repost?.repostSource
                         return Html.fromHtml(featuredBy?.atName + "featured a <u>repost</u> of your <u>post</u> in <u>" +categoryText +"</u>.")
                     }
                     else {
                         return Html.fromHtml("Someone featured a repost of your post.")
                     }
                 }
+
                 Notification.Kind.WelcomeNotification -> {
                     Html.fromHtml("Welcome to Ello!")
                 }
