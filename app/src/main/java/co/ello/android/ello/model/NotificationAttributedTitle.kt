@@ -198,7 +198,39 @@ class NotificationAttributedTitle {
                         return Html.fromHtml("Someone featured a repost of your post.")
                     }
                 }
-
+                Notification.Kind.UserAddedAsFeatured -> {
+                    if ((subject as? CategoryUser) != null){
+                        val submission = subject
+                        val featuredBy = submission.featuredBy
+                        val categoryText = submission.category?.name
+                        return Html.fromHtml(featuredBy?.atName + " has featured you in <u>" +categoryText +"</u>.")
+                    }
+                    else {
+                        return Html.fromHtml("Someone has featured you in a category.")
+                    }
+                }
+                Notification.Kind.UserAddedAsCurator -> {
+                    if ((subject as? CategoryUser) != null){
+                        val submission = subject
+                        val curatorBy = submission.curatorBy
+                        val categoryText = submission.category?.name
+                        return Html.fromHtml(curatorBy?.atName + " has invited you to help curate <u>" +categoryText +"</u>.")
+                    }
+                    else {
+                        return Html.fromHtml("Someone has invited you to help curate a category.")
+                    }
+                }
+                Notification.Kind.UserAddedAsModerator -> {
+                    if ((subject as? CategoryUser) != null){
+                        val submission = subject
+                        val moderatorBy = submission.moderatorBy
+                        val categoryText = submission.category?.name
+                        return Html.fromHtml(moderatorBy?.atName + " has invited you to help moderate <u>" +categoryText +"</u>.")
+                    }
+                    else {
+                        return Html.fromHtml("Someone has invited you to help moderate a category.")
+                    }
+                }
                 Notification.Kind.WelcomeNotification -> {
                     Html.fromHtml("Welcome to Ello!")
                 }
