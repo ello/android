@@ -139,7 +139,15 @@ data class Notification(
         LoveOnOriginalPostNotification("love_on_original_post_notification"), // someone loved other's repost of your post
 
         ApprovedArtistInviteSubmission("approved_artist_invite_submission"), // your submission has been accepted
-        ApprovedArtistInviteSubmissionNotificationForFollowers("approved_artist_invite_submission_notification_for_followers"); // a person you follow had their submission accepted
+        ApprovedArtistInviteSubmissionNotificationForFollowers("approved_artist_invite_submission_notification_for_followers"), // a person you follow had their submission accepted
+
+        CategoryPostFeatured("category_post_featured"),
+        CategoryRepostFeatured("category_repost_featured"),
+        CategoryPostViaRepostFeatured("category_post_via_repost_featured"),
+
+        UserAddedAsFeatured("user_added_as_featured"),
+        UserAddedAsCurator("user_added_as_curator"),
+        UserAddedAsModerator("user_added_as_moderator");
 
         companion object {
             fun create(value: String): Kind? = when(value) {
@@ -162,6 +170,12 @@ data class Notification(
                 "love_on_original_post_notification" -> LoveOnOriginalPostNotification
                 "approved_artist_invite_submission" -> ApprovedArtistInviteSubmission
                 "approved_artist_invite_submission_notification_for_followers" -> ApprovedArtistInviteSubmissionNotificationForFollowers
+                "category_post_featured" -> CategoryPostFeatured
+                "category_repost_featured" -> CategoryRepostFeatured
+                "category_post_via_repost_featured" -> CategoryPostViaRepostFeatured
+                "user_added_as_featured" -> UserAddedAsFeatured
+                "user_added_as_curator" -> UserAddedAsCurator
+                "user_added_as_moderator" -> UserAddedAsModerator
                 else -> null
             }
         }

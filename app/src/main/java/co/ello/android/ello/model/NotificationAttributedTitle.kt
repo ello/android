@@ -50,7 +50,16 @@ class NotificationAttributedTitle {
                     }
                 }
                 Notification.Kind.CommentOnOriginalPostNotification -> {
-                    return Html.fromHtml("Placeholder")
+                    if ((subject as? Comment != null)) {
+                        val comment = subject
+                        val repost = comment.loadedFromPost
+                        val repostAuthor = repost?.author
+                        val source = repost?.repostSource
+                        return Html.fromHtml(author?.atName + " commented on " +repostAuthor?.atName + "'s <u>repost</u> of your <u>post</u>.")
+                    }
+                    else {
+                        return Html.fromHtml(author?.atName + " commented on your post.")
+                    }
                 }
                 Notification.Kind.CommentOnRepostNotification -> {
                     if ((subject as? Comment) != null){
@@ -73,8 +82,9 @@ class NotificationAttributedTitle {
                     }
                 }
                 Notification.Kind.LoveOnRepostNotification -> {
-                    if ((subject as? Love) != null){
-                        val post = (subject as? Love)?.post
+                    if ((subject as? Love != null)) {
+                        val love = subject
+                        val post = love.post
                         return Html.fromHtml(author?.atName + " loved your <u>repost</u>.")
                     }
                     else {
@@ -82,7 +92,16 @@ class NotificationAttributedTitle {
                     }
                 }
                 Notification.Kind.LoveOnOriginalPostNotification -> {
-                    return Html.fromHtml("Placeholder")
+                    if ((subject as? Love != null)) {
+                        val love = subject
+                        val repost = love.post
+                        val repostAuthor = repost?.author
+                        val source = repost?.repostSource
+                        return Html.fromHtml(author?.atName + " loved " +repostAuthor?.atName + "'s <u>repost</u> of your <u>post</u>.")
+                    }
+                    else {
+                        return Html.fromHtml(author?.atName + " loved a repost of your post.")
+                    }
                 }
                 Notification.Kind.WatchNotification -> {
                     if ((subject as? Watch) != null){
@@ -112,7 +131,16 @@ class NotificationAttributedTitle {
                     }
                 }
                 Notification.Kind.WatchOnOriginalPostNotification -> {
-                    return Html.fromHtml("Placeholder")
+                    if ((subject as? Watch != null)) {
+                        val watch = subject
+                        val repost = watch.post
+                        val repostAuthor = repost?.author
+                        val source = repost?.repostSource
+                        return Html.fromHtml(author?.atName + " is watching " +repostAuthor?.atName + "'s <u>repost</u> of your <u>post</u>.")
+                    }
+                    else {
+                        return Html.fromHtml(author?.atName + " is watching a repost of your post.")
+                    }
                 }
                 Notification.Kind.ApprovedArtistInviteSubmission -> {
                     if ((subject as? ArtistInviteSubmission) != null){
@@ -131,6 +159,43 @@ class NotificationAttributedTitle {
                     }
                     else {
                         return Html.fromHtml("A follower's submission has been accepted!")
+                    }
+                }
+                Notification.Kind.CategoryPostFeatured -> {
+                    if ((subject as? CategoryPost) != null){
+                        val submission = subject
+                        val featuredBy = submission.featuredBy
+                        val categoryText = submission.category?.name
+                        val post = submission.post
+                        return Html.fromHtml(featuredBy?.atName + "featured your <u>post</u> in <u>" +categoryText +"</u>.")
+                    }
+                    else {
+                        return Html.fromHtml("Someone featured your post.")
+                    }
+                }
+                Notification.Kind.CategoryRepostFeatured -> {
+                    if ((subject as? CategoryPost) != null){
+                        val submission = subject
+                        val featuredBy = submission.featuredBy
+                        val categoryText = submission.category?.name
+                        val post = submission.post
+                        return Html.fromHtml(featuredBy?.atName + "featured your <u>repost</u> in <u>" +categoryText +"</u>.")
+                    }
+                    else {
+                        return Html.fromHtml("Someone featured your repost.")
+                    }
+                }
+                Notification.Kind.CategoryPostViaRepostFeatured -> {
+                    if ((subject as? CategoryPost) != null){
+                        val submission = subject
+                        val featuredBy = submission.featuredBy
+                        val categoryText = submission.category?.name
+                        val repost = submission.post
+                        val source = repost.repostSource
+                        return Html.fromHtml(featuredBy?.atName + "featured a <u>repost</u> of your <u>post</u> in <u>" +categoryText +"</u>.")
+                    }
+                    else {
+                        return Html.fromHtml("Someone featured a repost of your post.")
                     }
                 }
                 Notification.Kind.WelcomeNotification -> {

@@ -10,7 +10,8 @@ data class CategoryPost(
     val submittedAt: Date,
     val featuredAt: Date,
     val unfeaturedAt: Date,
-    val removedAt: Date
+    val removedAt: Date,
+    val post: Post
     ) : Model() {
 
     val category: Category? get() { return getLinkObject("category") }
