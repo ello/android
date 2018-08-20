@@ -10,12 +10,14 @@ data class CategoryPost(
     val submittedAt: Date,
     val featuredAt: Date,
     val unfeaturedAt: Date,
-    val removedAt: Date
+    val removedAt: Date,
+    val categoryName: String,
+    val actionAuthor: String
     ) : Model() {
 
     val category: Category? get() { return getLinkObject("category") }
     val submittedBy: User? get() { return getLinkObject("submittedBy") }
-    val featuredBy: User? get() { return getLinkObject("featuredBy") }
+    val featuredBy: User? get() { return getLinkObject("featured_by") }
     val unfeaturedBy: User? get() { return getLinkObject("unfeaturedBy") }
     val removedBy: User? get() { return getLinkObject("removedBy") }
     val post: Post? get() { return getLinkObject("post") }

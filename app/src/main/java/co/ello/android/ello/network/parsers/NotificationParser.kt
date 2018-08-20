@@ -11,7 +11,7 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
             Notification.SubjectType.Post ->  flattenPostSubject(json["subject"], db)
             Notification.SubjectType.User -> flattenUserSubject(json["subject"], db)
             Notification.SubjectType.Comment -> flattenCommentSubject(json["subject"], db)
-            Notification.SubjectType.Watch -> flattenUserSubject(json["subject"]["user"], db)
+            Notification.SubjectType.Watch -> flattenWatchSubject(json["subject"], db)
             Notification.SubjectType.CategoryPost -> flattenCategoryPostSubject(json["subject"], db)
             Notification.SubjectType.Love -> flattenUserSubject(json["subject"]["user"], db)
             else -> null
@@ -48,6 +48,14 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
         return userParser.identifier(json)?.let { userIdentifier ->
             userParser.flatten(json, identifier = userIdentifier, db = db)
             userIdentifier
+        }
+    }
+
+    private fun flattenWatchSubject(json: JSON, db: Database) : Parser.Identifier? {
+        val watchParser = WatchParser()
+        return watchParser.identifier(json)?.let { watchIdentifier ->
+            watchParser.flatten(json, identifier = watchIdentifier, db = db)
+            watchIdentifier
         }
     }
 

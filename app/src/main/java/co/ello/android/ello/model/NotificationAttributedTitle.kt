@@ -164,10 +164,10 @@ class NotificationAttributedTitle {
                 Notification.Kind.CategoryPostFeatured -> {
                     if ((subject as? CategoryPost) != null){
                         val submission = subject
-                        val featuredBy = submission.featuredBy
-                        val categoryText = submission.category?.name
+                        val featuredBy = submission.actionAuthor
+                        val categoryText = submission.categoryName
                         val post = submission.post
-                        return Html.fromHtml(featuredBy?.atName + "featured your <u>post</u> in <u>" +categoryText +"</u>.")
+                        return Html.fromHtml(featuredBy + " featured your <u>post</u> in <u>" +categoryText +"</u>.")
                     }
                     else {
                         return Html.fromHtml("Someone featured your post.")
@@ -176,10 +176,10 @@ class NotificationAttributedTitle {
                 Notification.Kind.CategoryRepostFeatured -> {
                     if ((subject as? CategoryPost) != null){
                         val submission = subject
-                        val featuredBy = submission.featuredBy
-                        val categoryText = submission.category?.name
+                        val featuredBy = submission.actionAuthor
+                        val categoryText = submission.categoryName
                         val post = submission.post
-                        return Html.fromHtml(featuredBy?.atName + "featured your <u>repost</u> in <u>" +categoryText +"</u>.")
+                        return Html.fromHtml(featuredBy + " featured your <u>repost</u> in <u>" +categoryText +"</u>.")
                     }
                     else {
                         return Html.fromHtml("Someone featured your repost.")
@@ -188,11 +188,11 @@ class NotificationAttributedTitle {
                 Notification.Kind.CategoryPostViaRepostFeatured -> {
                     if ((subject as? CategoryPost) != null){
                         val submission = subject
-                        val featuredBy = submission.featuredBy
-                        val categoryText = submission.category?.name
+                        val featuredBy = submission.actionAuthor
+                        val categoryText = submission.categoryName
                         val repost = submission.post
                         val source = repost?.repostSource
-                        return Html.fromHtml(featuredBy?.atName + "featured a <u>repost</u> of your <u>post</u> in <u>" +categoryText +"</u>.")
+                        return Html.fromHtml(featuredBy + " featured a <u>repost</u> of your <u>post</u> in <u>" +categoryText +"</u>.")
                     }
                     else {
                         return Html.fromHtml("Someone featured a repost of your post.")

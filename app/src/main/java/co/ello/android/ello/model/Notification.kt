@@ -42,6 +42,7 @@ data class Notification(
         val post = subject as? Post
         val comment = subject as? Comment
         val user = subject as? User
+        val watch = subject as? Watch
         val actionable = subject as? PostActionable
         val actionablePost = actionable?.post
 
@@ -52,6 +53,10 @@ data class Notification(
         else if (comment != null) {
             this.author = comment.author
             this.postId = comment.postId
+        }
+        else if (watch != null) {
+            this.author = watch.user
+            this.postId = watch.postId
         }
         else if (user != null) {
             this.author = user

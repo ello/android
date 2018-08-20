@@ -5,8 +5,8 @@ import java.util.Date
 
 data class Watch(
     val id: String,
-    val createdAt: Date,
-    val updatedAt: Date,
+    val createdAt: Date?,
+    val updatedAt: Date?,
     val postId: String,
     val userId: String
     ) : Model() {

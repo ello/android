@@ -1,6 +1,5 @@
 package co.ello.android.ello
 
-
 class CategoryPostParser : IdParser(table = MappingType.CategoryPostsType) {
     init {
         linkObject(MappingType.CategoriesType, "submittedBy")
@@ -23,6 +22,20 @@ class CategoryPostParser : IdParser(table = MappingType.CategoryPostsType) {
         val featuredAt = json["featuredAt"].date ?: Globals.now
         val unfeaturedAt = json["unfeaturedAt"].date ?: Globals.now
         val removedAt = json["removedAt"].date ?: Globals.now
+        val categoryName = json["category"]["name"].stringValue
+        val actionAuthor =
+                if (json["featuredBy"].exists) {
+                    json["featuredBy"]["username"].stringValue
+                }
+                else if (json["submittedBy"].exists) {
+                    json["submittedBy"]["username"].stringValue
+                }
+                else if (json["unfeaturedBy"].exists) {
+                    json["unfeaturedBy"]["username"].stringValue
+                }
+                else {
+                    json["removedBy"]["username"].stringValue
+                }
 
         val categoryPost = CategoryPost(
             id = json["id"].stringValue,
@@ -31,7 +44,9 @@ class CategoryPostParser : IdParser(table = MappingType.CategoryPostsType) {
             submittedAt = submittedAt,
             featuredAt = featuredAt,
             unfeaturedAt = unfeaturedAt,
-            removedAt = removedAt
+            removedAt = removedAt,
+            categoryName = categoryName,
+            actionAuthor = actionAuthor
         )
 
         categoryPost.mergeLinks(json["links"])
