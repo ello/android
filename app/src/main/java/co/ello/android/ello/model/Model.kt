@@ -12,7 +12,6 @@ open class Model {
     var links: MutableMap<String, Model.Link> = mutableMapOf()
 
     inline fun <reified T: Model> getLinkObject(key: String): T? {
-        if (links[key] == null) println(key+"IS NULL")
         val link = links[key] ?: return null
         val (id, mappingType) = when (link) {
                 is Link.One -> { Pair(link.id, link.type) }

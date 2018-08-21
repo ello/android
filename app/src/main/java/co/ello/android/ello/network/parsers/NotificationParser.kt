@@ -52,6 +52,7 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
     }
 
     private fun flattenWatchSubject(json: JSON, db: Database) : Parser.Identifier? {
+        println(json)
         val watchParser = WatchParser()
         return watchParser.identifier(json)?.let { watchIdentifier ->
             watchParser.flatten(json, identifier = watchIdentifier, db = db)

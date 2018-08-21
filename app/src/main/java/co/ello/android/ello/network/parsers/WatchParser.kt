@@ -2,6 +2,7 @@ package co.ello.android.ello
 
 class WatchParser : IdParser(table = MappingType.WatchesType){
     override fun parse(json: JSON): Model? {
+        println(json)
         val id = json["id"].idValue
         val createdAt = json["createdAt"].date
         val updatedAt = json["updatedAt"].date

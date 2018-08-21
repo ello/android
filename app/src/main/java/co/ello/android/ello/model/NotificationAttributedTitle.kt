@@ -164,7 +164,7 @@ class NotificationAttributedTitle {
                 Notification.Kind.CategoryPostFeatured -> {
                     if ((subject as? CategoryPost) != null){
                         val submission = subject
-                        val featuredBy = submission.actionAuthor
+                        val featuredBy = submission.featuredBy?.atName
                         val categoryText = submission.categoryName
                         val post = submission.post
                         return Html.fromHtml(featuredBy + " featured your <u>post</u> in <u>" +categoryText +"</u>.")
@@ -176,7 +176,7 @@ class NotificationAttributedTitle {
                 Notification.Kind.CategoryRepostFeatured -> {
                     if ((subject as? CategoryPost) != null){
                         val submission = subject
-                        val featuredBy = submission.actionAuthor
+                        val featuredBy = submission.featuredBy?.atName
                         val categoryText = submission.categoryName
                         val post = submission.post
                         return Html.fromHtml(featuredBy + " featured your <u>repost</u> in <u>" +categoryText +"</u>.")
@@ -188,7 +188,7 @@ class NotificationAttributedTitle {
                 Notification.Kind.CategoryPostViaRepostFeatured -> {
                     if ((subject as? CategoryPost) != null){
                         val submission = subject
-                        val featuredBy = submission.actionAuthor
+                        val featuredBy = submission.featuredBy?.atName
                         val categoryText = submission.categoryName
                         val repost = submission.post
                         val source = repost?.repostSource

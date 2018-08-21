@@ -32,7 +32,7 @@ data class Notification(
             SubjectType.User -> MappingType.UsersType
             SubjectType.Comment -> MappingType.CommentsType
             SubjectType.Post -> MappingType.PostsType
-            SubjectType.Watch -> MappingType.UsersType
+            SubjectType.Watch -> MappingType.WatchesType
             SubjectType.CategoryPost -> MappingType.CategoryPostsType
             SubjectType.Love -> MappingType.UsersType
             else -> null
@@ -40,6 +40,7 @@ data class Notification(
         addLinkObject("subject", subjectId, mappingType as MappingType)
 
         val post = subject as? Post
+        val categoryPost = subject as? CategoryPost
         val comment = subject as? Comment
         val user = subject as? User
         val watch = subject as? Watch
@@ -49,6 +50,9 @@ data class Notification(
         if (post != null) {
             this.author = post.author
             this.postId = post.id
+        }
+        else if (categoryPost != null) {
+            this.author = categoryPost.post?.author
         }
         else if (comment != null) {
             this.author = comment.author
@@ -70,6 +74,10 @@ data class Notification(
         }
         if (post != null) {
             assignRegionsFromContent(post.summary)
+        }
+        else if (categoryPost != null) {
+            val post = categoryPost.post
+            assignRegionsFromContent(post!!.summary)
         }
         else if (comment != null) {
             var parentSummary = comment.parentPost?.summary

@@ -7,6 +7,7 @@ class CategoryPostParser : IdParser(table = MappingType.CategoryPostsType) {
         linkObject(MappingType.UsersType, "featuredBy")
         linkObject(MappingType.UsersType, "unfeaturedBy")
         linkObject(MappingType.UsersType, "removedBy")
+        linkObject(MappingType.PostsType, "post")
     }
 
     override fun parse(json: JSON): CategoryPost {
@@ -23,19 +24,6 @@ class CategoryPostParser : IdParser(table = MappingType.CategoryPostsType) {
         val unfeaturedAt = json["unfeaturedAt"].date ?: Globals.now
         val removedAt = json["removedAt"].date ?: Globals.now
         val categoryName = json["category"]["name"].stringValue
-        val actionAuthor =
-                if (json["featuredBy"].exists) {
-                    json["featuredBy"]["username"].stringValue
-                }
-                else if (json["submittedBy"].exists) {
-                    json["submittedBy"]["username"].stringValue
-                }
-                else if (json["unfeaturedBy"].exists) {
-                    json["unfeaturedBy"]["username"].stringValue
-                }
-                else {
-                    json["removedBy"]["username"].stringValue
-                }
 
         val categoryPost = CategoryPost(
             id = json["id"].stringValue,
@@ -46,11 +34,8 @@ class CategoryPostParser : IdParser(table = MappingType.CategoryPostsType) {
             unfeaturedAt = unfeaturedAt,
             removedAt = removedAt,
             categoryName = categoryName,
-            actionAuthor = actionAuthor
+            json = json["links"]
         )
-
-        categoryPost.mergeLinks(json["links"])
-
         return categoryPost
     }
 }
