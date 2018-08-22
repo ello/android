@@ -75,6 +75,10 @@ data class Notification(
         if (post != null) {
             assignRegionsFromContent(post.summary)
         }
+        else if (watch?.post != null) {
+            val post = watch.post
+            assignRegionsFromContent(post?.summary ?: emptyList())
+        }
         else if (categoryPost != null) {
             val post = categoryPost.post
             assignRegionsFromContent(post!!.summary)

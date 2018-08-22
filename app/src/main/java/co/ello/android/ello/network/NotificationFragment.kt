@@ -134,6 +134,7 @@ class NotificationFragment(string: String, needs: List<Fragments>) : Fragments(s
             fragment watchSummary on Watch {
                 id
                 post { ...postSummary repostedSource { ...postSummary } }
+                user { ...authorSummary }
             }
             """, needs = listOf(postSummary))
 

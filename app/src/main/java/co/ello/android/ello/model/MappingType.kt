@@ -39,7 +39,7 @@ sealed class MappingType {
     object RelationshipsType : MappingType(name = "relationships", singularKey = "relationship")
     object UsernamesType : MappingType(name = "usernames", singularKey = "username")
     object UsersType : MappingType(name = "users", singularKey = "user", parser = { UserParser() })
-    object WatchesType : MappingType(name = "watches", singularKey = "watch")
+    object WatchesType : MappingType(name = "watches", singularKey = "watch", parser = { WatchParser() })
 
     companion object {
         fun create(value: String): MappingType? = when (value) {

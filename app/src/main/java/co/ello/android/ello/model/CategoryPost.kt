@@ -22,7 +22,6 @@ data class CategoryPost(
     val removedBy: User? get() { return getLinkObject("removed_by") }
     val post: Post? get() { return getLinkObject("post") }
 
-
     init {
         val jsonMap = json.map ?: emptyMap()
         for ((key, json) in jsonMap) {
