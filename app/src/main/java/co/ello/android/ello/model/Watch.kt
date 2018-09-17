@@ -2,13 +2,13 @@ package co.ello.android.ello
 
 import java.util.Date
 
-
 data class Watch(
     val id: String,
     val createdAt: Date,
     val updatedAt: Date,
     val postId: String,
-    val userId: String
+    val userId: String,
+    val json: JSON
     ) : Model() {
 
     override val identifier = Parser.Identifier(id = id, table = MappingType.WatchesType)
@@ -18,7 +18,10 @@ data class Watch(
     val user: User? get() =  getLinkObject("user")
 
     init {
-        addLinkObject("post", postId, MappingType.PostsType)
-        addLinkObject("user", userId, MappingType.UsersType)
+        val jsonMap = json.map ?: emptyMap()
+        for ((key, json) in jsonMap) {
+            println(json)
+            addLinkObject(key, json["id"].stringValue, MappingType.create(json["type"].stringValue) as MappingType)
+        }
     }
 }

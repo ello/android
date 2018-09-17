@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/actionableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:paddingBottom="10dp">
+
+        <co.ello.android.ello.StyledLabel
+            android:id="@+id/styledLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="6.4" />
+
+        <co.ello.android.ello.StyledButton
+            android:id="@+id/styledButton"
+            android:background="@drawable/border_rounded"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="6"
+            android:text="@string/Notification.reply" />
+
+        <co.ello.android.ello.StyledLabel
+            android:id="@+id/styledLabel3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/border"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/actionableLayout">
+
+        <co.ello.android.ello.StyledLabel
+            android:id="@+id/styledLabel2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="6" />
+
+        <co.ello.android.ello.StyledLabel
+            android:id="@+id/timestampLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            app:styleName="gray"
+            tools:layout_editor_absoluteX="15dp"
+            tools:text="15m" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

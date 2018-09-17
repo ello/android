@@ -39,6 +39,27 @@ class API {
         }
     }
 
+    enum class NotificationFilter(val value: String) {
+        All("ALL"),
+        Comments("COMMENTS"),
+        Loves("LOVES"),
+        Mentions("MENTIONS"),
+        Relationships("RELATIONSHIPS"),
+        Reposts("REPOSTS");
+
+        companion object {
+            fun create(value: String): NotificationFilter? = when (value) {
+                "ALL" -> NotificationFilter.All
+                "COMMENTS" -> NotificationFilter.Comments
+                "LOVES" -> NotificationFilter.Loves
+                "MENTIONS" -> NotificationFilter.Mentions
+                "RELATIONSHIPS" -> NotificationFilter.Relationships
+                "REPOSTS" -> NotificationFilter.Reposts
+                else -> null
+            }
+        }
+    }
+
     fun followingPostStream(filter: StreamFilter = StreamFilter.Recent,before: String? = null): GraphQLRequest<Pair<PageConfig, List<Post>>> {
         return GraphQLRequest<Pair<PageConfig, List<Post>>>("followingPostStream")
                 .parser { PageParser<Post>("posts", PostParser()).parse(it) }
@@ -100,6 +121,17 @@ class API {
                 GraphQLRequest.Variable.optionalInt("perPage", null)
             )
             .setBody(Fragments.editorialsBody)
+    }
+
+    fun notificationsStream(category: NotificationFilter, before: String? = null): GraphQLRequest<Pair<PageConfig, List<Notification>>> {
+        return GraphQLRequest<Pair<PageConfig, List<Notification>>>("notificationStream")
+                .parser { PageParser<Notification>("notifications", NotificationParser()).parse(it) }
+                .setVariables(
+                        GraphQLRequest.Variable.optionalString("before", before),
+                        GraphQLRequest.Variable.enum("category", category.value, "NotificationCategory"),
+                        GraphQLRequest.Variable.optionalInt("perPage", null)
+                )
+                .setBody(NotificationFragment.notificationStreamBody)
     }
 
     fun postDetail(token: Token, username: String?): GraphQLRequest<Post> {

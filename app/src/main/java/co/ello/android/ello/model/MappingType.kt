@@ -29,6 +29,7 @@ sealed class MappingType {
     object CommentsType : MappingType(name = "comments", singularKey = "comment", parser = { CommentParser() })
     object DynamicSettingsType : MappingType(name = "settings", singularKey = "setting")
     object EditorialsType : MappingType(name = "editorials", singularKey = "editorial", parser = { EditorialParser() })
+    object NotificationsType : MappingType(name = "notifications", singularKey = "notification", parser = { NotificationParser() })
     object ErrorsType : MappingType(name = "errors", singularKey = "error")
     object ErrorType : MappingType(name = "error", singularKey = "error", pluralKey = "errors")
     object LovesType : MappingType(name = "loves", singularKey = "love")
@@ -40,7 +41,7 @@ sealed class MappingType {
     object RelationshipsType : MappingType(name = "relationships", singularKey = "relationship")
     object UsernamesType : MappingType(name = "usernames", singularKey = "username")
     object UsersType : MappingType(name = "users", singularKey = "user", parser = { UserParser() })
-    object WatchesType : MappingType(name = "watches", singularKey = "watch")
+    object WatchesType : MappingType(name = "watches", singularKey = "watch", parser = { WatchParser() })
 
     companion object {
         fun create(value: String): MappingType? = when (value) {
@@ -57,6 +58,7 @@ sealed class MappingType {
             "comments"                  -> MappingType.CommentsType
             "settings"                  -> MappingType.DynamicSettingsType
             "editorials"                -> MappingType.EditorialsType
+            "notifications"             -> MappingType.NotificationsType
             "errors"                    -> MappingType.ErrorsType
             "error"                     -> MappingType.ErrorType
             "loves"                     -> MappingType.LovesType

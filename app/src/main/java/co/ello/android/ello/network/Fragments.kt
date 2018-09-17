@@ -1,7 +1,7 @@
 package co.ello.android.ello
 
 
-class Fragments {
+open class Fragments {
     val string: String
     val needs: List<Fragments>
 
@@ -102,7 +102,6 @@ class Fragments {
             fragment postContent on Post {
               content { ...contentProps }
             }
-
             fragment postSummary on Post {
               id
               token
@@ -180,7 +179,6 @@ class Fragments {
                 xhdpi { ...imageProps }
                 original { ...imageProps }
             }
-
             fragment editorial on Editorial {
                 id
                 kind

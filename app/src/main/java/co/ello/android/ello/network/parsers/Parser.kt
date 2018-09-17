@@ -17,7 +17,6 @@ open class Parser {
             val table = db[identifier.table] ?: return null
             val json = table[identifier.id] ?: return null
             val model = parser.parse(json) ?: return null
-
             Store.write { transaction ->
                 transaction.setObject(model, key = identifier.id, collection = identifier.table)
             }
@@ -48,7 +47,7 @@ open class Parser {
         } }
         val newJSON = existingJSON ?: json
 
-        val links: MutableMap<String, JSON> = json["links"].map?.let { HashMap(it) } ?: mutableMapOf()
+        val links: MutableMap<String, Any> = json["links"].obj?.let { HashMap(it) } ?: mutableMapOf()
         for (link in linkedArrays) {
             val mappingType = link.mappingType
             val jsonKey = link.jsonKey
@@ -64,7 +63,7 @@ open class Parser {
                 ids.add(identifier.id)
             }
             val map: Map<String, Any> = mapOf("ids" to ids, "type" to mappingType.name)
-            links[linkKey] = JSON(map)
+            links[linkKey] = map
         }
 
         for (link in linkedObjects) {
@@ -77,10 +76,10 @@ open class Parser {
 
             parser.flatten(json = linkedJSON, identifier = linkIdentifier, db = db)
             val map: Map<String, Any> = mapOf("id" to linkIdentifier.id, "type" to mappingType.name)
-            links[linkKey] = JSON(map)
+            links[linkKey] = map
         }
 
-        newJSON["links"] = JSON(links)
+        newJSON["links"] = links
 
         val table = db[identifier.table] ?: mutableMapOf()
         table[identifier.id] = newJSON
