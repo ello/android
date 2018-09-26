@@ -10,7 +10,7 @@ data class Notification(
         val subjectType: SubjectType?
     ) : Model() {
 
-    override val identifier = Parser.Identifier(id = activity.id, table = MappingType.NotificationsType)
+    override val identifier = Parser.Identifier(id = id, table = MappingType.NotificationsType)
     override fun update(property: Property, value: Any) {}
 
     var author: User? = null
@@ -79,16 +79,16 @@ data class Notification(
             assignRegionsFromContent(post.summary)
         }
         else if (watch?.post != null) {
-            val post = watch.post
-            assignRegionsFromContent(post?.summary ?: emptyList())
+            val watchPost = watch.post
+            assignRegionsFromContent(watchPost!!.summary)
         }
         else if (categoryPost != null) {
-            val post = categoryPost.post
-            assignRegionsFromContent(post!!.summary)
+            val cpPost = categoryPost.post
+            assignRegionsFromContent(cpPost!!.summary)
         }
         else if (comment != null) {
-            var parentSummary = comment.parentPost?.summary
-            var summary = if (comment.summary.isNotEmpty()) comment.summary else comment.content
+            val parentSummary = comment.parentPost?.summary
+            val summary = if (comment.summary.isNotEmpty()) comment.summary else comment.content
 
             assignRegionsFromContent(content = summary, parentSummary = parentSummary)
         }

@@ -6,7 +6,7 @@ class CategoryParser : IdParser(table = MappingType.CategoriesType) {
         val level = CategoryLevel.create(json["level"].stringValue) ?: CategoryLevel.Tertiary
 
         val category = Category(
-            id = json["id"].stringValue,
+            id = json["id"].idValue,
             name = json["name"].stringValue,
             slug = json["slug"].stringValue,
             order = json["order"].intValue,

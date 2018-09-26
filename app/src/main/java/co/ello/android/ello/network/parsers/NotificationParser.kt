@@ -71,7 +71,7 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
             json: JSON
     ): Notification {
         val id = json["id"].idValue
-        val subjectId = json["links"]["subject"]["id"].stringValue
+        val subjectId = json["links"]["subject"]["id"].idValue
         val kind = Notification.Kind.create(json["kind"].stringValue)
         val subjectType = Notification.SubjectType.create(json["subjectType"].stringValue)
         val createdAt = json["createdAt"].stringValue

@@ -2,7 +2,7 @@ package co.ello.android.ello
 
 class CategoryPostParser : IdParser(table = MappingType.CategoryPostsType) {
     init {
-        linkObject(MappingType.CategoriesType, "submittedBy")
+        linkObject(MappingType.CategoriesType, "category")
         linkObject(MappingType.UsersType, "submittedBy")
         linkObject(MappingType.UsersType, "featuredBy")
         linkObject(MappingType.UsersType, "unfeaturedBy")
@@ -26,7 +26,7 @@ class CategoryPostParser : IdParser(table = MappingType.CategoryPostsType) {
         val categoryName = json["category"]["name"].stringValue
 
         val categoryPost = CategoryPost(
-            id = json["id"].stringValue,
+            id = json["id"].idValue,
             status = CategoryPost.Status.create(json["status"].stringValue) ?: CategoryPost.Status.Unspecified,
             actions = actions,
             submittedAt = submittedAt,

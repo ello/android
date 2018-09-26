@@ -31,9 +31,9 @@ class PostParser : IdParser(table = MappingType.PostsType) {
         val repostContent = RegionParser.graphQLRegions(json["repostContent"])
 
         val post = Post(
-            id = json["id"].stringValue,
+            id = json["id"].idValue,
             createdAt = json["createdAt"].date ?: Globals.now,
-            authorId = json["author"]["id"].stringValue,
+            authorId = json["author"]["id"].idValue,
             token = json["token"].stringValue,
             isAdultContent = false, // json["is_adult_content"].booleanValue,
             contentWarning = "", // json["content_warning"].stringValue,

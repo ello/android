@@ -5,6 +5,9 @@ data class CategoryUser(
         val role: Role
 ) : Model() {
 
+    override val identifier = Parser.Identifier(id = id, table = MappingType.CategoryUsersType)
+    override fun update(property: Property, value: Any) {}
+
     val category: Category? get() { return getLinkObject("category") }
     val user: User? get() { return getLinkObject("user") }
     val featuredBy: User? get() { return getLinkObject("featured_by") }

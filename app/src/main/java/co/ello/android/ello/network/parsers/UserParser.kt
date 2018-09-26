@@ -11,7 +11,7 @@ class UserParser : IdParser(table = MappingType.UsersType) {
         val relationshipPriority = RelationshipPriority.create(json["currentUserState"]["relationshipPriority"].string)
 
         val user = User(
-            id = json["id"].stringValue,
+            id = json["id"].idValue,
             username = json["username"].stringValue,
             name = json["name"].stringValue,
             relationshipPriority = relationshipPriority,

@@ -11,7 +11,7 @@ class PageHeaderParser : IdParser(table = MappingType.PageHeadersType) {
         val image = AssetParser().parse(json["image"])
 
         val header = PageHeader(
-            id = json["id"].stringValue,
+            id = json["id"].idValue,
             postToken = json["postToken"].string,
             categoryId = json["category"]["id"].id,
             header = json["header"].stringValue,

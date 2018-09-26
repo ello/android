@@ -10,10 +10,10 @@ class CommentParser : IdParser(table = MappingType.CommentsType) {
 
     override fun parse(json: JSON): Comment {
         val comment = Comment(
-            id = json["id"].stringValue,
+            id = json["id"].idValue,
             createdAt = json["createdAt"].date ?: Globals.now,
-            authorId = json["author"]["id"].stringValue,
-            postId = json["parentPost"]["id"].stringValue,
+            authorId = json["author"]["id"].idValue,
+            postId = json["parentPost"]["id"].idValue,
             content = RegionParser.graphQLRegions(json["content"]),
             summary = RegionParser.graphQLRegions(json["summary"])
             )

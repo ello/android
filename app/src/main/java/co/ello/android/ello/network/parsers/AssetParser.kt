@@ -5,7 +5,7 @@ class AssetParser : IdParser(table = MappingType.AssetsType) {
     override fun parse(json: JSON): Asset = parse(json = json, lookIn = "attachment")
 
     fun parse(json: JSON, lookIn: String): Asset {
-        val asset = Asset(json["id"].stringValue)
+        val asset = Asset(json["id"].idValue)
         val attachmentsJson = json[lookIn]
 
         val attachments: List<Pair<JSON, Asset.AttachmentType>> = listOf(

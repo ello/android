@@ -4,7 +4,7 @@ package co.ello.android.ello
 class ProfileParser : IdParser(table = MappingType.ProfilesType) {
     override fun parse(json: JSON): Profile {
         val profile = Profile(
-            id = json["id"].stringValue,
+            id = json["id"].idValue,
             createdAt = json["createdAt"].date ?: Globals.now,
             shortBio = json["shortBio"].stringValue,
             email = json["email"].stringValue,

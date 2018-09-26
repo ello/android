@@ -188,9 +188,9 @@ class API {
         val elloRequest = ElloRequest<Relationship>(ElloRequest.Method.POST, path)
                 .parser { json ->
                     Relationship(
-                        id = json["id"].stringValue,
-                        ownerId = json["links"]["owner"]["id"].stringValue,
-                        subjectId = json["links"]["subject"]["id"].stringValue
+                        id = json["id"].idValue,
+                        ownerId = json["links"]["owner"]["id"].idValue,
+                        subjectId = json["links"]["subject"]["id"].idValue
                         )
                 }
 

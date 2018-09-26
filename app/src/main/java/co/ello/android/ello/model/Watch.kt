@@ -21,7 +21,7 @@ data class Watch(
         val jsonMap = json.map ?: emptyMap()
         for ((key, json) in jsonMap) {
             println(json)
-            addLinkObject(key, json["id"].stringValue, MappingType.create(json["type"].stringValue) as MappingType)
+            addLinkObject(key, json["id"].idValue, MappingType.create(json["type"].stringValue) as MappingType)
         }
     }
 }

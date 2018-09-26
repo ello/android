@@ -28,7 +28,7 @@ data class CategoryPost(
     init {
         val jsonMap = json.map ?: emptyMap()
         for ((key, json) in jsonMap) {
-            addLinkObject(key, json["id"].stringValue, MappingType.create(json["type"].stringValue)!!)
+            addLinkObject(key, json["id"].idValue, MappingType.create(json["type"].stringValue)!!)
         }
     }
 

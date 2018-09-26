@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/greyE5"
-            android:textColor="@color/gray"
+            android:textColor="@color/greyA"
             android:text="@string/Notification.all"/>
 
         <ImageButton
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:background="@color/greyE5"
             android:text="@string/Notification.mention"
-            android:textColor="@color/gray"/>
+            android:textColor="@color/greyA"/>
 
         <ImageButton
             android:id="@+id/loves"

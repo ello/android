@@ -19,7 +19,7 @@ class AppActivity : AppCompatActivity() {
     var eventBus: EventBus = OttoBus()
     private var sensorManager: SensorManager? = null
     private var accelerometer: Sensor? = null
-    private var shakeController: ShakeController = ShakeController()
+    private var shakeController = ShakeController()
 
     companion object {
         val ENVIRONMENT_KEY = "ENV_KEY"
@@ -37,8 +37,6 @@ class AppActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
         showAppScreen()
-
-        showDebugDialog()
 
         if (!Hawk.contains(ENVIRONMENT_KEY)) {
             showDebugDialog()
