@@ -1,6 +1,6 @@
 package co.ello.android.ello
 
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,10 +64,13 @@ class PostImageCell(parent: ViewGroup, isComment: Boolean)
         val width = imageView.measuredWidth
         val height = (width.toFloat() / aspectRatio).roundToInt()
 
-        if (width > 0 && streamCellItem?.height != height) {
-            streamCellItem?.height = height
+        val streamCellItem = streamCellItem ?: return
+        if (width > 0 && streamCellItem.height != height) {
+            streamCellItem.height = height
             assignHeight(height)
-            streamController?.resizedCell()
+            if (!streamCellItem.isBinding) {
+                streamController?.resizedCell()
+            }
         }
     }
 }

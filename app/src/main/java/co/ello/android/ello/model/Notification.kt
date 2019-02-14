@@ -7,7 +7,7 @@ data class Notification(
         val subjectId: String,
         val createdAt: Date,
         val kind: Kind?,
-        val subjectType: SubjectType?
+        val subjectType: SubjectType
     ) : Model() {
 
     override val identifier = Parser.Identifier(id = id, table = MappingType.NotificationsType)
@@ -30,7 +30,6 @@ data class Notification(
     }
 
     init {
-
         val mappingType = when (subjectType) {
             SubjectType.User -> MappingType.UsersType
             SubjectType.Comment -> MappingType.CommentsType
@@ -38,7 +37,7 @@ data class Notification(
             SubjectType.Watch -> MappingType.WatchesType
             SubjectType.CategoryPost -> MappingType.CategoryPostsType
             SubjectType.Love -> MappingType.UsersType
-            else -> null
+            SubjectType.ArtistInviteSubmission -> MappingType.ArtistInviteSubmissionsType
         }
         addLinkObject("subject", subjectId, mappingType as MappingType)
 
@@ -207,7 +206,8 @@ data class Notification(
         Comment("Comment"),
         Watch("Watch"),
         CategoryPost("CategoryPost"),
-        Love("Love");
+        Love("Love"),
+        ArtistInviteSubmission("ArtistInviteSubmission");
 
         companion object {
             fun create(value: String): SubjectType? = when(value) {
@@ -217,6 +217,7 @@ data class Notification(
                 "Watch" -> Watch
                 "CategoryPost" -> CategoryPost
                 "Love" -> Love
+                "ArtistInviteSubmission" -> ArtistInviteSubmission
                 else -> null
             }
         }

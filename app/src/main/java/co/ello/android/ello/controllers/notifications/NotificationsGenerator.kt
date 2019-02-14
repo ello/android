@@ -2,8 +2,8 @@ package co.ello.android.ello.controllers.notifications
 
 import co.ello.android.ello.*
 import co.ello.android.ello.Queue
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.launch
 import java.util.*
 
 class NotificationsGenerator(val delegate: NotificationsProtocols.Controller?, val queue: Queue)

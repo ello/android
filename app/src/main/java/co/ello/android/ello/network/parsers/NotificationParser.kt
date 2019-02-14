@@ -1,5 +1,6 @@
 package co.ello.android.ello
 
+import android.util.Log
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -69,11 +70,19 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
 
     override fun parse(
             json: JSON
-    ): Notification {
+    ): Notification? {
+        val subjectType = Notification.SubjectType.create(json["subjectType"].stringValue)
+        val kind = Notification.Kind.create(json["kind"].stringValue)
+        if (subjectType == null) {
+            Log.d("NotificationParser", "does not support ${json["subjectType"].stringValue}")
+            return null
+        }
+        if (kind == null) {
+            Log.d("NotificationParser", "does not support ${json["kind"].stringValue}")
+            return null
+        }
         val id = json["id"].idValue
         val subjectId = json["links"]["subject"]["id"].idValue
-        val kind = Notification.Kind.create(json["kind"].stringValue)
-        val subjectType = Notification.SubjectType.create(json["subjectType"].stringValue)
         val createdAt = json["createdAt"].stringValue
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000000Z'")
         var createdAtDate : Date? = null
@@ -91,6 +100,8 @@ class NotificationParser : IdParser(table = MappingType.NotificationsType) {
             kind = kind,
             subjectType = subjectType
         )
+
+        // notification.mergeLinks(json["links"])
 
         return notification
     }

@@ -1,11 +1,11 @@
 package co.ello.android.ello
 
 import android.app.Activity
-import android.support.constraint.ConstraintLayout
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 
 
 class StartupScreen : StartupProtocols.Screen {

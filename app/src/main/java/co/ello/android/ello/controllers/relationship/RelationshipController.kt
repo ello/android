@@ -1,7 +1,7 @@
 package co.ello.android.ello
 
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.android.UI
 
 
 class RelationshipController(val queue: Queue) {

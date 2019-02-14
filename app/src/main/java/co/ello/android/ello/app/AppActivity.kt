@@ -3,7 +3,7 @@ package co.ello.android.ello
 import android.content.Context
 import android.hardware.Sensor
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import com.orhanobut.hawk.Hawk
 import co.ello.android.ello.debug.ShakeController

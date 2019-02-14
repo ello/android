@@ -22,10 +22,6 @@ class PostTextCell(parent: ViewGroup, isComment: Boolean)
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
             return true
         }
-
-        override fun onPageFinished(view: WebView, url: String) {
-            super.onPageFinished(view, url)
-        }
     }
 
     fun config(value: Config) {

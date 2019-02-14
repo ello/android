@@ -4,9 +4,10 @@ import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import java.util.UUID
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.launch
+import kotlin.coroutines.suspendCoroutine
+import kotlin.coroutines.resume
 
 
 class GraphQLRequest<T>(
@@ -88,6 +89,7 @@ class GraphQLRequest<T>(
             }
             catch(e: Throwable) {
                 continuation.resume(Failure(e))
+                throw e
             }
         }
         .onFailure { exception ->

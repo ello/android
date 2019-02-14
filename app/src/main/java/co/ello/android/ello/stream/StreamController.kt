@@ -1,10 +1,10 @@
 package co.ello.android.ello
 
 import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.otto.Subscribe
 import java.net.URL
 
@@ -36,7 +36,9 @@ class StreamController(a: AppActivity)
         override fun onBindViewHolder(holder: StreamCell, position: Int) {
             val item = items[position]
             holder.streamController = streamController
+            item.isBinding = true
             item.type.bindViewHolder(holder, item = item)
+            item.isBinding = false
         }
 
         override fun onViewAttachedToWindow(holder: StreamCell) {

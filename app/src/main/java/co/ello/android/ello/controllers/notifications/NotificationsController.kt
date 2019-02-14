@@ -1,6 +1,5 @@
 package co.ello.android.ello.controllers.notifications
 
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import co.ello.android.ello.*

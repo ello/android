@@ -1,8 +1,8 @@
 package co.ello.android.ello
 
 import java.util.UUID
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.android.UI
 
 
 class EditorialsGenerator(val delegate: EditorialsProtocols.Controller?, val queue: Queue)

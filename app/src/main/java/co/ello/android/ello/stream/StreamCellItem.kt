@@ -10,4 +10,5 @@ class StreamCellItem(
     val uuid: String = UUIDString()
     var height: Int? = null
     var extra: Any? = null
+    var isBinding = false
 }

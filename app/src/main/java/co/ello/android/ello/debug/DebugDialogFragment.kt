@@ -3,9 +3,9 @@ package co.ello.android.ello.debug
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
 import co.ello.android.ello.AppActivity
 import co.ello.android.ello.AuthToken
 import co.ello.android.ello.R

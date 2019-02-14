@@ -1,6 +1,6 @@
 package co.ello.android.ello
 
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView

@@ -1,7 +1,5 @@
 package co.ello.android.ello
 
-import java.net.URL
-
 
 object PostImagePresenter {
     fun configure(cell: PostImageCell, item: StreamCellItem) {

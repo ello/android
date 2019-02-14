@@ -1,7 +1,7 @@
 package co.ello.android.ello
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 
 open class StreamCell(view: View) : RecyclerView.ViewHolder(view) {

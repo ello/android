@@ -5,9 +5,10 @@ import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import org.json.JSONException
 import java.util.UUID
-import kotlin.coroutines.experimental.suspendCoroutine
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
 
 
 class ElloRequest<T>(
